@@ -8,6 +8,7 @@ import NotFoundPage from '@/modules/common/pages/NotFoundPage.vue'
 import { userRoutes } from '@/modules/admin/modules/users/router'
 import { vehicleRoutes } from '@/modules/admin/modules/vehicles/router'
 import { rolesRoutes } from '@/modules/admin/modules/roles/router'
+import { tenantRoutes } from '@/modules/admin/modules/tenants/router'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -41,6 +42,7 @@ const routes: RouteRecordRaw[] = [
       ...vehicleRoutes,
       ...userRoutes,
       ...rolesRoutes,
+      ...tenantRoutes,
       {
         path: 'bookings',
         name: 'AdminBookings',
