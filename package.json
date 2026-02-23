@@ -1,0 +1,39 @@
+{
+  "name": "project-sims-frontend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.7.23",
+    "@heroicons/vue": "^2.2.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/leaflet": "^1.9.21",
+    "axios": "^1.13.3",
+    "leaflet": "^1.9.4",
+    "tailwindcss": "^4.1.18",
+    "vue": "^3.5.26",
+    "vue-router": "^4.6.4",
+    "vue3-toastify": "^0.2.8"
+  },
+  "devDependencies": {
+    "@tsconfig/node24": "^24.0.4",
+    "@types/node": "^24.10.9",
+    "@vitejs/plugin-vue": "^6.0.3",
+    "@vue/tsconfig": "^0.8.1",
+    "npm-run-all2": "^8.0.4",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.1",
+    "vite-plugin-vue-devtools": "^8.0.5",
+    "vue-tsc": "^3.2.2"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
+}
