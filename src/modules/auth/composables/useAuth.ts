@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import apiClient from '@/services/api'
 import type { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, User, UserResponse } from '../interfaces/auth.interface'
-import router from '@/router'
 import showToast from '@/modules/common/composables/useToast'
 
 const TOKEN_COOKIE_NAME = 'token'
@@ -36,6 +36,7 @@ const user = ref<User | null>(null)
 const isAuthenticated = computed(() => !!user.value)
 
 export function useAuth() {
+  const router = useRouter()
 
   const getToken = (): string | null => {
     return getCookie(TOKEN_COOKIE_NAME)
