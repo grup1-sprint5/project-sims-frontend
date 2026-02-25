@@ -125,6 +125,7 @@ import {
   TruckIcon,
   TicketIcon,
   MapIcon,
+  BuildingOfficeIcon,
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
 
@@ -137,6 +138,7 @@ const navigationItems = [
   { name: 'Roles', href: '/admin/roles', icon: ShieldCheckIcon },
   { name: 'Bookings', href: '/admin/bookings', icon: CalendarDaysIcon },
   { name: 'Vehicles', href: '/admin/vehicles', icon: TruckIcon },
+  { name: 'Tenants', href: '/admin/tenants', icon: BuildingOfficeIcon },
   { name: 'Tickets', href: '/admin/tickets', icon: TicketIcon },
 ]
 

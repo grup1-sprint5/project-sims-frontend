@@ -7,6 +7,7 @@ import {
   CalendarDaysIcon,
   TruckIcon,
   TicketIcon,
+  BuildingOfficeIcon,
 } from '@heroicons/vue/24/outline'
 
 export function useAdmin() {
@@ -17,6 +18,7 @@ export function useAdmin() {
     { name: 'Roles', href: '/admin/roles', icon: ShieldCheckIcon, current: false },
     { name: 'Bookings', href: '/admin/bookings', icon: CalendarDaysIcon, current: false },
     { name: 'Vehicles', href: '/admin/vehicles', icon: TruckIcon, current: false },
+    { name: 'Tenants', href: '/admin/tenants', icon: BuildingOfficeIcon, current: false },
     { name: 'Tickets', href: '/admin/tickets', icon: TicketIcon, current: false },
   ]
 
