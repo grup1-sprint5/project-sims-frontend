@@ -9,6 +9,7 @@ import { userRoutes } from '@/modules/admin/modules/users/router'
 import { vehicleRoutes } from '@/modules/admin/modules/vehicles/router'
 import { rolesRoutes } from '@/modules/admin/modules/roles/router'
 import { tenantRoutes } from '@/modules/admin/modules/tenants/router'
+import { clientRoutes } from '@/modules/client/router'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -18,12 +19,10 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '', component: () => import('@/modules/common/pages/HomePage.vue') },
       { path: 'vehicles-map', component: () => import('@/modules/common/pages/MapPage.vue') },
-      { path: 'bookings', component: () => import('@/modules/auth/pages/DashboardPage.vue') },
       { path: 'tickets', component: () => import('@/modules/tickets/pages/TicketsPage.vue') },
       { path: 'tickets/create', component: () => import('@/modules/tickets/pages/CreateTicketPage.vue') },
       { path: 'tickets/:id', component: () => import('@/modules/tickets/pages/TicketConversationPage.vue') },
-      { path: 'favoritos', component: () => import('@/modules/auth/pages/DashboardPage.vue') },
-      { path: 'perfil', component: () => import('@/modules/auth/pages/DashboardPage.vue') },
+      ...clientRoutes,
 
     ]
   },
@@ -87,7 +86,7 @@ const router = createRouter({
 
 // Navigation guard global
 router.beforeEach(async (to, from, next) => {
-  const { isAuthenticated, fetchUser, getToken } = useAuth()
+  const { isAuthenticated, fetchUser, getToken, user } = useAuth()
   const requiresAuth = to.meta.requiresAuth
 
   // If there's a token but no user data, try to fetch user
@@ -95,14 +94,18 @@ router.beforeEach(async (to, from, next) => {
     await fetchUser()
   }
 
+  const isAdmin = user.value?.roles?.some((r: any) => r.name === 'Admin') ?? false
+
   if (requiresAuth && !isAuthenticated.value) {
     // Protected route and not authenticated -> go to login
     next('/login')
   } else if (to.path === '/login' && isAuthenticated.value) {
-    // Already authenticated attempting to go to login -> go to admin dashboard
-    next('/admin')
+    // Already authenticated: redirect based on role
+    next(isAdmin ? '/admin' : '/')
+  } else if (to.path.startsWith('/admin') && isAuthenticated.value && !isAdmin) {
+    // Client trying to access admin area -> redirect to client home
+    next('/')
   } else {
-    // All good
     next()
   }
 })
