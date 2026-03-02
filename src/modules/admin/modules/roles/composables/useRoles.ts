@@ -26,22 +26,21 @@ export const useRoles = () => {
     error.value = null
 
     try {
-      let url = `/roles?page=${page}`
-      if (filters.search) {
-        url += `&search=${encodeURIComponent(filters.search)}`
-      }
+      const params: Record<string, any> = { page, per_page: pagination.value.per_page }
+      if (filters.search) params.search = filters.search
 
-      const response = await api.get(url)
+      const response = await api.get('/roles', { params })
       const data = response.data
 
-      roles.value = data.data || data
-      
-      if (data.current_page) {
+      roles.value = data.data ?? data
+
+      const meta = data.meta ?? data
+      if (meta.current_page) {
         pagination.value = {
-          current_page: data.current_page,
-          last_page: data.last_page,
-          per_page: data.per_page,
-          total: data.total,
+          current_page: meta.current_page,
+          last_page: meta.last_page,
+          per_page: meta.per_page,
+          total: meta.total,
         }
       }
     } catch (err) {
@@ -58,7 +57,8 @@ export const useRoles = () => {
 
     try {
       const response = await api.get(`/roles/${id}`)
-      currentRole.value = response.data
+      // Laravel JsonResource wraps in { data: ... }
+      currentRole.value = response.data.data ?? response.data
     } catch (err) {
       error.value = 'Failed to load role'
       showError('Error al cargar rol')

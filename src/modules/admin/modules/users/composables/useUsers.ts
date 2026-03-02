@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import api from '@/services/api'
 import { useAuth } from '@/modules/auth/composables/useAuth'
-import type { User, UserForm, UserFilters, UserPagination } from '../interfaces/user.interface'
+import type { User, UserForm, UserFilters } from '../interfaces/user.interface'
 
 export function useUsers() {
   const { user: currentUser } = useAuth()
@@ -23,39 +23,25 @@ export function useUsers() {
     loading.value = true
     error.value = null
     try {
-      const response = await api.get<User[]>('/users')
-      let filteredUsers = response.data
-
-      // Filter by search if present
-      if (filters.search) {
-        const search = filters.search.toLowerCase()
-        filteredUsers = filteredUsers.filter(
-          (user) =>
-            user.name.toLowerCase().includes(search) ||
-            user.username.toLowerCase().includes(search) ||
-            user.email.toLowerCase().includes(search)
-        )
+      const params: Record<string, any> = {
+        page,
+        per_page: pagination.value.per_page,
       }
+      if (filters.search) params.search = filters.search
+      if (filters.role) params.role = filters.role
+      if (filters.tenant_id) params.tenant_id = filters.tenant_id
+      if (filters.active !== undefined) params.active = filters.active ? 1 : 0
 
-      // Filter by active status if defined
-      if (filters.active !== undefined) {
-        filteredUsers = filteredUsers.filter((user) => user.active === filters.active)
-      }
+      const response = await api.get('/users', { params })
+      const data = response.data
 
-      // Calculate pagination
-      const perPage = pagination.value.per_page
-      const total = filteredUsers.length
-      const lastPage = Math.max(1, Math.ceil(total / perPage))
-      const currentPage = Math.min(page, lastPage)
-      const start = (currentPage - 1) * perPage
-      const end = start + perPage
-
-      users.value = filteredUsers.slice(start, end)
+      users.value = data.data
+      const meta = data.meta ?? data
       pagination.value = {
-        current_page: currentPage,
-        last_page: lastPage,
-        per_page: perPage,
-        total: total
+        current_page: meta.current_page,
+        last_page: meta.last_page,
+        per_page: meta.per_page,
+        total: meta.total,
       }
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Error loading users'
@@ -106,12 +92,12 @@ export function useUsers() {
     }
   }
 
-  const getUser = async (id: number) => {
+  const getUser = async (id: number): Promise<User> => {
     loading.value = true
     error.value = null
     try {
       const response = await api.get<{ data: User }>(`/users/${id}`)
-      return response.data
+      return response.data.data
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Error fetching user'
       throw err

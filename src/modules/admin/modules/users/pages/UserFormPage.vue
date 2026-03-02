@@ -93,6 +93,16 @@
             </p>
           </FormField>
 
+          <!-- Password confirmation -->
+          <FormField v-if="formData.password" :label="isEditMode ? 'Confirm new password' : 'Confirm password'">
+            <FormInput
+              v-model="formData.password_confirmation"
+              type="password"
+              :placeholder="isEditMode ? 'Confirm new password' : 'Confirm password'"
+              :required="!!formData.password"
+            />
+          </FormField>
+
           <!-- Rol (solo para Admin) -->
           <FormField v-if="isCurrentUserAdmin" label="Role">
             <select
@@ -100,12 +110,10 @@
               class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
             >
               <option :value="null">Select role</option>
-              <option value="1">Client</option>
-              <option value="2">Admin</option>
+              <option v-for="role in availableRoles" :key="role.id" :value="role.id">
+                {{ role.name }}
+              </option>
             </select>
-            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              Only administrators can create users with the Admin role
-            </p>
           </FormField>
 
           <!-- Estado -->
@@ -145,8 +153,9 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUsers } from '../composables/useUsers'
+import { useRoles } from '../../roles/composables/useRoles'
 import { useToast } from '@/modules/common/composables/useToast'
-import type { User, UserForm } from '../interfaces/user.interface'
+import type { UserForm } from '../interfaces/user.interface'
 import FormField from '@/modules/admin/components/FormField.vue'
 import FormInput from '@/modules/admin/components/FormInput.vue'
 import FormCheckbox from '@/modules/admin/components/FormCheckbox.vue'
@@ -154,6 +163,7 @@ import FormCheckbox from '@/modules/admin/components/FormCheckbox.vue'
 const router = useRouter()
 const route = useRoute()
 const { getUser, createUser, updateUser, isCurrentUserAdmin, loading } = useUsers()
+const { roles: availableRoles, getRoles } = useRoles()
 const toast = useToast()
 
 const userId = computed(() => route.params.id ? Number(route.params.id) : null)
@@ -164,6 +174,7 @@ const formData = reactive<Partial<UserForm>>({
   username: '',
   email: '',
   password: '',
+  password_confirmation: '',
   active: true,
   role_id: null
 })
@@ -178,6 +189,8 @@ const validationErrors = reactive({
 const isSaving = ref(false)
 
 onMounted(async () => {
+  await getRoles(1, {})
+
   if (isEditMode.value && userId.value) {
     try {
       const user = await getUser(userId.value)
@@ -210,6 +223,7 @@ const handleSubmit = async () => {
     // Only include password if provided
     if (formData.password) {
       submitData.password = formData.password
+      submitData.password_confirmation = formData.password_confirmation
     }
 
     if (isEditMode.value && userId.value) {
