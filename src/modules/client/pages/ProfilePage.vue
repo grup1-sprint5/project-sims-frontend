@@ -2,13 +2,11 @@
   <div class="min-h-screen bg-gray-900 text-white px-4 py-8">
     <div class="mx-auto max-w-2xl">
 
-      <!-- Header -->
       <div class="mb-8">
         <h1 class="text-2xl font-bold">My Profile</h1>
         <p class="mt-1 text-sm text-gray-400">Manage your personal information and password.</p>
       </div>
 
-      <!-- Loading -->
       <div v-if="loading" class="flex justify-center py-16">
         <svg class="animate-spin h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -18,7 +16,6 @@
 
       <template v-else-if="user">
 
-        <!-- Avatar + nom -->
         <div class="flex items-center gap-4 mb-8">
           <span class="size-16 rounded-full bg-indigo-700 flex items-center justify-center text-2xl font-bold">
             {{ initials }}
@@ -37,13 +34,11 @@
           </div>
         </div>
 
-        <!-- ── Secció: dades personals ────────────────────────────────────── -->
         <section class="rounded-xl bg-gray-800/60 border border-white/5 p-6 mb-6">
           <h2 class="text-base font-semibold mb-5">Personal information</h2>
 
           <form @submit.prevent="submitProfile" class="space-y-4">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <!-- Nom -->
               <div>
                 <label class="block text-sm font-medium text-gray-300 mb-1">Full name</label>
                 <input
@@ -55,7 +50,6 @@
                 />
               </div>
 
-              <!-- Username -->
               <div>
                 <label class="block text-sm font-medium text-gray-300 mb-1">Username</label>
                 <input
@@ -67,7 +61,6 @@
                 />
               </div>
 
-              <!-- Email -->
               <div class="sm:col-span-2">
                 <label class="block text-sm font-medium text-gray-300 mb-1">Email</label>
                 <input
@@ -96,7 +89,6 @@
           </form>
         </section>
 
-        <!-- ── Secció: canvi de contrasenya ──────────────────────────────── -->
         <section class="rounded-xl bg-gray-800/60 border border-white/5 p-6">
           <h2 class="text-base font-semibold mb-5">Change password</h2>
 
