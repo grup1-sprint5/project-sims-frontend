@@ -21,12 +21,12 @@
                 v-for="item in navigation"
                 :key="item.name"
                 :to="item.to"
-                class="inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium"
+                class="inline-flex items-center gap-1.5 border-b-2 px-1 pt-1 text-sm font-medium"
                 :class="isActive(item.to)
                   ? 'border-indigo-500 text-white'
                   : 'border-transparent text-gray-400 hover:border-white/20 hover:text-gray-200'"
               >
-                {{ item.name }}
+                <component :is="item.icon" class="size-5" aria-hidden="true" />
               </RouterLink>
             </div>
           </div>
@@ -99,12 +99,12 @@
           >
             <RouterLink
               :to="item.to"
-              class="block border-l-4 py-2 pr-4 pl-3 text-base font-medium"
+              class="flex items-center gap-2 border-l-4 py-2 pr-4 pl-3 text-base font-medium"
               :class="isActive(item.to)
                 ? 'border-indigo-500 bg-indigo-600/10 text-indigo-300'
                 : 'border-transparent text-gray-400 hover:border-gray-500 hover:bg-white/5 hover:text-gray-200'"
             >
-              {{ item.name }}
+              <component :is="item.icon" class="size-5" aria-hidden="true" />
             </RouterLink>
           </DisclosureButton>
         </div>
@@ -118,12 +118,22 @@
 
     <!-- Bottom nav (mobile-first) -->
     <nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-gray-900/90 backdrop-blur sm:hidden">
-      <div class="mx-auto max-w-md px-2 py-2 grid grid-cols-5 text-center text-xs text-gray-300">
-        <RouterLink to="/" class="py-2 rounded-xl" :class="isActive('/') ? 'text-white bg-white/5' : ''">Map</RouterLink>
-        <RouterLink to="/bookings" class="py-2 rounded-xl" :class="isActive('/bookings') ? 'text-white bg-white/5' : ''">Bookings</RouterLink>
-        <RouterLink to="/tickets" class="py-2 rounded-xl" :class="isActive('/tickets') ? 'text-white bg-white/5' : ''">Tickets</RouterLink>
-        <RouterLink to="/favoritos" class="py-2 rounded-xl" :class="isActive('/favoritos') ? 'text-white bg-white/5' : ''">Fav</RouterLink>
-        <RouterLink to="/perfil" class="py-2 rounded-xl" :class="isActive('/perfil') ? 'text-white bg-white/5' : ''">Profile</RouterLink>
+      <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-5 text-center text-xs text-gray-300">
+        <RouterLink to="/" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/') ? 'text-indigo-400' : 'hover:text-gray-100'">
+          <MapIcon class="size-6" />
+        </RouterLink>
+        <RouterLink to="/bookings" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/bookings') ? 'text-indigo-400' : 'hover:text-gray-100'">
+          <CalendarDaysIcon class="size-6" />
+        </RouterLink>
+        <RouterLink to="/tickets" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/tickets') ? 'text-indigo-400' : 'hover:text-gray-100'">
+          <TicketIcon class="size-6" />
+        </RouterLink>
+        <RouterLink to="/favoritos" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/favoritos') ? 'text-indigo-400' : 'hover:text-gray-100'">
+          <StarIcon class="size-6" />
+        </RouterLink>
+        <RouterLink to="/perfil" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/perfil') ? 'text-indigo-400' : 'hover:text-gray-100'">
+          <UserIcon class="size-6" />
+        </RouterLink>
       </div>
     </nav>
   </div>
@@ -132,7 +142,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, BellIcon, XMarkIcon, MapIcon, CalendarDaysIcon, TicketIcon, StarIcon, UserIcon } from '@heroicons/vue/24/outline'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
 
@@ -149,11 +159,11 @@ const user = {
 }
 
 const navigation = [
-  { name: 'Map', to: '/vehicles-map' },
-  { name: 'Bookings', to: '/bookings' },
-  { name: 'Tickets', to: '/tickets' },
-  { name: 'Favorites', to: '/favoritos' },
-  { name: 'Profile', to: '/perfil' },
+  { name: 'Map', to: '/vehicles-map', icon: MapIcon },
+  { name: 'Bookings', to: '/bookings', icon: CalendarDaysIcon },
+  { name: 'Tickets', to: '/tickets', icon: TicketIcon },
+  { name: 'Favorites', to: '/favoritos', icon: StarIcon },
+  { name: 'Profile', to: '/perfil', icon: UserIcon },
 ]
 
 const userNavigation = [
