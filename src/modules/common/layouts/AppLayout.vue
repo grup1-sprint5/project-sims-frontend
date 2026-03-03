@@ -43,7 +43,9 @@
               <MenuButton class="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
                 <span class="absolute -inset-1.5"></span>
                 <span class="sr-only">Open user menu</span>
-                <img class="size-8 rounded-full outline -outline-offset-1 outline-white/10" :src="user.imageUrl" alt="" />
+                <span class="size-8 rounded-full outline -outline-offset-1 outline-white/10 bg-indigo-700 flex items-center justify-center text-xs font-bold text-white">
+                  {{ userInitials }}
+                </span>
               </MenuButton>
 
               <transition
@@ -136,27 +138,30 @@
         </RouterLink>
       </div>
     </nav>
+
+    <!-- AI Chat floating widget -->
+    <ChatWidget />
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon, MapIcon, CalendarDaysIcon, TicketIcon, StarIcon, UserIcon } from '@heroicons/vue/24/outline'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
+import ChatWidget from '@/modules/client/components/ChatWidget.vue'
 
 const route = useRoute()
 const router = useRouter()
-const { logout } = useAuth()
+const { logout, user: authUser } = useAuth()
 const isActive = (path: string) => route.path === path
 
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-}
+const userInitials = computed(() => {
+  const name = authUser.value?.name || ''
+  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?'
+})
 
 const navigation = [
   { name: 'Map', to: '/vehicles-map', icon: MapIcon },

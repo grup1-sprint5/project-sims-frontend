@@ -36,4 +36,5 @@ export const clientRoutes: RouteRecordRaw[] = [
     component: () => import('../pages/FavoritesPage.vue'),
     meta: { requiresAuth: true },
   },
+
 ]

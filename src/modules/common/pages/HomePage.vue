@@ -12,7 +12,7 @@
         <button @click="openMap" class="px-4 py-2 bg-indigo-600 rounded text-white hover:bg-indigo-500">Open full map</button>
       </div>
 
-      <footer class="mt-6 text-center text-sm text-gray-500">Updated: 2026-02-09T15:57:38.759Z</footer>
+      <footer class="mt-6 text-center text-sm text-gray-500">SIMS</footer>
     </div>
   </div>
 </template>
