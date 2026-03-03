@@ -272,7 +272,7 @@ async function sendMessage() {
     const { data } = await apiClient.post<{ reply: string }>('/chat', {
       message: text,
       history,
-    })
+    }, { timeout: 130_000 })
 
     messages.value.push({ role: 'assistant', content: data.reply })
 

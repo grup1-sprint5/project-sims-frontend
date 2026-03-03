@@ -37,11 +37,4 @@ export const clientRoutes: RouteRecordRaw[] = [
     meta: { requiresAuth: true },
   },
 
-  // ── Help / AI Chat ────────────────────────────────────────────────────────
-  {
-    path: 'ajuda',
-    name: 'ClientHelp',
-    component: () => import('../pages/ChatPage.vue'),
-    meta: { requiresAuth: true },
-  },
 ]
