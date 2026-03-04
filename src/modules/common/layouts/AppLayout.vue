@@ -27,6 +27,7 @@
                   : 'border-transparent text-gray-400 hover:border-white/20 hover:text-gray-200'"
               >
                 <component :is="item.icon" class="size-5" aria-hidden="true" />
+                {{ item.name }}
               </RouterLink>
             </div>
           </div>
@@ -107,6 +108,7 @@
                 : 'border-transparent text-gray-400 hover:border-gray-500 hover:bg-white/5 hover:text-gray-200'"
             >
               <component :is="item.icon" class="size-5" aria-hidden="true" />
+              {{ item.name }}
             </RouterLink>
           </DisclosureButton>
         </div>
