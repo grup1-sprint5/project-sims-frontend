@@ -32,7 +32,8 @@
             </div>
           </div>
 
-          <div class="hidden sm:ml-6 sm:flex sm:items-center">
+          <div class="hidden sm:ml-6 sm:flex sm:items-center gap-3">
+            <LanguageSwitcher />
             <button type="button" class="relative rounded-full p-1 text-gray-400 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
               <span class="absolute -inset-1.5"></span>
               <span class="sr-only">View notifications</span>
@@ -154,7 +155,10 @@ import { Bars3Icon, BellIcon, XMarkIcon, MapIcon, CalendarDaysIcon, TicketIcon, 
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
 import ChatWidget from '@/modules/client/components/ChatWidget.vue'
+import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
+import { useI18n } from '@/i18n'
 
+const { m } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { logout, user: authUser } = useAuth()
@@ -165,26 +169,26 @@ const userInitials = computed(() => {
   return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?'
 })
 
-const navigation = [
-  { name: 'Map', to: '/vehicles-map', icon: MapIcon },
-  { name: 'Bookings', to: '/bookings', icon: CalendarDaysIcon },
-  { name: 'Tickets', to: '/tickets', icon: TicketIcon },
-  { name: 'Favorites', to: '/favoritos', icon: StarIcon },
-  { name: 'Profile', to: '/perfil', icon: UserIcon },
-]
+const navigation = computed(() => [
+  { name: m.value.nav.map, to: '/vehicles-map', icon: MapIcon },
+  { name: m.value.nav.bookings, to: '/bookings', icon: CalendarDaysIcon },
+  { name: m.value.nav.tickets, to: '/tickets', icon: TicketIcon },
+  { name: m.value.nav.favorites, to: '/favoritos', icon: StarIcon },
+  { name: m.value.nav.profile, to: '/perfil', icon: UserIcon },
+])
 
-const userNavigation = [
-  { name: 'Your profile', to: '/perfil', type: 'link' },
-  { name: 'Settings', to: '/settings', type: 'link' },
-  { name: 'Sign out', type: 'logout' },
-]
+const userNavigation = computed(() => [
+  { name: m.value.userMenu.yourProfile, to: '/perfil', type: 'link' },
+  { name: m.value.userMenu.settings, to: '/settings', type: 'link' },
+  { name: m.value.userMenu.signOut, type: 'logout' },
+])
 
 const handleLogout = async () => {
   try {
     await logout()
-    showToast('Logged out successfully')
+    showToast(m.value.userMenu.loggedOut)
   } catch (_) {
-    // El propio useAuth ya muestra el error si falla
+    // El propio useAuth ja mostra l'error si falla
   } finally {
     router.push('/login')
   }
