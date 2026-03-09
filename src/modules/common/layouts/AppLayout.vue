@@ -81,8 +81,32 @@
             </Menu>
           </div>
 
-          <!-- Mobile hamburger -->
-          <div class="-mr-2 flex items-center sm:hidden">
+          <!-- Mobile: language dropdown + hamburger -->
+          <div class="-mr-2 flex items-center gap-1 sm:hidden">
+            <Menu as="div" class="relative">
+              <MenuButton class="inline-flex items-center justify-center rounded-md bg-gray-900 p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:outline-indigo-500">
+                <GlobeAltIcon class="size-6" aria-hidden="true" />
+              </MenuButton>
+              <transition
+                enter-active-class="transition ease-out duration-200"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform scale-100"
+                leave-active-class="transition ease-in duration-75"
+                leave-from-class="transform scale-100"
+                leave-to-class="transform opacity-0 scale-95"
+              >
+                <MenuItems class="absolute right-0 z-50 mt-2 w-32 origin-top-right rounded-md bg-gray-800 py-1 outline -outline-offset-1 outline-white/10">
+                  <MenuItem v-for="loc in locales" :key="loc.code" v-slot="{ active }">
+                    <button
+                      @click="setLocale(loc.code)"
+                      :class="[locale === loc.code ? 'text-indigo-400 font-semibold' : 'text-gray-300', active ? 'bg-white/5' : '', 'flex w-full items-center gap-2 px-4 py-2 text-sm']"
+                    >
+                      {{ loc.label }}
+                    </button>
+                  </MenuItem>
+                </MenuItems>
+              </transition>
+            </Menu>
             <DisclosureButton class="relative inline-flex items-center justify-center rounded-md bg-gray-900 p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
               <span class="absolute -inset-0.5"></span>
               <span class="sr-only">Open main menu</span>
@@ -123,7 +147,7 @@
 
     <!-- Bottom nav (mobile-first) -->
     <nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-gray-900/90 backdrop-blur sm:hidden">
-      <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-6 text-center text-xs text-gray-300">
+      <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-5 text-center text-xs text-gray-300">
         <RouterLink to="/" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/') ? 'text-indigo-400' : 'hover:text-gray-100'">
           <MapIcon class="size-6" />
         </RouterLink>
@@ -151,14 +175,14 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon, MapIcon, CalendarDaysIcon, TicketIcon, StarIcon, UserIcon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, BellIcon, XMarkIcon, MapIcon, CalendarDaysIcon, TicketIcon, StarIcon, UserIcon, GlobeAltIcon } from '@heroicons/vue/24/outline'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
 import ChatWidget from '@/modules/client/components/ChatWidget.vue'
 import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
 import { useI18n } from '@/i18n'
 
-const { m } = useI18n()
+const { m, locale, setLocale, locales } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { logout, user: authUser } = useAuth()
