@@ -108,11 +108,15 @@
         </div>
       </div>
     </main>
+
+    <!-- AI Chat floating widget -->
+    <ChatWidget />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import ChatWidget from '@/modules/client/components/ChatWidget.vue'
 import { useRoute } from 'vue-router'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
