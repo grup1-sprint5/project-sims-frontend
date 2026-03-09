@@ -8,8 +8,12 @@ import showToast from '@/modules/common/composables/useToast'
 // For now the token is read from cookies and added to request headers.
 // Improve security later as needed.
 
+// Normalize API base URL and ensure it points to the backend API prefix (/api)
+const _rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8001'
+const _apiBase = (_rawApiUrl as string).replace(/\/$/, '') + '/api'
+
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: _apiBase,
   headers: {
     'Content-Type': 'application/json'
   }
