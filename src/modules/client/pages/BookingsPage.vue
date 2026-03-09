@@ -135,7 +135,6 @@
                   <input
                     v-model="bookingForm.scheduled_start"
                     type="datetime-local"
-                    :min="minDateTime"
                     required
                     class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
                   />
@@ -155,15 +154,19 @@
                 <div v-if="priceInfo" class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-lg">
                   <div class="flex justify-between items-center mb-2">
                     <span class="text-sm text-gray-600 dark:text-gray-400">Durada:</span>
-                    <span class="font-semibold text-gray-900 dark:text-white">{{ priceInfo.hours }} hores</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ priceInfo.total_minutes }} min ({{ priceInfo.hours }}h)</span>
                   </div>
                   <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm text-gray-600 dark:text-gray-400">Preu per hora:</span>
-                    <span class="font-semibold text-gray-900 dark:text-white">{{ priceInfo.price_per_hour }}€</span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">Tarifa:</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ priceInfo.price_per_minute }}€/min (màx {{ priceInfo.max_per_hour }}€/h)</span>
+                  </div>
+                  <div v-if="priceInfo.base_price !== priceInfo.final_price" class="flex justify-between items-center mb-2">
+                    <span class="text-sm text-gray-600 dark:text-gray-400">Preu base:</span>
+                    <span class="font-semibold text-gray-500 dark:text-gray-400 line-through">{{ priceInfo.base_price }}€</span>
                   </div>
                   <div class="flex justify-between items-center pt-2 border-t border-indigo-200 dark:border-indigo-700">
                     <span class="text-base font-bold text-gray-900 dark:text-white">Total:</span>
-                    <span class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ priceInfo.total_price }}€</span>
+                    <span class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ priceInfo.final_price }}€</span>
                   </div>
                 </div>
                 <div class="flex gap-3">
@@ -324,13 +327,70 @@ const bookingForm = ref({
 
 const minDateTime = computed(() => {
   const now = new Date()
-  now.setMinutes(now.getMinutes() + 30)
-  return now.toISOString().slice(0, 16)
+  // Només 1 minut de marge (el backend ja valida amb +1 minut)
+  now.setMinutes(now.getMinutes() + 1)
+  // Retornar en format local (YYYY-MM-DDTHH:mm)
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  const hours = String(now.getHours()).padStart(2, '0')
+  const minutes = String(now.getMinutes()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}`
 })
+
+// Actualitzar cada segon per comprovar reserves expirades
+const countdownInterval = ref<number | null>(null)
+const expiredBookings = ref<Set<number>>(new Set()) // Track de reserves expirades
 
 onMounted(async () => {
   await vehicleStore.fetchVehicles()
   await bookingStore.fetchBookings()
+  
+  // Actualitzar cada segon per comprovar reserves expirades
+  countdownInterval.value = window.setInterval(async () => {
+    // Comprovar si alguna reserva pending ha expirat
+    const now = new Date()
+    
+    for (const booking of bookingStore.bookings) {
+      if (booking.status === 'pending' && booking.activation_deadline) {
+        const deadline = new Date(booking.activation_deadline)
+        
+        // Si ha expirat i no l'hem marcat abans
+        if (now >= deadline && !expiredBookings.value.has(booking.id)) {
+          console.log(`Reserva ${booking.id} ha expirat. Refrescant...`)
+          expiredBookings.value.add(booking.id)
+          
+          // Mostrar notificació immediatament
+          toast.warning(`La reserva del vehicle ${booking.vehicle?.license_plate || 'N/A'} ha expirat`)
+          
+          // Intentar refrescar diverses vegades per assegurar que el backend ha processat
+          let attempts = 0
+          const maxAttempts = 5
+          const refreshInterval = setInterval(async () => {
+            attempts++
+            await bookingStore.fetchBookings()
+            
+            // Comprovar si la reserva ja està cancel·lada
+            const updatedBooking = bookingStore.bookings.find(b => b.id === booking.id)
+            if (!updatedBooking || updatedBooking.status === 'cancelled' || attempts >= maxAttempts) {
+              clearInterval(refreshInterval)
+              if (updatedBooking?.status === 'cancelled') {
+                console.log(`Reserva ${booking.id} cancel·lada correctament`)
+              }
+            }
+          }, 3000) // Cada 3 segons durant 15 segons màxim
+        }
+      }
+    }
+  }, 1000)
+})
+
+// Netejar interval quan es destrueix el component
+import { onUnmounted } from 'vue'
+onUnmounted(() => {
+  if (countdownInterval.value) {
+    clearInterval(countdownInterval.value)
+  }
 })
 
 watch([() => bookingForm.value.scheduled_start, () => bookingForm.value.scheduled_end], async ([start, end]) => {
@@ -365,7 +425,14 @@ function closeBookingModal() {
 
 async function submitBooking() {
   try {
-    await bookingStore.createBooking(bookingForm.value)
+    // Com el backend ara treballa amb Europe/Madrid, enviem les dates en format local
+    const bookingData = {
+      ...bookingForm.value,
+      scheduled_start: bookingForm.value.scheduled_start + ':00', // Afegir segons
+      scheduled_end: bookingForm.value.scheduled_end + ':00'
+    }
+    
+    await bookingStore.createBooking(bookingData)
     toast.success('Reserva creada correctament!')
     closeBookingModal()
     await bookingStore.fetchBookings()

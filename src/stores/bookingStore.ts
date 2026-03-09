@@ -11,7 +11,7 @@ export interface Booking {
   scheduled_end: string
   activation_deadline: string
   total_price: number
-  status: 'pending' | 'active' | 'completed' | 'cancelled'
+  status: 'pending' | 'active' | 'completed' | 'cancelled' | 'confirmed'
   cancelled_at?: string | null
   cancellation_fee?: number | null
   created_at?: string
@@ -27,6 +27,12 @@ export interface Booking {
     license_plate: string
     brand: string
     model: string
+  }
+  trip?: {
+    id: number
+    minutes_driven: number
+    total_amount: number
+    engine_started_at: string
   }
 }
 
@@ -143,6 +149,12 @@ export const useBookingStore = defineStore('booking', () => {
     error.value = null
     
     try {
+      // Si la reserva està activa o pending, primer la cancel·lem
+      const booking = bookings.value.find(b => b.id === id)
+      if (booking && (booking.status === 'active' || booking.status === 'pending')) {
+        await apiClient.post(`/reservations/${id}/cancel`)
+      }
+      
       await apiClient.delete(`/reservations/${id}`)
       bookings.value = bookings.value.filter(b => b.id !== id)
       

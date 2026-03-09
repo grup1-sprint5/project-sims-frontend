@@ -17,11 +17,11 @@
             </button>
           </div>
 
-          <div v-if="selectedVehicle" class="space-y-4">
+          <div v-if="selectedVehicle" class="space-y-3">
             <!-- Matrícula -->
             <div>
               <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Matrícula</label>
-              <p class="text-lg font-bold text-gray-900 dark:text-white">{{ selectedVehicle.plate }}</p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white">{{ selectedVehicle.plate }}</p>
             </div>
 
             <!-- Marca/Model -->
@@ -65,7 +65,7 @@
             <!-- Ubicació -->
             <div>
               <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Ubicació</label>
-              <p class="text-sm text-gray-900 dark:text-white font-mono">
+              <p class="text-xs text-gray-900 dark:text-white font-mono">
                 {{ selectedVehicle.latitude?.toFixed(6) }}, {{ selectedVehicle.longitude?.toFixed(6) }}
               </p>
             </div>
@@ -86,6 +86,15 @@
             <div v-if="selectedVehicle.tenant_id">
               <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Tenant ID</label>
               <p class="text-base text-gray-900 dark:text-white">#{{ selectedVehicle.tenant_id }}</p>
+            </div>
+
+            <!-- Botó Reserva ara (sempre visible, disabled si no disponible) -->
+            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <BookingButton 
+                :vehicle-id="selectedVehicle.id"
+                :disabled="selectedVehicle.status !== 'available'"
+                :label="selectedVehicle.status === 'available' ? 'Reserva ara!' : 'No disponible'"
+              />
             </div>
           </div>
         </div>
@@ -140,10 +149,12 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useMap } from '@/modules/map/composables/useMap'
+import BookingButton from '@/modules/common/components/BookingButton.vue'
 
 const route = useRoute()
+const router = useRouter()
 const { mapContainer, map, vehicles, markers, initMap, fetchVehicles, setUserLocation, destroyMap, rawVehicles, userLocation, _internal, centerOnVehicle, setOnVehicleClick, setSelectedVehicle } = useMap()
 let userMarker: any = null
 
@@ -152,6 +163,11 @@ const selectedVehicle = ref<any | null>(null)
 const showSelectedPanel = ref(false)
 
 const refresh = () => fetchVehicles('/vehicles')
+
+const goToBookings = () => {
+  router.push('/bookings')
+}
+
 const locateMe = () => {
   if (!navigator.geolocation) return
   navigator.geolocation.getCurrentPosition(pos => {
