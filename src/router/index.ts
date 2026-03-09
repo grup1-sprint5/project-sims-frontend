@@ -10,6 +10,7 @@ import { vehicleRoutes } from '@/modules/admin/modules/vehicles/router'
 import { rolesRoutes } from '@/modules/admin/modules/roles/router'
 import { tenantRoutes } from '@/modules/admin/modules/tenants/router'
 import { clientRoutes } from '@/modules/client/router'
+import { ticketsRoutes } from '@/modules/tickets/router'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -23,6 +24,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'tickets/create', component: () => import('@/modules/tickets/pages/CreateTicketPage.vue') },
       { path: 'tickets/:id', component: () => import('@/modules/tickets/pages/TicketConversationPage.vue') },
       ...clientRoutes,
+      ...ticketsRoutes,
 
     ]
   },
