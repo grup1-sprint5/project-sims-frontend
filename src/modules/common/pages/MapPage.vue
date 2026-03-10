@@ -91,7 +91,6 @@
             <!-- Botó Reserva ara (sempre visible, disabled si no disponible) -->
             <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
               <BookingButton 
-                :vehicle-id="selectedVehicle.id"
                 :disabled="selectedVehicle.status !== 'available'"
                 :label="selectedVehicle.status === 'available' ? 'Reserva ara!' : 'No disponible'"
               />

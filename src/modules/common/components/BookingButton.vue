@@ -17,7 +17,6 @@ import { useRouter } from 'vue-router'
 interface Props {
   label?: string
   disabled?: boolean
-  vehicleId?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
