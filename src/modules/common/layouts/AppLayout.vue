@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-[100dvh] bg-gray-900">
     <!-- Top nav (tu template) -->
-    <Disclosure as="nav" class="border-b border-white/10 bg-gray-900" v-slot="{ open }">
+    <nav class="border-b border-white/10 bg-gray-900">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 justify-between">
           <div class="flex">
@@ -81,64 +81,13 @@
             </Menu>
           </div>
 
-          <!-- Mobile: language dropdown + hamburger -->
-          <div class="-mr-2 flex items-center gap-1 sm:hidden">
-            <Menu as="div" class="relative">
-              <MenuButton class="inline-flex items-center justify-center rounded-md bg-gray-900 p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:outline-indigo-500">
-                <GlobeAltIcon class="size-6" aria-hidden="true" />
-              </MenuButton>
-              <transition
-                enter-active-class="transition ease-out duration-200"
-                enter-from-class="transform opacity-0 scale-95"
-                enter-to-class="transform scale-100"
-                leave-active-class="transition ease-in duration-75"
-                leave-from-class="transform scale-100"
-                leave-to-class="transform opacity-0 scale-95"
-              >
-                <MenuItems class="absolute right-0 z-50 mt-2 w-32 origin-top-right rounded-md bg-gray-800 py-1 outline -outline-offset-1 outline-white/10">
-                  <MenuItem v-for="loc in locales" :key="loc.code" v-slot="{ active }">
-                    <button
-                      @click="setLocale(loc.code)"
-                      :class="[locale === loc.code ? 'text-indigo-400 font-semibold' : 'text-gray-300', active ? 'bg-white/5' : '', 'flex w-full items-center gap-2 px-4 py-2 text-sm']"
-                    >
-                      {{ loc.label }}
-                    </button>
-                  </MenuItem>
-                </MenuItems>
-              </transition>
-            </Menu>
-            <DisclosureButton class="relative inline-flex items-center justify-center rounded-md bg-gray-900 p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
-              <span class="absolute -inset-0.5"></span>
-              <span class="sr-only">Open main menu</span>
-              <Bars3Icon v-if="!open" class="block size-6" aria-hidden="true" />
-              <XMarkIcon v-else class="block size-6" aria-hidden="true" />
-            </DisclosureButton>
+          <!-- Mobile: language switcher -->
+          <div class="-mr-2 flex items-center sm:hidden">
+            <LanguageSwitcher />
           </div>
         </div>
       </div>
-
-      <!-- Mobile panel -->
-      <DisclosurePanel class="sm:hidden">
-        <div class="space-y-1 pt-2 pb-3">
-          <DisclosureButton
-            v-for="item in navigation"
-            :key="item.name"
-            as="div"
-          >
-            <RouterLink
-              :to="item.to"
-              class="flex items-center gap-2 border-l-4 py-2 pr-4 pl-3 text-base font-medium"
-              :class="isActive(item.to)
-                ? 'border-indigo-500 bg-indigo-600/10 text-indigo-300'
-                : 'border-transparent text-gray-400 hover:border-gray-500 hover:bg-white/5 hover:text-gray-200'"
-            >
-              <component :is="item.icon" class="size-5" aria-hidden="true" />
-              {{ item.name }}
-            </RouterLink>
-          </DisclosureButton>
-        </div>
-      </DisclosurePanel>
-    </Disclosure>
+    </nav>
 
     <!-- Content (MAP / PAGES) -->
     <main class="relative min-h-[calc(100dvh-4rem)] pb-16">
@@ -147,7 +96,7 @@
 
     <!-- Bottom nav (mobile-first) -->
     <nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-gray-900/90 backdrop-blur sm:hidden">
-      <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-5 text-center text-xs text-gray-300">
+      <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-4 text-center text-xs text-gray-300">
         <RouterLink to="/" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/') ? 'text-indigo-400' : 'hover:text-gray-100'">
           <MapIcon class="size-6" />
         </RouterLink>
@@ -156,9 +105,6 @@
         </RouterLink>
         <RouterLink to="/tickets" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/tickets') ? 'text-indigo-400' : 'hover:text-gray-100'">
           <TicketIcon class="size-6" />
-        </RouterLink>
-        <RouterLink to="/favoritos" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/favoritos') ? 'text-indigo-400' : 'hover:text-gray-100'">
-          <StarIcon class="size-6" />
         </RouterLink>
         <RouterLink to="/perfil" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/perfil') ? 'text-indigo-400' : 'hover:text-gray-100'">
           <UserIcon class="size-6" />
@@ -174,8 +120,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon, MapIcon, CalendarDaysIcon, TicketIcon, StarIcon, UserIcon, GlobeAltIcon } from '@heroicons/vue/24/outline'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, GlobeAltIcon } from '@heroicons/vue/24/outline'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
 import ChatWidget from '@/modules/client/components/ChatWidget.vue'
@@ -197,7 +143,6 @@ const navigation = computed(() => [
   { name: m.value.nav.map, to: '/vehicles-map', icon: MapIcon },
   { name: m.value.nav.bookings, to: '/bookings', icon: CalendarDaysIcon },
   { name: m.value.nav.tickets, to: '/tickets', icon: TicketIcon },
-  { name: m.value.nav.favorites, to: '/favoritos', icon: StarIcon },
   { name: m.value.nav.profile, to: '/perfil', icon: UserIcon },
 ])
 

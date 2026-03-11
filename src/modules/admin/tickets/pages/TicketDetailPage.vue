@@ -1,98 +1,215 @@
 <template>
-  <div class="p-4 max-w-3xl mx-auto">
-    <div class="flex items-center justify-between mb-3">
-      <div>
-        <h2 class="text-lg font-semibold">{{ ticket.subject || ticket.title || `Ticket #${ticket.id}` }}</h2>
-        <div class="text-xs text-gray-400">Usuario: {{ ticket.user?.name || ticket.user_name || '-' }} — {{ ticket.user?.email || ticket.user_email || '-' }}</div>
-      </div>
-      <div class="flex items-center gap-3">
-        <div class="text-sm text-gray-400">{{ ticket.created_at ? new Date(ticket.created_at).toLocaleString() : '' }}</div>
-        <select v-model="ticket.active" class="bg-gray-800 text-sm rounded px-2 py-1" @change="updateStatus">
-          <option :value="true">Active</option>
-          <option :value="false">Inactive</option>
-        </select>
-      </div>
+  <div class="px-4 sm:px-6 lg:px-8 max-w-3xl">
+
+    <!-- Back button -->
+    <div class="mb-6">
+      <router-link
+        to="/admin/tickets"
+        class="inline-flex items-center text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
+      >
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to tickets
+      </router-link>
     </div>
 
-    <div class="mb-3 text-sm text-gray-300">{{ ticket.description || ticket.message || '-' }}</div>
+    <!-- Loading -->
+    <div v-if="loading && !ticket" class="text-center text-gray-500 py-12">Loading ticket...</div>
 
-    <div class="space-y-2">
-      <div v-for="m in messages" :key="m.id" class="p-2 rounded bg-gray-800">
-        <div class="text-xs text-gray-400">{{ m.user?.name || (m.is_support ? 'Support' : 'User') }} • {{ m.created_at ? new Date(m.created_at).toLocaleString() : '' }}</div>
-        <div class="mt-1 text-sm text-gray-200">{{ m.content || m.message || m.body || '' }}</div>
-      </div>
-    </div>
+    <!-- Error -->
+    <div v-else-if="error" class="text-center text-red-500 py-8">{{ error }}</div>
 
-    <div class="mt-3">
-      <textarea v-model="reply" rows="3" class="w-full p-2 bg-gray-900 border border-white/10 rounded text-sm" placeholder="Reply..."></textarea>
-      <div class="text-right mt-2">
-        <button @click="sendReply" class="px-3 py-1 rounded bg-indigo-600 text-white text-sm">Send</button>
+    <template v-else-if="ticket">
+      <!-- Header -->
+      <div class="bg-white dark:bg-gray-900 shadow rounded-lg mb-6">
+        <div class="px-4 py-5 sm:px-6 flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+              {{ ticket.title }}
+            </h2>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              By <span class="font-medium">{{ ticket.user?.name || '-' }}</span>
+              ({{ ticket.user?.email || '-' }}) ·
+              {{ formatDate(ticket.created_at) }}
+            </p>
+            <p v-if="ticket.description" class="mt-2 text-sm text-gray-700 dark:text-gray-300">
+              {{ ticket.description }}
+            </p>
+          </div>
+
+          <!-- Status selector + delete -->
+          <div class="flex items-center gap-3 shrink-0">
+            <select
+              :value="ticket.active"
+              @change="toggleStatus($event)"
+              class="rounded-md border-0 px-2 py-1 text-sm shadow-sm ring-1 ring-inset ring-gray-300 dark:bg-gray-800 dark:text-white dark:ring-gray-700"
+            >
+              <option :value="true">Active</option>
+              <option :value="false">Closed</option>
+            </select>
+
+            <button
+              @click="confirmingDelete = true"
+              class="inline-flex items-center gap-1 rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-500"
+            >
+              <span class="material-icons text-base">delete</span>
+              Delete
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+
+      <!-- Conversation -->
+      <div class="space-y-4 mb-6">
+        <p v-if="messages.length === 0" class="text-sm text-gray-400 text-center py-4">
+          No messages yet.
+        </p>
+
+        <div
+          v-for="m in messages"
+          :key="m.id"
+          :class="[
+            'flex gap-2',
+            m.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row',
+          ]"
+        >
+          <!-- Avatar initials -->
+          <div
+            :class="[
+              'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white select-none',
+              m.user_id === currentUserId ? 'bg-indigo-600' : 'bg-gray-600',
+            ]"
+          >
+            {{ initials(m.user?.name) }}
+          </div>
+
+          <!-- Bubble -->
+          <div :class="m.user_id === currentUserId ? 'items-end' : 'items-start'" class="flex flex-col max-w-[75%]">
+            <div class="flex items-baseline gap-2 mb-1" :class="m.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row'">
+              <span class="text-xs font-semibold" :class="m.user_id === currentUserId ? 'text-indigo-400' : 'text-gray-300'">
+                {{ m.user?.name || 'Unknown' }}
+              </span>
+              <span class="text-xs text-gray-500">{{ formatDate(m.created_at) }}</span>
+            </div>
+            <div
+              :class="[
+                'px-4 py-2.5 rounded-2xl text-sm whitespace-pre-wrap break-words shadow-sm',
+                m.user_id === currentUserId
+                  ? 'bg-indigo-600 text-white rounded-tr-sm'
+                  : 'bg-gray-800 text-gray-100 rounded-tl-sm',
+              ]"
+            >
+              {{ m.message }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reply box -->
+      <div class="bg-white dark:bg-gray-900 shadow rounded-lg px-4 py-4">
+        <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-2">Reply</h3>
+        <textarea
+          v-model="replyText"
+          rows="4"
+          class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
+          placeholder="Write your reply..."
+        />
+        <div class="mt-3 flex justify-end">
+          <button
+            :disabled="sending || !replyText.trim()"
+            @click="handleReply"
+            class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ sending ? 'Sending…' : 'Send reply' }}
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Delete confirmation -->
+    <ConfirmDialog
+      :visible="confirmingDelete"
+      title="Delete ticket"
+      :message="`Are you sure you want to permanently delete this ticket? This action cannot be undone.`"
+      @confirm="handleDelete"
+      @cancel="confirmingDelete = false"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import apiClient from '@/services/api'
-import showToast from '@/modules/common/composables/useToast'
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useTickets } from '@/modules/tickets/composables/useTickets'
+import { useToast } from '@/modules/common/composables/useToast'
+import { useAuth } from '@/modules/auth/composables/useAuth'
+import type { TicketMessage } from '@/modules/tickets/interfaces/ticket.interface'
+import ConfirmDialog from '@/modules/admin/components/ConfirmDialog.vue'
 
 const route = useRoute()
-const id = route.params.id as string
+const router = useRouter()
+const toast = useToast()
+const { user: authUser } = useAuth()
+const { ticket, loading, error, getTicket, updateTicket, deleteTicket, sendMessage } = useTickets()
 
-const ticket = ref<any>({})
-const messages = ref<any[]>([])
-const reply = ref('')
-const loading = ref(false)
+const id = Number(route.params.id)
+const currentUserId = computed(() => authUser.value?.id ?? null)
+const initials = (name?: string) =>
+  (name ?? '?').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+const replyText = ref('')
+const sending = ref(false)
+const confirmingDelete = ref(false)
+const messages = ref<TicketMessage[]>([])
 
 const load = async () => {
-  loading.value = true
   try {
-    const res = await apiClient.get(`/tickets/${id}`)
-    const data = res.data.data ?? res.data
-    ticket.value = data
-    // normalize active as boolean
-    ticket.value.active = !!(data.active)
-    messages.value = data.messages ?? data.data?.messages ?? []
-  } catch (e) {
-    console.error(e)
-    showToast('Error loading ticket')
+    const data = await getTicket(id)
+    messages.value = data.messages ?? []
+  } catch {
+    toast.error('Error loading ticket')
+  }
+}
+
+const toggleStatus = async (event: Event) => {
+  const active = (event.target as HTMLSelectElement).value === 'true'
+  try {
+    await updateTicket(id, { active })
+    toast.success('Status updated')
+  } catch {
+    toast.error('Error updating status')
+  }
+}
+
+const handleReply = async () => {
+  if (!replyText.value.trim()) return
+  sending.value = true
+  try {
+    const msg = await sendMessage(id, replyText.value.trim())
+    messages.value.push(msg)
+    replyText.value = ''
+    toast.success('Reply sent')
+  } catch (err: any) {
+    const detail = err?.response?.data?.message || 'Error sending message'
+    toast.error(detail)
   } finally {
-    loading.value = false
+    sending.value = false
   }
 }
 
-const sendReply = async () => {
-  if (!reply.value) return
+const handleDelete = async () => {
   try {
-    const payload = { ticket_id: id, message: reply.value }
-    const res = await apiClient.post(`/tickets/${id}/messages`, payload)
-    const newMsg = res.data.data ?? res.data
-    if (newMsg) messages.value.push(newMsg)
-    reply.value = ''
-    showToast('Message sent')
-  } catch (e: any) {
-    console.error(e)
-    const resp = e?.response
-    if (resp?.data) showToast(JSON.stringify(resp.data))
-    else showToast('Error sending message')
+    await deleteTicket(id)
+    toast.success('Ticket deleted')
+    router.push('/admin/tickets')
+  } catch {
+    toast.error('Error deleting ticket')
+    confirmingDelete.value = false
   }
 }
 
-const updateStatus = async () => {
-  try {
-    const payload = { active: !!ticket.value.active }
-    const res = await apiClient.put(`/tickets/${id}`, payload)
-    ticket.value = res.data.data ?? res.data ?? ticket.value
-    // normalize
-    ticket.value.active = !!(ticket.value.active)
-    showToast('Status updated')
-  } catch (e) {
-    console.error(e)
-    showToast('Error updating status')
-  }
-}
+const formatDate = (iso: string) =>
+  iso ? new Date(iso).toLocaleString() : '-'
 
 onMounted(load)
 </script>
