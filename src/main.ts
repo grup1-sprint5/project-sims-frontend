@@ -9,7 +9,7 @@ const app = createApp(App)
 const pinia = createPinia()
 
 app
-	.use(pinia)
-	.use(router)
-	.use(Vue3Toastify)
-	.mount('#app')
+  .use(pinia)
+  .use(router)
+  .use(Vue3Toastify)
+  .mount('#app')

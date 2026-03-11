@@ -2,6 +2,18 @@
 
 This template should help get you started developing with Vue 3 in Vite.
 
+## Tech Stack
+
+- **Vue 3** - Progressive JavaScript Framework
+- **TypeScript** - Typed superset of JavaScript
+- **Vite** - Next Generation Frontend Tooling
+- **Pinia** - Official state management for Vue 3
+- **Vue Router** - Official router for Vue.js
+- **Tailwind CSS** - Utility-first CSS framework
+- **Leaflet** - Interactive maps
+- **Axios** - HTTP client
+- **Vue3-Toastify** - Toast notifications
+
 ## Recommended IDE Setup
 
 [VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
@@ -40,3 +52,26 @@ npm run dev
 ```sh
 npm run build
 ```
+
+## State Management with Pinia
+
+This project uses **Pinia** as the official state management solution for Vue 3.
+
+### Stores Available
+
+- **vehicleStore** (`src/stores/vehicleStore.ts`) - Manages vehicles state
+  - Actions: `fetchVehicles`, `fetchVehicleById`, `selectVehicle`
+  - Getters: `availableVehicles`, `occupiedVehicles`, `runningVehicles`
+
+- **bookingStore** (`src/stores/bookingStore.ts`) - Manages bookings/reservations state
+  - Actions: `fetchBookings`, `createBooking`, `updateBooking`, `deleteBooking`, `cancelBooking`, `calculatePrice`
+  - Getters: `pendingBookings`, `activeBookings`, `completedBookings`, `cancelledBookings`
+
+### Why Pinia?
+
+- ✅ Official Vue 3 state management
+- ✅ Better TypeScript support
+- ✅ Simpler API with less boilerplate
+- ✅ Composition API ready
+- ✅ Automatic modules without registration
+- ✅ Lightweight and performance optimized

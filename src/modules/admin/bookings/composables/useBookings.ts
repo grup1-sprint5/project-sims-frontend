@@ -68,6 +68,12 @@ export function useBookings() {
 
   const deleteBooking = async (id: number) => {
     try {
+      // Si la reserva està activa o pending, primer canviem l'estat a cancelled
+      const booking = bookings.value.find(b => b.id === id)
+      if (booking && (booking.status === 'active' || booking.status === 'pending')) {
+        await api.put(`/admin/reservations/${id}`, { status: 'cancelled' })
+      }
+      
       await api.delete(`/admin/reservations/${id}`)
     } catch (err: any) {
       throw err?.response?.data?.message || 'Error deleting booking'
