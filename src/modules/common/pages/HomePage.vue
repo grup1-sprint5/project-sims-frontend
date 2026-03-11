@@ -25,7 +25,7 @@ import { useMap } from '@/modules/map/composables/useMap'
 const router = useRouter()
 const openMap = () => router.push('/vehicles-map')
 
-const { map, mapContainer, initMap, destroyMap, fetchVehicles, addVehicleMarkers, rawVehicles } = useMap()
+const { map, mapContainer, initMap, destroyMap, fetchVehicles, rawVehicles } = useMap()
 const miniMap = ref<HTMLElement | null>(null)
 const nearbyAvailable = ref<any[]>([])
 
@@ -46,8 +46,8 @@ function computeDistancesAndFilter() {
       const d = R * c
       return { ...v, distanceMeters: d }
     })
-    .filter(Boolean)
-    .filter(v => !v.mongo_active) // available means postgres not occupied (based on icon logic)
+    .filter((v): v is NonNullable<typeof v> => v !== null)
+    .filter(v => v.status === 'available')
     .sort((a, b) => a.distanceMeters - b.distanceMeters)
     .slice(0, 10)
 }
@@ -58,7 +58,6 @@ onMounted(async () => {
   initMap()
   try {
     await fetchVehicles('/vehicles-map')
-    addVehicleMarkers()
     // compute after markers added
     setTimeout(() => computeDistancesAndFilter(), 400)
   } catch (e) {

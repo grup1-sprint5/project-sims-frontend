@@ -14,6 +14,8 @@ export interface Vehicle {
   status: 'available' | 'occupied' | 'running'
   tenant_id?: number
   active?: boolean
+  postgres_active?: boolean
+  mongo_active?: boolean
   created_at?: string
   updated_at?: string
 }
