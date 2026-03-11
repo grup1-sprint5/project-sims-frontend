@@ -210,6 +210,30 @@ export const useBookingStore = defineStore('booking', () => {
     }
   }
 
+  // Retorna les reserves actives/pending d'un vehicle concret
+  async function fetchVehicleBookings(vehicleId: number): Promise<Booking[]> {
+    try {
+      const response = await apiClient.get('/reservations')
+      const all: Booking[] = Array.isArray(response.data)
+        ? response.data
+        : (response.data.data || [])
+      const now = Date.now()
+      const twoHoursMs = 2 * 60 * 60 * 1000
+      return all.filter(b => {
+        if (b.vehicle_id !== vehicleId) return false
+        if (b.status === 'active') return true
+        if (['pending', 'confirmed'].includes(b.status)) {
+          const startsIn = new Date(b.scheduled_start).getTime() - now
+          return startsIn <= twoHoursMs
+        }
+        return false
+      })
+    } catch (err: any) {
+      console.error('Error fetching vehicle bookings:', err)
+      return []
+    }
+  }
+
   function confirmBooking(id: number) {
     return updateBooking(id, { status: 'confirmed' })
   }
@@ -245,6 +269,7 @@ export const useBookingStore = defineStore('booking', () => {
     // Actions
     fetchBookings,
     fetchBookingById,
+    fetchVehicleBookings,
     createBooking,
     updateBooking,
     deleteBooking,

@@ -87,21 +87,66 @@ const createVehicleIcon = (status: 'available' | 'occupied' | 'running', isSelec
 }
 
 const rawVehicles = ref<Vehicle[]>([])
+// IDs de vehicles amb reserva activa/pendent detectats des del frontend
+const bookedVehicleIds = ref<Set<number>>(new Set())
+
+const markVehicleAsBooked = (vehicleId: number, booked: boolean) => {
+  const newSet = new Set(bookedVehicleIds.value)
+  if (booked) {
+    newSet.add(vehicleId)
+  } else {
+    newSet.delete(vehicleId)
+  }
+  bookedVehicleIds.value = newSet
+  // Actualitzar la icona del marcador si existeix
+  const marker = markers.get(vehicleId) as any
+  const vehicle = rawVehicles.value.find(v => v.id === vehicleId)
+  if (marker && vehicle) {
+    const isSelected = vehicle.id === selectedVehicleId
+    const effectiveStatus = newSet.has(vehicleId) ? 'occupied' : vehicle.status
+    try { marker.setIcon(createVehicleIcon(effectiveStatus, isSelected)) } catch { /* ignore */ }
+  }
+}
 
 const fetchVehicles = async (endpoint = '/vehicles') => {
   try {
-    const response = await apiClient.get(endpoint)
-    console.log('Response from backend:', response.data)
-    
+    const [vehiclesResponse, reservationsResponse] = await Promise.all([
+      apiClient.get(endpoint),
+      apiClient.get('/reservations').catch(() => ({ data: [] }))
+    ])
+
     // El backend pot retornar un array directament o un objecte amb data
-    const vehiclesData = Array.isArray(response.data) ? response.data : (response.data.data || [])
+    const vehiclesData = Array.isArray(vehiclesResponse.data) ? vehiclesResponse.data : (vehiclesResponse.data.data || [])
     
     if (!Array.isArray(vehiclesData)) {
-      console.error('Backend did not return an array:', response.data)
+      console.error('Backend did not return an array:', vehiclesResponse.data)
       rawVehicles.value = []
       return
     }
     
+    // Calcular quins vehicle_ids tenen reserva activa/pendent IMMINENT
+    // Un vehicle es considera ocupat si:
+    //   - té una reserva 'active' (vehicle en ús ara mateix)
+    //   - té una reserva 'pending'/'confirmed' que comença en menys de 2 hores
+    const reservationsData: any[] = Array.isArray(reservationsResponse.data)
+      ? reservationsResponse.data
+      : (reservationsResponse.data.data || [])
+    const now = Date.now()
+    const twoHoursMs = 2 * 60 * 60 * 1000
+    const occupiedIds = new Set<number>(
+      reservationsData
+        .filter((r: any) => {
+          if (r.status === 'active') return true
+          if (['pending', 'confirmed'].includes(r.status)) {
+            const startsIn = new Date(r.scheduled_start).getTime() - now
+            return startsIn <= twoHoursMs
+          }
+          return false
+        })
+        .map((r: any) => r.vehicle_id)
+    )
+    bookedVehicleIds.value = occupiedIds
+
     // El backend retorna vehicles filtrats per tenant automàticament
     rawVehicles.value = vehiclesData.map((v: any) => ({
       id: v.id,
@@ -118,8 +163,18 @@ const fetchVehicles = async (endpoint = '/vehicles') => {
       updated_at: v.updated_at,
     }))
 
-    console.log(`Loaded ${rawVehicles.value.length} vehicles`)
+    console.log(`Loaded ${rawVehicles.value.length} vehicles, ${occupiedIds.size} with active bookings`)
     applyFiltersAndMarkers()
+
+    // Actualitzar icones dels marcadors ja existents amb l'estat real de reserva
+    rawVehicles.value.forEach(v => {
+      const marker = markers.get(v.id) as any
+      if (marker) {
+        const isSelected = v.id === selectedVehicleId
+        const effectiveStatus = occupiedIds.has(v.id) ? 'occupied' : v.status
+        try { marker.setIcon(createVehicleIcon(effectiveStatus, isSelected)) } catch { /* ignore */ }
+      }
+    })
   } catch (error) {
     console.error('Error fetching vehicles:', error)
     rawVehicles.value = []
@@ -173,8 +228,9 @@ const applyFiltersAndMarkers = () => {
     if (v.latitude == null || v.longitude == null) return
     if (markers.has(v.id)) return
     
+    const effectiveStatus = bookedVehicleIds.value.has(v.id) ? 'occupied' : v.status
     const marker = L.marker([v.latitude, v.longitude], { 
-      icon: createVehicleIcon(v.status, false) 
+      icon: createVehicleIcon(effectiveStatus, false) 
     }).addTo(map.value as any)
     
     marker.on('click', () => {
@@ -246,6 +302,11 @@ const setOnVehicleClick = (callback: (vehicle: Vehicle) => void) => {
   onVehicleClickCallback = callback
 }
 
+const getEffectiveStatus = (vehicle: Vehicle): 'available' | 'occupied' | 'running' => {
+  if (bookedVehicleIds.value.has(vehicle.id)) return 'occupied'
+  return vehicle.status
+}
+
 const setSelectedVehicle = (vehicleId: number | null) => {
   const previousSelectedId = selectedVehicleId
   selectedVehicleId = vehicleId
@@ -256,7 +317,7 @@ const setSelectedVehicle = (vehicleId: number | null) => {
     const prevVehicle = rawVehicles.value.find(v => v.id === previousSelectedId)
     if (prevVehicle) {
       try {
-        prevMarker.setIcon(createVehicleIcon(prevVehicle.status, false))
+        prevMarker.setIcon(createVehicleIcon(getEffectiveStatus(prevVehicle), false))
       } catch (e) { /* ignore */ }
     }
   }
@@ -266,7 +327,7 @@ const setSelectedVehicle = (vehicleId: number | null) => {
     const newVehicle = rawVehicles.value.find(v => v.id === vehicleId)
     if (newVehicle) {
       try {
-        newMarker.setIcon(createVehicleIcon(newVehicle.status, true))
+        newMarker.setIcon(createVehicleIcon(getEffectiveStatus(newVehicle), true))
       } catch (e) { /* ignore */ }
     }
   }
@@ -301,6 +362,8 @@ export function useMap() {
     destroyMap,
     setOnVehicleClick,
     setSelectedVehicle,
+    markVehicleAsBooked,
+    bookedVehicleIds,
     // new api
     rawVehicles,
     searchQuery,
