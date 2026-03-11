@@ -693,14 +693,11 @@ onUnmounted(() => {
   border: 2px solid white;
 }
 
-/* Ensure Leaflet map and all its panes stay below the app sidebar */
-.leaflet-container,
-.leaflet-control-container,
-.leaflet-map-pane,
-.leaflet-pane,
-.leaflet-overlay-pane,
-.leaflet-tile-pane,
-.leaflet-shadow-pane {
+/* Ensure Leaflet map container stays below the app sidebar overlay elements.
+   IMPORTANT: Do NOT override z-index on leaflet-pane, leaflet-map-pane or any
+   inner pane — Leaflet uses transform+position internally to place markers and
+   overriding those breaks marker positioning (icons stay fixed on screen). */
+.leaflet-container {
   z-index: 0 !important;
 }
 /* Legend styling */
