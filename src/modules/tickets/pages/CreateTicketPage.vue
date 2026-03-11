@@ -36,8 +36,8 @@ const createTicket = async () => {
   } catch (e: any) {
     console.error(e)
     const resp = e?.response
-    if (resp?.data) showToast(JSON.stringify(resp.data), 'error')
-    else showToast('Error creating ticket', 'error')
+    if (resp?.data) showToast(JSON.stringify(resp.data))
+    else showToast('Error creating ticket')
   } finally {
     creating.value = false
   }

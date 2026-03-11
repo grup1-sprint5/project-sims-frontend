@@ -57,7 +57,7 @@ const load = async () => {
     messages.value = data.messages ?? data.data?.messages ?? []
   } catch (e) {
     console.error(e)
-    showToast('Error loading ticket', 'error')
+    showToast('Error loading ticket')
   } finally {
     loading.value = false
   }
@@ -75,8 +75,8 @@ const sendReply = async () => {
   } catch (e: any) {
     console.error(e)
     const resp = e?.response
-    if (resp?.data) showToast(JSON.stringify(resp.data), 'error')
-    else showToast('Error sending message', 'error')
+    if (resp?.data) showToast(JSON.stringify(resp.data))
+    else showToast('Error sending message')
   }
 }
 
@@ -90,7 +90,7 @@ const updateStatus = async () => {
     showToast('Status updated')
   } catch (e) {
     console.error(e)
-    showToast('Error updating status', 'error')
+    showToast('Error updating status')
   }
 }
 

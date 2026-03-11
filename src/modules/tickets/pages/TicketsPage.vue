@@ -136,7 +136,7 @@ const load = async () => {
     tickets.value = res.data.data ?? res.data ?? []
   } catch (e) {
     console.error(e)
-    showToast('Error loading your tickets', 'error')
+    showToast('Error loading your tickets')
   } finally {
     loading.value = false
   }
@@ -156,8 +156,8 @@ const createTicket = async () => {
   } catch (e: any) {
     console.error(e)
     const resp = e?.response
-    if (resp?.data) showToast(JSON.stringify(resp.data), 'error')
-    else showToast('Error creating ticket', 'error')
+    if (resp?.data) showToast(JSON.stringify(resp.data))
+    else showToast('Error creating ticket')
   } finally {
     creating.value = false
   }
@@ -175,7 +175,7 @@ const toggle = async (ticketId: string | number) => {
       details.value = { ...(details.value || {}), [idStr]: data.messages ?? data.data?.messages ?? [] }
     } catch (e) {
       console.error(e)
-      showToast('Error loading conversation', 'error')
+      showToast('Error loading conversation')
     } finally {
       loadingDetails.value = { ...(loadingDetails.value || {}), [idStr]: false }
     }
@@ -199,8 +199,8 @@ const sendMessage = async (ticketId: string | number) => {
   } catch (e: any) {
     console.error(e)
     const resp = e?.response
-    if (resp?.data) showToast(JSON.stringify(resp.data), 'error')
-    else showToast('Error sending message', 'error')
+    if (resp?.data) showToast(JSON.stringify(resp.data))
+    else showToast('Error sending message')
   }
 }
 

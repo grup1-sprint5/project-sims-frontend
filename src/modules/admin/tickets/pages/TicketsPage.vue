@@ -140,7 +140,7 @@ const load = async () => {
     tickets.value = res.data.data ?? res.data ?? []
   } catch (e: any) {
     console.error(e)
-    showToast('Error loading admin tickets', 'error')
+    showToast('Error loading admin tickets')
   } finally {
     loading.value = false
   }
@@ -155,7 +155,7 @@ const loadDetails = async (ticketId: string | number) => {
     details.value = { ...(details.value || {}), [ticketId]: data.messages ?? data.data?.messages ?? [] }
   } catch (e) {
     console.error(e)
-    showToast('Error loading ticket conversation', 'error')
+    showToast('Error loading ticket conversation')
   } finally {
     loadingDetails.value = { ...(loadingDetails.value || {}), [ticketId]: false }
   }
@@ -179,8 +179,8 @@ const sendReply = async (ticketId: string | number) => {
   } catch (e: any) {
     console.error(e)
     const resp = e?.response
-    if (resp?.data) showToast(JSON.stringify(resp.data), 'error')
-    else showToast('Error sending message', 'error')
+    if (resp?.data) showToast(JSON.stringify(resp.data))
+    else showToast('Error sending message')
   }
 }
 

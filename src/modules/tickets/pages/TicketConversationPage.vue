@@ -52,7 +52,7 @@ const load = async () => {
     messages.value = data.messages ?? data.data?.messages ?? []
   } catch (e) {
     console.error(e)
-    showToast('Error loading conversation', 'error')
+    showToast('Error loading conversation')
   } finally {
     loading.value = false
   }
@@ -77,15 +77,15 @@ const sendMessage = async () => {
       const errors = resp.data.errors || resp.data
       console.error('Validation errors creating ticket message:', errors)
       const msg = typeof errors === 'string' ? errors : Object.values(errors).flat().join(' | ')
-      showToast(msg, 'error')
+      showToast(msg)
     } else if (resp?.data) {
       // fallback: show the whole response body so the developer can see expected fields
       const bodyMsg = typeof resp.data === 'string' ? resp.data : JSON.stringify(resp.data)
-      showToast(bodyMsg, 'error')
+      showToast(bodyMsg)
       console.error(resp.data)
     } else {
       console.error(e)
-      showToast('Error sending message', 'error')
+      showToast('Error sending message')
     }
   } finally {
     sending.value = false
@@ -99,7 +99,7 @@ const deleteMessage = async (messageId: number | string) => {
     showToast('Message deleted')
   } catch (e) {
     console.error(e)
-    showToast('Error deleting message', 'error')
+    showToast('Error deleting message')
   }
 }
 
