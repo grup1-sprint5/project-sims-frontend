@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-[100dvh] bg-gray-900">
     <!-- Top nav (tu template) -->
-    <Disclosure as="nav" class="border-b border-white/10 bg-gray-900" v-slot="{ open }">
+    <nav class="border-b border-white/10 bg-gray-900">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 justify-between">
           <div class="flex">
@@ -32,7 +32,8 @@
             </div>
           </div>
 
-          <div class="hidden sm:ml-6 sm:flex sm:items-center">
+          <div class="hidden sm:ml-6 sm:flex sm:items-center gap-3">
+            <LanguageSwitcher />
             <button type="button" class="relative rounded-full p-1 text-gray-400 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
               <span class="absolute -inset-1.5"></span>
               <span class="sr-only">View notifications</span>
@@ -80,40 +81,13 @@
             </Menu>
           </div>
 
-          <!-- Mobile hamburger -->
+          <!-- Mobile: language switcher -->
           <div class="-mr-2 flex items-center sm:hidden">
-            <DisclosureButton class="relative inline-flex items-center justify-center rounded-md bg-gray-900 p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
-              <span class="absolute -inset-0.5"></span>
-              <span class="sr-only">Open main menu</span>
-              <Bars3Icon v-if="!open" class="block size-6" aria-hidden="true" />
-              <XMarkIcon v-else class="block size-6" aria-hidden="true" />
-            </DisclosureButton>
+            <LanguageSwitcher />
           </div>
         </div>
       </div>
-
-      <!-- Mobile panel -->
-      <DisclosurePanel class="sm:hidden">
-        <div class="space-y-1 pt-2 pb-3">
-          <DisclosureButton
-            v-for="item in navigation"
-            :key="item.name"
-            as="div"
-          >
-            <RouterLink
-              :to="item.to"
-              class="flex items-center gap-2 border-l-4 py-2 pr-4 pl-3 text-base font-medium"
-              :class="isActive(item.to)
-                ? 'border-indigo-500 bg-indigo-600/10 text-indigo-300'
-                : 'border-transparent text-gray-400 hover:border-gray-500 hover:bg-white/5 hover:text-gray-200'"
-            >
-              <component :is="item.icon" class="size-5" aria-hidden="true" />
-              {{ item.name }}
-            </RouterLink>
-          </DisclosureButton>
-        </div>
-      </DisclosurePanel>
-    </Disclosure>
+    </nav>
 
     <!-- Content (MAP / PAGES) -->
     <main class="relative min-h-[calc(100dvh-4rem)] pb-16">
@@ -122,7 +96,7 @@
 
     <!-- Bottom nav (mobile-first) -->
     <nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-gray-900/90 backdrop-blur sm:hidden">
-      <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-5 text-center text-xs text-gray-300">
+      <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-4 text-center text-xs text-gray-300">
         <RouterLink to="/" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/') ? 'text-indigo-400' : 'hover:text-gray-100'">
           <MapIcon class="size-6" />
         </RouterLink>
@@ -131,9 +105,6 @@
         </RouterLink>
         <RouterLink to="/tickets" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/tickets') ? 'text-indigo-400' : 'hover:text-gray-100'">
           <TicketIcon class="size-6" />
-        </RouterLink>
-        <RouterLink to="/favoritos" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/favoritos') ? 'text-indigo-400' : 'hover:text-gray-100'">
-          <StarIcon class="size-6" />
         </RouterLink>
         <RouterLink to="/perfil" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/perfil') ? 'text-indigo-400' : 'hover:text-gray-100'">
           <UserIcon class="size-6" />
@@ -149,12 +120,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon, MapIcon, CalendarDaysIcon, TicketIcon, StarIcon, UserIcon } from '@heroicons/vue/24/outline'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, GlobeAltIcon } from '@heroicons/vue/24/outline'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
 import ChatWidget from '@/modules/client/components/ChatWidget.vue'
+import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
+import { useI18n } from '@/i18n'
 
+const { m, locale, setLocale, locales } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { logout, user: authUser } = useAuth()
@@ -165,26 +139,25 @@ const userInitials = computed(() => {
   return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?'
 })
 
-const navigation = [
-  { name: 'Map', to: '/vehicles-map', icon: MapIcon },
-  { name: 'Bookings', to: '/bookings', icon: CalendarDaysIcon },
-  { name: 'Tickets', to: '/tickets', icon: TicketIcon },
-  { name: 'Favorites', to: '/favoritos', icon: StarIcon },
-  { name: 'Profile', to: '/perfil', icon: UserIcon },
-]
+const navigation = computed(() => [
+  { name: m.value.nav.map, to: '/vehicles-map', icon: MapIcon },
+  { name: m.value.nav.bookings, to: '/bookings', icon: CalendarDaysIcon },
+  { name: m.value.nav.tickets, to: '/tickets', icon: TicketIcon },
+  { name: m.value.nav.profile, to: '/perfil', icon: UserIcon },
+])
 
-const userNavigation = [
-  { name: 'Your profile', to: '/perfil', type: 'link' },
-  { name: 'Settings', to: '/settings', type: 'link' },
-  { name: 'Sign out', type: 'logout' },
-]
+const userNavigation = computed(() => [
+  { name: m.value.userMenu.yourProfile, to: '/perfil', type: 'link' },
+  { name: m.value.userMenu.settings, to: '/settings', type: 'link' },
+  { name: m.value.userMenu.signOut, to: '', type: 'logout' },
+])
 
 const handleLogout = async () => {
   try {
     await logout()
-    showToast('Logged out successfully')
+    showToast(m.value.userMenu.loggedOut)
   } catch (_) {
-    // El propio useAuth ya muestra el error si falla
+    // El propio useAuth ja mostra l'error si falla
   } finally {
     router.push('/login')
   }

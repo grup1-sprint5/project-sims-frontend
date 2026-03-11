@@ -408,7 +408,7 @@ function computeNearbyAvailable() {
       const d = R * c
       return { ...v, distanceMeters: d }
     })
-    .filter(Boolean)
+    .filter((v): v is NonNullable<typeof v> => v !== null)
     .filter(v => v.distanceMeters <= 2000) // Mostra tots els vehicles dins de 2km
     .sort((a, b) => a.distanceMeters - b.distanceMeters)
     .slice(0, 10)
