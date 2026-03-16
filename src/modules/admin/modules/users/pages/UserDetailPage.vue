@@ -70,8 +70,8 @@
           <div class="sm:col-span-1">
             <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Role</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-              <span v-if="user.roles && user.roles.length > 0" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" :class="user.roles[0].name === 'Admin' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'">
-                {{ user.roles[0].name }}
+              <span v-if="user.roles && user.roles.length > 0" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" :class="user.roles[0]?.name === 'Admin' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'">
+                {{ user.roles[0]?.name }}
               </span>
               <span v-else class="text-gray-400">-</span>
             </dd>

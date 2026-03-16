@@ -31,11 +31,11 @@ export const usePermissions = () => {
         const name = perm.name || ''
 
         if (name.endsWith('.view')) {
-          modules[group.module].view = perm
+          modules[group.module]!.view = perm
         } else if (name.endsWith('.manage') || name.endsWith('.create') || name.endsWith('.edit')) {
-          modules[group.module].manage = perm
+          modules[group.module]!.manage = perm
         } else if (name.endsWith('.delete')) {
-          modules[group.module].delete = perm
+          modules[group.module]!.delete = perm
         }
       })
     })
@@ -95,13 +95,13 @@ export const usePermissions = () => {
     permissionModules.value.forEach((module) => {
       result[module.module] = []
       if (module.view && rolePermissionIds.includes(module.view.id)) {
-        result[module.module].push(module.view.id)
+        result[module.module]!.push(module.view.id)
       }
       if (module.manage && rolePermissionIds.includes(module.manage.id)) {
-        result[module.module].push(module.manage.id)
+        result[module.module]!.push(module.manage.id)
       }
       if (module.delete && rolePermissionIds.includes(module.delete.id)) {
-        result[module.module].push(module.delete.id)
+        result[module.module]!.push(module.delete.id)
       }
     })
 
