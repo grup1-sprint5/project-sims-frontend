@@ -133,6 +133,8 @@ import {
   TicketIcon,
   MapIcon,
   BuildingOfficeIcon,
+  Squares2X2Icon,
+  RectangleGroupIcon,
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
 
@@ -147,18 +149,23 @@ const navigationItems = [
   { key: 'bookings', href: '/admin/bookings', icon: CalendarDaysIcon },
   { key: 'vehicles', href: '/admin/vehicles', icon: TruckIcon },
   { key: 'tenants', href: '/admin/tenants', icon: BuildingOfficeIcon },
+  { key: 'superAdmin', href: '/admin/super-admin', icon: Squares2X2Icon, superAdminOnly: true },
+  { key: 'tenantWorkspace', href: '/admin/tenant-workspace', icon: RectangleGroupIcon, superAdminOnly: true },
   { key: 'tickets', href: '/admin/tickets', icon: TicketIcon },
 ]
 
-const navigation = computed(() =>
-  navigationItems.map(item => ({
-    ...item,
-    name: m.value.adminNav[item.key as keyof typeof m.value.adminNav],
-    current: route.path === item.href || (item.href !== '/admin' && route.path.startsWith(item.href))
-  }))
-)
-
 const sidebarOpen = ref(false)
 const { user, isLoading } = useAuth()
-const isAdmin = computed(() => !!(user.value && user.value.roles && user.value.roles.some((r: any) => (r.name || '').toLowerCase() === 'admin')))
+const isAdmin = computed(() => !!(user.value && user.value.roles && user.value.roles.some((r: any) => (r.name || '').toLowerCase().includes('admin'))))
+const isSuperAdmin = computed(() => !!(user.value && user.value.roles && user.value.roles.some((r: any) => (r.name || '').toLowerCase().includes('superadmin'))))
+
+const navigation = computed(() =>
+  navigationItems
+    .filter((item) => !item.superAdminOnly || isSuperAdmin.value)
+    .map(item => ({
+      ...item,
+      name: m.value.adminNav[item.key as keyof typeof m.value.adminNav],
+      current: route.path === item.href || (item.href !== '/admin' && route.path.startsWith(item.href))
+    }))
+)
 </script>
