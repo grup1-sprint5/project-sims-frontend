@@ -122,7 +122,7 @@
 
     <!-- Bottom nav (mobile-first) -->
     <nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-gray-900/90 backdrop-blur sm:hidden">
-      <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-5 text-center text-xs text-gray-300">
+      <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-6 text-center text-xs text-gray-300">
         <RouterLink to="/" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/') ? 'text-indigo-400' : 'hover:text-gray-100'">
           <MapIcon class="size-6" />
         </RouterLink>
@@ -131,6 +131,9 @@
         </RouterLink>
         <RouterLink to="/tickets" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/tickets') ? 'text-indigo-400' : 'hover:text-gray-100'">
           <TicketIcon class="size-6" />
+        </RouterLink>
+        <RouterLink to="/sensors" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/sensors') ? 'text-indigo-400' : 'hover:text-gray-100'">
+          <WifiIcon class="size-6" />
         </RouterLink>
         <RouterLink to="/favoritos" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/favoritos') ? 'text-indigo-400' : 'hover:text-gray-100'">
           <StarIcon class="size-6" />
@@ -150,7 +153,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon, MapIcon, CalendarDaysIcon, TicketIcon, StarIcon, UserIcon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, BellIcon, XMarkIcon, MapIcon, CalendarDaysIcon, TicketIcon, StarIcon, UserIcon, WifiIcon } from '@heroicons/vue/24/outline'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
 import ChatWidget from '@/modules/client/components/ChatWidget.vue'
@@ -169,6 +172,7 @@ const navigation = [
   { name: 'Map', to: '/vehicles-map', icon: MapIcon },
   { name: 'Bookings', to: '/bookings', icon: CalendarDaysIcon },
   { name: 'Tickets', to: '/tickets', icon: TicketIcon },
+  { name: 'Sensors', to: '/sensors', icon: WifiIcon },
   { name: 'Favorites', to: '/favoritos', icon: StarIcon },
   { name: 'Profile', to: '/perfil', icon: UserIcon },
 ]
@@ -176,7 +180,7 @@ const navigation = [
 const userNavigation = [
   { name: 'Your profile', to: '/perfil', type: 'link' },
   { name: 'Settings', to: '/settings', type: 'link' },
-  { name: 'Sign out', type: 'logout' },
+  { name: 'Sign out', to: '/', type: 'logout' },
 ]
 
 const handleLogout = async () => {
