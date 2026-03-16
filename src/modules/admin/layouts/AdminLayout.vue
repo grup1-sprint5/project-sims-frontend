@@ -90,7 +90,8 @@
         <span class="sr-only">Open sidebar</span>
         <Bars3Icon class="size-6" aria-hidden="true" />
       </button>
-      <div class="flex-1 text-sm/6 font-semibold text-gray-900 dark:text-white">Dashboard</div>
+      <div class="flex-1 text-sm/6 font-semibold text-gray-900 dark:text-white">{{ m.adminNav.dashboard }}</div>
+      <LanguageSwitcher />
       <a href="#">
         <span class="sr-only">Your profile</span>
         <img class="size-8 rounded-full bg-gray-50 outline -outline-offset-1 outline-black/5 dark:bg-gray-800 dark:outline-white/10" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
@@ -103,18 +104,24 @@
           <router-view />
         </div>
         <div v-else class="p-8 text-center text-gray-500">
-          <h2 class="text-lg font-semibold mb-2">Not authorized</h2>
-          <p>Your account does not have permission to access the admin area.</p>
+          <h2 class="text-lg font-semibold mb-2">{{ m.admin.notAuthorizedTitle }}</h2>
+          <p>{{ m.admin.notAuthorizedMsg }}</p>
         </div>
       </div>
     </main>
+
+    <!-- AI Chat floating widget -->
+    <ChatWidget />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import ChatWidget from '@/modules/client/components/ChatWidget.vue'
+import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
 import { useRoute } from 'vue-router'
 import { useAuth } from '@/modules/auth/composables/useAuth'
+import { useI18n } from '@/i18n'
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import {
   Bars3Icon,
@@ -129,22 +136,24 @@ import {
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
 
+const { m } = useI18n()
 const route = useRoute()
 
 const navigationItems = [
-  { name: 'Dashboard', href: '/admin', icon: HomeIcon },
-  { name: 'Map', href: '/admin/map', icon: MapIcon },
-  { name: 'Users', href: '/admin/users', icon: UsersIcon },
-  { name: 'Roles', href: '/admin/roles', icon: ShieldCheckIcon },
-  { name: 'Bookings', href: '/admin/bookings', icon: CalendarDaysIcon },
-  { name: 'Vehicles', href: '/admin/vehicles', icon: TruckIcon },
-  { name: 'Tenants', href: '/admin/tenants', icon: BuildingOfficeIcon },
-  { name: 'Tickets', href: '/admin/tickets', icon: TicketIcon },
+  { key: 'dashboard', href: '/admin', icon: HomeIcon },
+  { key: 'map', href: '/admin/map', icon: MapIcon },
+  { key: 'users', href: '/admin/users', icon: UsersIcon },
+  { key: 'roles', href: '/admin/roles', icon: ShieldCheckIcon },
+  { key: 'bookings', href: '/admin/bookings', icon: CalendarDaysIcon },
+  { key: 'vehicles', href: '/admin/vehicles', icon: TruckIcon },
+  { key: 'tenants', href: '/admin/tenants', icon: BuildingOfficeIcon },
+  { key: 'tickets', href: '/admin/tickets', icon: TicketIcon },
 ]
 
-const navigation = computed(() => 
+const navigation = computed(() =>
   navigationItems.map(item => ({
     ...item,
+    name: m.value.adminNav[item.key as keyof typeof m.value.adminNav],
     current: route.path === item.href || (item.href !== '/admin' && route.path.startsWith(item.href))
   }))
 )

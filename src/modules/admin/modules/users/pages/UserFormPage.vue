@@ -169,14 +169,14 @@ const toast = useToast()
 const userId = computed(() => route.params.id ? Number(route.params.id) : null)
 const isEditMode = computed(() => !!userId.value)
 
-const formData = reactive<Partial<UserForm>>({
+const formData = reactive({
   name: '',
   username: '',
   email: '',
   password: '',
   password_confirmation: '',
   active: true,
-  role_id: null
+  role_id: null as number | null,
 })
 
 const validationErrors = reactive({
@@ -199,7 +199,7 @@ onMounted(async () => {
       formData.email = user.email
       formData.active = user.active
       if (user.roles && user.roles.length > 0) {
-        formData.role_id = user.roles[0].id
+        formData.role_id = user.roles[0]?.id ?? null
       }
     } catch (err) {
       toast.error('Error loading user')

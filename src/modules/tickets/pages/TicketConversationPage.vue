@@ -1,107 +1,174 @@
 <template>
-  <div class="p-6 max-w-3xl mx-auto">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h1 class="text-2xl font-semibold">{{ ticket.subject || ticket.title || `Ticket #${ticket.id}` }}</h1>
-        <div class="text-sm text-gray-400">{{ ticket.status || '' }} • {{ ticket.created_at ? new Date(ticket.created_at).toLocaleString() : '' }}</div>
-      </div>
-      <button @click="load" class="px-2 py-1 bg-gray-700 rounded text-sm">Refresh</button>
+  <div class="p-4 max-w-3xl mx-auto">
+
+    <!-- Back -->
+    <div class="mb-6">
+      <router-link
+        to="/tickets"
+        class="inline-flex items-center text-indigo-400 hover:text-indigo-300"
+      >
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to tickets
+      </router-link>
     </div>
 
-    <div class="space-y-3">
-      <div v-for="m in messages" :key="m.id" class="p-3 rounded" :class="m.is_support ? 'bg-gray-800 text-gray-200' : 'bg-gray-700 text-gray-100'">
-        <div class="text-sm text-gray-400">{{ m.user?.name || (m.is_support ? 'Support' : 'You') }} • {{ m.created_at ? new Date(m.created_at).toLocaleString() : '' }}</div>
-        <div class="mt-2">{{ m.content || m.message || m.body || '' }}</div>
-        <div class="text-right mt-2">
-          <button v-if="m.deletable" @click="deleteMessage(m.id)" class="text-xs text-red-400">Delete</button>
+    <!-- Loading -->
+    <div v-if="loading && !ticket" class="text-center text-gray-400 py-12">Loading ticket…</div>
+
+    <template v-else-if="ticket">
+
+      <!-- Ticket info card -->
+      <div class="bg-white dark:bg-gray-900 shadow rounded-lg mb-6 px-4 py-4">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{ ticket.title }}</h2>
+            <p class="mt-1 text-xs text-gray-500">Opened {{ formatDate(ticket.created_at) }}</p>
+          </div>
+          <span
+            :class="[
+              'inline-flex rounded-full px-2 py-1 text-xs font-semibold shrink-0',
+              ticket.active
+                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400',
+            ]"
+          >
+            {{ ticket.active ? 'Active' : 'Closed' }}
+          </span>
+        </div>
+        <p v-if="ticket.description" class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          {{ ticket.description }}
+        </p>
+      </div>
+
+      <!-- Messages -->
+      <div class="space-y-4 mb-6">
+        <p v-if="messages.length === 0" class="text-center text-sm text-gray-400 py-4">
+          No messages yet. Start the conversation below.
+        </p>
+
+        <div
+          v-for="m in messages"
+          :key="m.id"
+          :class="[
+            'flex gap-2',
+            m.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row',
+          ]"
+        >
+          <!-- Avatar initials -->
+          <div
+            :class="[
+              'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white select-none',
+              m.user_id === currentUserId ? 'bg-indigo-600' : 'bg-gray-600',
+            ]"
+          >
+            {{ initials(m.user?.name) }}
+          </div>
+
+          <!-- Bubble -->
+          <div :class="m.user_id === currentUserId ? 'items-end' : 'items-start'" class="flex flex-col max-w-[75%]">
+            <div class="flex items-baseline gap-2 mb-1" :class="m.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row'">
+              <span class="text-xs font-semibold" :class="m.user_id === currentUserId ? 'text-indigo-400' : 'text-gray-300'">
+                {{ m.user?.name || 'Unknown' }}
+              </span>
+              <span class="text-xs text-gray-500">{{ formatDate(m.created_at) }}</span>
+            </div>
+            <div
+              :class="[
+                'px-4 py-2.5 rounded-2xl text-sm whitespace-pre-wrap break-words shadow-sm',
+                m.user_id === currentUserId
+                  ? 'bg-indigo-600 text-white rounded-tr-sm'
+                  : 'bg-gray-800 text-gray-100 rounded-tl-sm',
+              ]"
+            >
+              {{ m.message }}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="mt-6 bg-gray-800 p-4 rounded">
-      <textarea v-model="form.message" rows="4" class="w-full p-2 bg-gray-900 border border-white/10 rounded" placeholder="Write a message..."></textarea>
-      <div class="text-right mt-2">
-        <button @click="sendMessage" :disabled="sending" class="px-3 py-1 rounded bg-indigo-600 text-white">{{ sending ? 'Sending...' : 'Send' }}</button>
+      <!-- Reply form (only when ticket is active) -->
+      <div
+        v-if="ticket.active"
+        class="bg-white dark:bg-gray-900 shadow rounded-lg px-4 py-4"
+      >
+        <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-2">Reply</h3>
+        <textarea
+          v-model="replyText"
+          rows="4"
+          placeholder="Write your message…"
+          class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
+        />
+        <div class="mt-3 flex justify-end">
+          <button
+            :disabled="sending || !replyText.trim()"
+            @click="handleReply"
+            class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <svg v-if="sending" class="animate-spin h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            {{ sending ? 'Sending…' : 'Send' }}
+          </button>
+        </div>
       </div>
-    </div>
+
+      <p v-else class="text-center text-sm text-gray-500 py-4">
+        This ticket is closed. Contact support to reopen it.
+      </p>
+
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import apiClient from '@/services/api'
-import showToast from '@/modules/common/composables/useToast'
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useTickets } from '../composables/useTickets'
+import { useToast } from '@/modules/common/composables/useToast'
+import { useAuth } from '@/modules/auth/composables/useAuth'
+import type { TicketMessage } from '../interfaces/ticket.interface'
 
 const route = useRoute()
-const router = useRouter()
-const id = route.params.id as string
+const toast = useToast()
+const { user: authUser } = useAuth()
+const { ticket, loading, getTicket, sendMessage } = useTickets()
 
-const ticket = ref<any>({})
-const messages = ref<any[]>([])
-const loading = ref(false)
+const currentUserId = computed(() => authUser.value?.id ?? null)
+const initials = (name?: string) =>
+  (name ?? '?').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+
+const id = Number(route.params.id)
+const messages = ref<TicketMessage[]>([])
+const replyText = ref('')
 const sending = ref(false)
-const form = ref({ message: '' })
 
 const load = async () => {
-  loading.value = true
   try {
-    const res = await apiClient.get(`/tickets/${id}`)
-    const data = res.data.data ?? res.data
-    ticket.value = data
-    messages.value = data.messages ?? data.data?.messages ?? []
-  } catch (e) {
-    console.error(e)
-    showToast('Error loading conversation', 'error')
-  } finally {
-    loading.value = false
+    const data = await getTicket(id)
+    messages.value = data.messages ?? []
+  } catch {
+    toast.error('Error loading ticket')
   }
 }
 
-const sendMessage = async () => {
-  if (!form.value.message) return
+const handleReply = async () => {
+  if (!replyText.value.trim()) return
   sending.value = true
   try {
-    // send multiple possible field names to satisfy different backend expectations
-    const payload = { ticket_id: id, message: form.value.message, content: form.value.message, body: form.value.message, text: form.value.message }
-    const res = await apiClient.post(`/tickets/${id}/messages`, payload)
-    const newMsg = res.data.data ?? res.data
-    if (newMsg) messages.value.push(newMsg)
-    form.value.message = ''
-  } catch (e: any) {
-    const resp = e?.response
-    // log full response to help debugging
-    console.error('Send message error response:', resp?.status, resp?.data)
-
-    if (resp?.status === 422 && resp.data) {
-      const errors = resp.data.errors || resp.data
-      console.error('Validation errors creating ticket message:', errors)
-      const msg = typeof errors === 'string' ? errors : Object.values(errors).flat().join(' | ')
-      showToast(msg, 'error')
-    } else if (resp?.data) {
-      // fallback: show the whole response body so the developer can see expected fields
-      const bodyMsg = typeof resp.data === 'string' ? resp.data : JSON.stringify(resp.data)
-      showToast(bodyMsg, 'error')
-      console.error(resp.data)
-    } else {
-      console.error(e)
-      showToast('Error sending message', 'error')
-    }
+    const msg = await sendMessage(id, replyText.value.trim())
+    messages.value.push(msg)
+    replyText.value = ''
+  } catch (err: any) {
+    const detail = err?.response?.data?.message || 'Error sending message'
+    toast.error(detail)
   } finally {
     sending.value = false
   }
 }
 
-const deleteMessage = async (messageId: number | string) => {
-  try {
-    await apiClient.delete(`/messages/${messageId}`)
-    messages.value = messages.value.filter(m => m.id !== messageId)
-    showToast('Message deleted')
-  } catch (e) {
-    console.error(e)
-    showToast('Error deleting message', 'error')
-  }
-}
+const formatDate = (iso: string) => iso ? new Date(iso).toLocaleString() : '-'
 
 onMounted(load)
 </script>

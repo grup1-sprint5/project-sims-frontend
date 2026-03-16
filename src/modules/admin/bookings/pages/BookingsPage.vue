@@ -214,6 +214,35 @@
       :total="pagination.total"
       @update:page="handlePageChange"
     />
+
+    <!-- Delete confirmation modal -->
+    <Modal :show="showDeleteModal" @close="showDeleteModal = false">
+      <template #header>
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Confirmar esborrat</h3>
+      </template>
+
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        Estàs segur que vols esborrar aquesta reserva? Aquesta acció no es pot desfer.
+      </p>
+
+      <template #footer>
+        <button
+          type="button"
+          class="mr-2 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
+          @click="showDeleteModal = false"
+        >
+          Cancel·lar
+        </button>
+        <button
+          type="button"
+          :disabled="deleting"
+          class="rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-red-500 disabled:opacity-50"
+          @click="confirmDelete"
+        >
+          {{ deleting ? 'Esborrant...' : 'Esborrar' }}
+        </button>
+      </template>
+    </Modal>
   </div>
 </template>
 
@@ -252,6 +281,10 @@ const filters = ref<BookingFilters>({
 
 const showCreateModal = ref(false)
 const creating = ref(false)
+
+const showDeleteModal = ref(false)
+const deleting = ref(false)
+const bookingToDelete = ref<number | null>(null)
 
 const createForm = ref<{
   user_id: string
@@ -328,14 +361,25 @@ const handleCreate = async () => {
   }
 }
 
-const handleDelete = async (id: number) => {
-  if (!confirm('Are you sure you want to delete this booking?')) return
+const handleDelete = (id: number) => {
+  bookingToDelete.value = id
+  showDeleteModal.value = true
+}
+
+const confirmDelete = async () => {
+  if (!bookingToDelete.value) return
+  
+  deleting.value = true
   try {
-    await deleteBooking(id)
-    toastSuccess('Booking deleted successfully')
+    await deleteBooking(bookingToDelete.value)
+    toastSuccess('Reserva esborrada correctament')
     loadBookings(pagination.value.current_page)
+    showDeleteModal.value = false
+    bookingToDelete.value = null
   } catch (e: any) {
     toastError(e)
+  } finally {
+    deleting.value = false
   }
 }
 

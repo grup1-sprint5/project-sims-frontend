@@ -3,8 +3,8 @@
     <div class="mx-auto max-w-2xl">
 
       <div class="mb-8">
-        <h1 class="text-2xl font-bold">My Profile</h1>
-        <p class="mt-1 text-sm text-gray-400">Manage your personal information and password.</p>
+        <h1 class="text-2xl font-bold">{{ m.profile.title }}</h1>
+        <p class="mt-1 text-sm text-gray-400">{{ m.profile.subtitle }}</p>
       </div>
 
       <div v-if="loading" class="flex justify-center py-16">
@@ -29,40 +29,40 @@
                 : 'bg-gray-500/20 text-gray-400'"
               class="inline-block mt-1 rounded-full px-2 py-0.5 text-xs font-medium"
             >
-              {{ user.active ? 'Active' : 'Inactive' }}
+              {{ user.active ? m.profile.active : m.profile.inactive }}
             </span>
           </div>
         </div>
 
         <section class="rounded-xl bg-gray-800/60 border border-white/5 p-6 mb-6">
-          <h2 class="text-base font-semibold mb-5">Personal information</h2>
+          <h2 class="text-base font-semibold mb-5">{{ m.profile.personalInfo }}</h2>
 
           <form @submit.prevent="submitProfile" class="space-y-4">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-1">Full name</label>
+                <label class="block text-sm font-medium text-gray-300 mb-1">{{ m.profile.fullName }}</label>
                 <input
                   v-model="profileForm.name"
                   type="text"
                   required
                   class="input-field"
-                  placeholder="Full name"
+                  :placeholder="m.profile.fullName"
                 />
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-1">Username</label>
+                <label class="block text-sm font-medium text-gray-300 mb-1">{{ m.profile.username }}</label>
                 <input
                   v-model="profileForm.username"
                   type="text"
                   required
                   class="input-field"
-                  placeholder="username"
+                  :placeholder="m.profile.username"
                 />
               </div>
 
               <div class="sm:col-span-2">
-                <label class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                <label class="block text-sm font-medium text-gray-300 mb-1">{{ m.profile.email }}</label>
                 <input
                   v-model="profileForm.email"
                   type="email"
@@ -83,38 +83,38 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
                 </svg>
-                {{ savingProfile ? 'Saving…' : 'Save changes' }}
+                {{ savingProfile ? m.profile.saving : m.profile.saveChanges }}
               </button>
             </div>
           </form>
         </section>
 
         <section class="rounded-xl bg-gray-800/60 border border-white/5 p-6">
-          <h2 class="text-base font-semibold mb-5">Change password</h2>
+          <h2 class="text-base font-semibold mb-5">{{ m.profile.changePassword }}</h2>
 
           <form @submit.prevent="submitPassword" class="space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-1">New password</label>
+              <label class="block text-sm font-medium text-gray-300 mb-1">{{ m.profile.newPassword }}</label>
               <input
                 v-model="passwordForm.password"
                 type="password"
                 required
                 minlength="8"
                 class="input-field"
-                placeholder="Minimum 8 characters"
+                :placeholder="m.profile.newPasswordPlaceholder"
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-1">Confirm new password</label>
+              <label class="block text-sm font-medium text-gray-300 mb-1">{{ m.profile.confirmPassword }}</label>
               <input
                 v-model="passwordForm.password_confirmation"
                 type="password"
                 required
                 minlength="8"
                 class="input-field"
-                placeholder="Repeat the new password"
+                :placeholder="m.profile.confirmPasswordPlaceholder"
               />
-              <p v-if="passwordMismatch" class="mt-1 text-xs text-red-400">Passwords do not match.</p>
+              <p v-if="passwordMismatch" class="mt-1 text-xs text-red-400">{{ m.profile.mismatch }}</p>
             </div>
 
             <div class="flex justify-end pt-2">
@@ -127,7 +127,7 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
                 </svg>
-                {{ savingPassword ? 'Updating…' : 'Update password' }}
+                {{ savingPassword ? m.profile.updating : m.profile.updatePassword }}
               </button>
             </div>
           </form>
@@ -140,10 +140,12 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
+import { useI18n } from '@/i18n'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import { useUsers } from '@/modules/admin/modules/users/composables/useUsers'
 import { useToast } from '@/modules/common/composables/useToast'
 
+const { m } = useI18n()
 const { user, fetchUser } = useAuth()
 const { updateUser } = useUsers()
 const toast = useToast()
@@ -185,9 +187,9 @@ const submitProfile = async () => {
       active: user.value.active,
     })
     await fetchUser()
-    toast.success('Profile updated successfully')
+    toast.success(m.value.profile.profileUpdated)
   } catch (err: any) {
-    toast.error(err.response?.data?.message || 'Error updating profile')
+    toast.error(err.response?.data?.message || m.value.profile.profileError)
   } finally {
     savingProfile.value = false
   }
@@ -204,9 +206,9 @@ const submitPassword = async () => {
     })
     passwordForm.password = ''
     passwordForm.password_confirmation = ''
-    toast.success('Password updated successfully')
+    toast.success(m.value.profile.passwordUpdated)
   } catch (err: any) {
-    toast.error(err.response?.data?.message || 'Error updating password')
+    toast.error(err.response?.data?.message || m.value.profile.passwordError)
   } finally {
     savingPassword.value = false
   }
