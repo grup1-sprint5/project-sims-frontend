@@ -150,15 +150,18 @@ const navigationItems = [
   { key: 'tickets', href: '/admin/tickets', icon: TicketIcon },
 ]
 
-const navigation = computed(() =>
-  navigationItems.map(item => ({
-    ...item,
-    name: m.value.adminNav[item.key as keyof typeof m.value.adminNav],
-    current: route.path === item.href || (item.href !== '/admin' && route.path.startsWith(item.href))
-  }))
-)
-
 const sidebarOpen = ref(false)
 const { user, isLoading } = useAuth()
-const isAdmin = computed(() => !!(user.value && user.value.roles && user.value.roles.some((r: any) => (r.name || '').toLowerCase() === 'admin')))
+const isAdmin = computed(() => !!(user.value && user.value.roles && user.value.roles.some((r: any) => (r.name || '').toLowerCase().includes('admin'))))
+const isSuperAdmin = computed(() => !!(user.value && user.value.roles && user.value.roles.some((r: any) => (r.name || '').toLowerCase().includes('superadmin'))))
+
+const navigation = computed(() =>
+  navigationItems
+    .filter((item) => !item.superAdminOnly || isSuperAdmin.value)
+    .map(item => ({
+      ...item,
+      name: m.value.adminNav[item.key as keyof typeof m.value.adminNav],
+      current: route.path === item.href || (item.href !== '/admin' && route.path.startsWith(item.href))
+    }))
+)
 </script>

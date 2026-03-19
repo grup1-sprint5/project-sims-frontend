@@ -7,6 +7,12 @@ export interface LoginResponse {
   token: string
 }
 
+export interface CentralLoginResponse {
+  exchange_token: string
+  tenant_id: string
+  tenant_host: string
+}
+
 export interface RegisterRequest {
   name: string
   username: string
@@ -34,6 +40,7 @@ export interface User {
   username: string
   email: string
   active: boolean
+  tenant_id: string | null  // tenant slug (string primary key)
   roles: Role[]
 }
 
