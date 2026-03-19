@@ -78,6 +78,7 @@ const routes: RouteRecordRaw[] = [
   },
   ...authRoutes,
 
+  { path: '/landing', name: 'Landing', component: () => import('@/modules/common/pages/LandingPage.vue') },
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFoundPage }
 ]
 
@@ -108,9 +109,6 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth && !isAuthenticated.value) {
     // Protected route and not authenticated -> go to login
     next('/login')
-  } else if (to.path === '/login' && isAuthenticated.value) {
-    // Already authenticated: redirect based on role
-    next(isAdmin ? '/admin' : '/')
   } else if (to.path.startsWith('/admin') && isAuthenticated.value && !isAdmin) {
     // Client trying to access admin area -> redirect to client home
     next('/')
