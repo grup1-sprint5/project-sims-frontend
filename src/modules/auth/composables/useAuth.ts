@@ -108,7 +108,11 @@ export function useAuth() {
 
     try {
       const loginData: LoginRequest = { email, password }
-      const response = await apiClient.post<LoginResponse>('/login', loginData)
+      const response = await apiClient.post<LoginResponse>('/login', loginData, {
+        headers: {
+          'X-Tenant': normalizedTenant,
+        },
+      })
 
       const token = response.data.token
       
