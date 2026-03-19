@@ -133,8 +133,6 @@ import {
   TicketIcon,
   MapIcon,
   BuildingOfficeIcon,
-  Squares2X2Icon,
-  RectangleGroupIcon,
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
 
@@ -149,8 +147,6 @@ const navigationItems = [
   { key: 'bookings', href: '/admin/bookings', icon: CalendarDaysIcon },
   { key: 'vehicles', href: '/admin/vehicles', icon: TruckIcon },
   { key: 'tenants', href: '/admin/tenants', icon: BuildingOfficeIcon },
-  { key: 'superAdmin', href: '/admin/super-admin', icon: Squares2X2Icon, superAdminOnly: true },
-  { key: 'tenantWorkspace', href: '/admin/tenant-workspace', icon: RectangleGroupIcon, superAdminOnly: true },
   { key: 'tickets', href: '/admin/tickets', icon: TicketIcon },
 ]
 
