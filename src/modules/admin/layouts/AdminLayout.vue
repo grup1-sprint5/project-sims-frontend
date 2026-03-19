@@ -233,6 +233,7 @@ const navigation = computed(() =>
     }))
 )
 
+
 const adminDisplayName = computed(() => user.value?.name || 'Admin')
 const adminProfilePath = computed(() => user.value?.id ? `/admin/users/${user.value.id}` : '/admin')
 const userInitials = computed(() => {
@@ -255,4 +256,5 @@ const handleLogout = async () => {
     router.push('/login')
   }
 }
+
 </script>

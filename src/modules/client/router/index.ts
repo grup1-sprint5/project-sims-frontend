@@ -37,4 +37,12 @@ export const clientRoutes: RouteRecordRaw[] = [
     meta: { requiresAuth: true },
   },
 
+  // ── Sensors ───────────────────────────────────────────────────────────────
+  {
+    path: 'sensors',
+    name: 'ClientSensors',
+    component: () => import('../pages/SensorsPage.vue'),
+    meta: { requiresAuth: true },
+  },
+
 ]

@@ -96,7 +96,7 @@
 
     <!-- Bottom nav (mobile-first) -->
     <nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-gray-900/90 backdrop-blur sm:hidden">
-      <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-4 text-center text-xs text-gray-300">
+      <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-5 text-center text-xs text-gray-300">
         <RouterLink to="/" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/') ? 'text-indigo-400' : 'hover:text-gray-100'">
           <MapIcon class="size-6" />
         </RouterLink>
@@ -105,6 +105,9 @@
         </RouterLink>
         <RouterLink to="/tickets" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/tickets') ? 'text-indigo-400' : 'hover:text-gray-100'">
           <TicketIcon class="size-6" />
+        </RouterLink>
+        <RouterLink to="/sensors" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/sensors') ? 'text-indigo-400' : 'hover:text-gray-100'">
+          <WifiIcon class="size-6" />
         </RouterLink>
         <RouterLink to="/perfil" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/perfil') ? 'text-indigo-400' : 'hover:text-gray-100'">
           <UserIcon class="size-6" />
@@ -121,14 +124,14 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, GlobeAltIcon } from '@heroicons/vue/24/outline'
+import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon } from '@heroicons/vue/24/outline'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
 import ChatWidget from '@/modules/client/components/ChatWidget.vue'
 import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
 import { useI18n } from '@/i18n'
 
-const { m, locale, setLocale, locales } = useI18n()
+const { m } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { logout, user: authUser } = useAuth()
@@ -143,6 +146,7 @@ const navigation = computed(() => [
   { name: m.value.nav.map, to: '/vehicles-map', icon: MapIcon },
   { name: m.value.nav.bookings, to: '/bookings', icon: CalendarDaysIcon },
   { name: m.value.nav.tickets, to: '/tickets', icon: TicketIcon },
+  { name: 'Sensors', to: '/sensors', icon: WifiIcon },
   { name: m.value.nav.profile, to: '/perfil', icon: UserIcon },
 ])
 

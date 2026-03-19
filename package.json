@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --build"
+    "type-check": "vue-tsc --build",
+    "start": "serve -s dist -l ${PORT:-8080}"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
