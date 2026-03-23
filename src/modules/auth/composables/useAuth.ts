@@ -38,6 +38,7 @@ const user = ref<User | null>(null)
 const isAuthenticated = computed(() => !!user.value)
 
 const normalizeTenantSlug = (input: string): string => {
+  // Accept user-friendly org names and normalize to the slug expected by API.
   return String(input || '')
     .trim()
     .toLowerCase()
@@ -69,6 +70,7 @@ export function useAuth() {
     if (typeof window === 'undefined') return false
     const host = window.location.hostname.toLowerCase()
 
+    // Allow forcing central mode via env (useful in some deployments).
     const forced = String((import.meta as any)?.env?.VITE_FORCE_CENTRAL_LOGIN || '').toLowerCase()
     if (['true', '1', 'yes'].includes(forced)) return true
 
@@ -78,8 +80,10 @@ export function useAuth() {
       .filter(Boolean)
     if (configuredCentralHosts.includes(host)) return true
 
+    // Local dev central host(s)
     if (host === 'localhost' || host === '127.0.0.1' || host === 'app.localhost') return true
 
+    // Heuristic: treat base deployment domain as central.
     if (host.endsWith('.ondigitalocean.app')) {
       const parts = host.split('.')
       if (parts.length === 3) return true
@@ -173,6 +177,7 @@ export function useAuth() {
         apiClient.defaults.headers.common.Authorization = `Bearer ${token}`
         // Fetch user data after successful login
         const userFetched = await fetchUser()
+        // Keep tenant cookie as a valid slug even if backend tenant_id varies.
         if (userFetched) {
           const tenantFromUser = typeof (user.value as any)?.tenant_id === 'string'
             ? normalizeTenantSlug((user.value as any).tenant_id)
@@ -189,6 +194,7 @@ export function useAuth() {
         return false
       }
     } catch (err: any) {
+      // If tenant-domain login fails due to tenancy middleware, retry central login.
       const status = err?.response?.status
       if (looksLikeTenancyHeaderError(err) || status === 500) {
         try {
@@ -221,6 +227,10 @@ export function useAuth() {
 
       const response = await apiClient.post<LoginResponse>('/auth/exchange-token', {
         exchange_token: exchangeToken,
+      }, {
+        headers: {
+          'X-Tenant': normalizedTenant,
+        },
       })
 
       const token = response.data.token
