@@ -48,13 +48,51 @@ const normalizeTenantSlug = (input: string): string => {
     .replace(/^-+|-+$/g, '')
 }
 
+const formatApiError = (err: any, fallbackMsg: string): string => {
+  const status = err?.response?.status
+  const data = err?.response?.data
+  const message = data?.message || err?.message || fallbackMsg
+  if (status) return `${message} (HTTP ${status})`
+  return message
+}
+
+const looksLikeTenancyHeaderError = (err: any): boolean => {
+  const status = err?.response?.status
+  const msg = String(err?.response?.data?.message || '').toLowerCase()
+  if (status === 422 && (msg.includes('tenant') || msg.includes('x-tenant'))) return true
+  if (status === 500 && (msg.includes('tenant') || msg.includes('tenancy'))) return true
+  return false
+}
+
 export function useAuth() {
   const router = useRouter()
 
   const isCentralHost = (): boolean => {
     if (typeof window === 'undefined') return false
     const host = window.location.hostname.toLowerCase()
-    return host === 'localhost' || host === '127.0.0.1' || host === 'app.localhost'
+
+    // Allow forcing central mode via env (useful in production deployments)
+    const forced = String((import.meta as any)?.env?.VITE_FORCE_CENTRAL_LOGIN || '').toLowerCase()
+    if (['true', '1', 'yes'].includes(forced)) return true
+
+    const configuredCentralHosts = String((import.meta as any)?.env?.VITE_CENTRAL_HOSTNAMES || '')
+      .split(',')
+      .map(s => s.trim().toLowerCase())
+      .filter(Boolean)
+    if (configuredCentralHosts.includes(host)) return true
+
+    // Local dev central host(s)
+    if (host === 'localhost' || host === '127.0.0.1' || host === 'app.localhost') return true
+
+    // Heuristic: treat the base deployment domain as central.
+    // Example central: grup1-sims-c7271.ondigitalocean.app
+    // Example tenant:  sims-corp.grup1-sims-c7271.ondigitalocean.app
+    if (host.endsWith('.ondigitalocean.app')) {
+      const parts = host.split('.')
+      if (parts.length === 3) return true
+    }
+
+    return false
   }
 
   const redirectToTenantDomain = (tenantHost: string, exchangeToken: string, tenantId: string): void => {
@@ -99,20 +137,22 @@ export function useAuth() {
       return false
     }
 
+    const tryCentralLogin = async (): Promise<boolean> => {
+      const response = await apiClient.post<CentralLoginResponse>('/central/login', {
+        organization: normalizedTenant,
+        email,
+        password,
+      })
+      redirectToTenantDomain(response.data.tenant_host, response.data.exchange_token, response.data.tenant_id)
+      return false
+    }
+
     // Central domain login: authenticate once and redirect user to tenant subdomain.
     if (isCentralHost()) {
       try {
-        const response = await apiClient.post<CentralLoginResponse>('/central/login', {
-          organization: normalizedTenant,
-          email,
-          password,
-        })
-
-        redirectToTenantDomain(response.data.tenant_host, response.data.exchange_token, response.data.tenant_id)
-        return false
+        return await tryCentralLogin()
       } catch (err: any) {
-        const msg = err.response?.data?.message || 'Error logging in'
-        error.value = msg
+        error.value = formatApiError(err, 'Error logging in')
         return false
       } finally {
         isLoading.value = false
@@ -156,8 +196,23 @@ export function useAuth() {
         return false
       }
     } catch (err: any) {
-      const msg = err.response?.data?.message || 'Error logging in'
-      error.value = msg
+      // In some deployments the app is hosted on a central domain (no tenant subdomains)
+      // and the backend expects central login. If tenant login fails due to tenancy,
+      // automatically retry central login for a smoother UX.
+      const status = err?.response?.status
+      if (looksLikeTenancyHeaderError(err) || status === 500) {
+        try {
+          return await tryCentralLogin()
+        } catch (err2: any) {
+          error.value = formatApiError(err2, 'Error logging in')
+          deleteCookie(TENANT_COOKIE_NAME)
+          return false
+        } finally {
+          isLoading.value = false
+        }
+      }
+
+      error.value = formatApiError(err, 'Error logging in')
       deleteCookie(TENANT_COOKIE_NAME)
       return false
     } finally {
