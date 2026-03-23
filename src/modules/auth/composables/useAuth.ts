@@ -280,9 +280,29 @@ export function useAuth() {
     }
   }
 
-  const register = async (name: string, username: string, email: string, password: string) => {
+  const register = async (
+    tenantOrName: string,
+    nameOrUsername: string,
+    usernameOrEmail: string,
+    emailOrPassword: string,
+    maybePassword?: string,
+  ) => {
     isLoading.value = true
     error.value = null
+
+    const hasTenantArg = typeof maybePassword === 'string'
+    const tenantSlug = hasTenantArg ? normalizeTenantSlug(tenantOrName) : ''
+    const name = hasTenantArg ? nameOrUsername : tenantOrName
+    const username = hasTenantArg ? usernameOrEmail : nameOrUsername
+    const email = hasTenantArg ? emailOrPassword : usernameOrEmail
+    const password = hasTenantArg ? (maybePassword as string) : emailOrPassword
+
+    if (hasTenantArg && !tenantSlug) {
+      error.value = 'Organization is required to register'
+      isLoading.value = false
+      return false
+    }
+
     try {
       const registerData: RegisterRequest = {
         name,
@@ -291,10 +311,15 @@ export function useAuth() {
         password,
         role_id: 2 // Client role ID is always 2, this might be not ideal but I dont care
       }
-      if (await apiClient.post<RegisterResponse>('/users', registerData)) router.push('/login')
+      const response = await apiClient.post<RegisterResponse>('/users', registerData, {
+        headers: hasTenantArg ? { 'X-Tenant': tenantSlug } : undefined,
+      })
+      if (response.data) router.push('/login')
+      return true
     } catch (err: any) {
-      const msg = err.response?.data?.message || 'Error registering'
-      showToast(msg)
+      error.value = formatApiError(err, 'Error registering')
+      showToast(error.value)
+      return false
     } finally {
       isLoading.value = false
     }
