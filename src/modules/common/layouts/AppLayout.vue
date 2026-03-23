@@ -8,8 +8,8 @@
             <div class="flex shrink-0 items-center">
               <RouterLink to="/">
                 <img
-                  class="h-8 w-auto"
-                  src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+                  class="h-11 w-auto object-contain"
+                  src="/image.png"
                   alt="SIMS"
                 />
               </RouterLink>
