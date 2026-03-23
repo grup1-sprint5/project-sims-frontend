@@ -38,11 +38,6 @@ const user = ref<User | null>(null)
 const isAuthenticated = computed(() => !!user.value)
 
 const normalizeTenantSlug = (input: string): string => {
-<<<<<<< HEAD
-=======
-  // Accept user-friendly org names and normalize to a slug expected by the API.
-  // Examples: "SIMS Corp" -> "sims-corp", "ecomove" -> "ecomove".
->>>>>>> origin/develop
   return String(input || '')
     .trim()
     .toLowerCase()
@@ -74,10 +69,6 @@ export function useAuth() {
     if (typeof window === 'undefined') return false
     const host = window.location.hostname.toLowerCase()
 
-<<<<<<< HEAD
-=======
-    // Allow forcing central mode via env (useful in production deployments)
->>>>>>> origin/develop
     const forced = String((import.meta as any)?.env?.VITE_FORCE_CENTRAL_LOGIN || '').toLowerCase()
     if (['true', '1', 'yes'].includes(forced)) return true
 
@@ -87,17 +78,8 @@ export function useAuth() {
       .filter(Boolean)
     if (configuredCentralHosts.includes(host)) return true
 
-<<<<<<< HEAD
     if (host === 'localhost' || host === '127.0.0.1' || host === 'app.localhost') return true
 
-=======
-    // Local dev central host(s)
-    if (host === 'localhost' || host === '127.0.0.1' || host === 'app.localhost') return true
-
-    // Heuristic: treat the base deployment domain as central.
-    // Example central: grup1-sims-c7271.ondigitalocean.app
-    // Example tenant:  sims-corp.grup1-sims-c7271.ondigitalocean.app
->>>>>>> origin/develop
     if (host.endsWith('.ondigitalocean.app')) {
       const parts = host.split('.')
       if (parts.length === 3) return true
@@ -154,13 +136,9 @@ export function useAuth() {
         email,
         password,
       })
-<<<<<<< HEAD
 
       const tenantRef = response.data.tenant_id || normalizedTenant
       redirectToTenantDomain(response.data.tenant_host, response.data.exchange_token, tenantRef)
-=======
-      redirectToTenantDomain(response.data.tenant_host, response.data.exchange_token, response.data.tenant_id)
->>>>>>> origin/develop
       return false
     }
 
@@ -195,11 +173,6 @@ export function useAuth() {
         apiClient.defaults.headers.common.Authorization = `Bearer ${token}`
         // Fetch user data after successful login
         const userFetched = await fetchUser()
-<<<<<<< HEAD
-=======
-        // Keep tenant cookie as a valid slug (X-Tenant). Some backends return tenant_id
-        // as a numeric/uuid; only accept it if it looks like a slug.
->>>>>>> origin/develop
         if (userFetched) {
           const tenantFromUser = typeof (user.value as any)?.tenant_id === 'string'
             ? normalizeTenantSlug((user.value as any).tenant_id)
@@ -216,12 +189,6 @@ export function useAuth() {
         return false
       }
     } catch (err: any) {
-<<<<<<< HEAD
-=======
-      // In some deployments the app is hosted on a central domain (no tenant subdomains)
-      // and the backend expects central login. If tenant login fails due to tenancy,
-      // automatically retry central login for a smoother UX.
->>>>>>> origin/develop
       const status = err?.response?.status
       if (looksLikeTenancyHeaderError(err) || status === 500) {
         try {

@@ -114,18 +114,14 @@
                 <span class="size-3 rounded-full bg-red-500/70"></span>
                 <span class="size-3 rounded-full bg-yellow-500/70"></span>
                 <span class="size-3 rounded-full bg-green-500/70"></span>
-                <span class="ml-3 text-xs text-gray-500">localhost:5173/vehicles-map</span>
+                <span class="ml-3 text-xs text-gray-500">Clients · Vista inicial</span>
               </div>
-              <div class="flex h-80 items-center justify-center bg-gray-800/40">
-                <!-- SUBSTITUEIX PER: <img src="/screenshots/map.png" alt="Mapa de vehicles" class="w-full h-full object-cover" /> -->
-                <div class="text-center">
-                  <svg class="mx-auto size-16 text-indigo-500/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-                  </svg>
-                  <p class="mt-3 text-sm font-medium text-gray-600">Captura de pantalla del mapa</p>
-                  <p class="text-xs text-gray-700">[ Substituir per screenshot ]</p>
-                </div>
-              </div>
+              <img
+                src="/screenshots/Clients%20-%20Principi.png"
+                alt="Pantalla inicial del client"
+                class="h-80 w-full object-cover object-top"
+                loading="eager"
+              />
             </div>
             <!-- Floating badge -->
             <div class="absolute -bottom-4 -left-4 flex items-center gap-3 rounded-2xl border border-white/10 bg-gray-900 px-4 py-3 shadow-xl">
@@ -254,13 +250,12 @@
               <p class="mt-2 text-sm leading-relaxed text-gray-400">Accedeix al mapa interactiu i veu tots els vehicles disponibles (en verd) propers a la teva ubicació.</p>
               <!-- Screenshot placeholder -->
               <div class="mt-6 w-full overflow-hidden rounded-2xl border border-white/10 bg-gray-800">
-                <div class="flex h-48 items-center justify-center">
-                  <!-- SUBSTITUEIX PER: <img src="/screenshots/step1-map.png" alt="Pas 1 - Mapa" class="w-full h-full object-cover" /> -->
-                  <div class="text-center">
-                    <svg class="mx-auto size-10 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-                    <p class="mt-2 text-xs text-gray-600">[ Screenshot mapa ]</p>
-                  </div>
-                </div>
+                <img
+                  src="/screenshots/Clients%20-%20Mapa.png"
+                  alt="Pas 1 - Mapa de vehicles"
+                  class="h-48 w-full object-cover object-top"
+                  loading="lazy"
+                />
               </div>
             </div>
 
@@ -272,13 +267,12 @@
               <p class="mt-2 text-sm leading-relaxed text-gray-400">Clica el vehicle que vulguis, tria l'hora d'inici i fi. Veuràs el preu estimat abans de confirmar.</p>
               <!-- Screenshot placeholder -->
               <div class="mt-6 w-full overflow-hidden rounded-2xl border border-white/10 bg-gray-800">
-                <div class="flex h-48 items-center justify-center">
-                  <!-- SUBSTITUEIX PER: <img src="/screenshots/step2-booking.png" alt="Pas 2 - Reserva" class="w-full h-full object-cover" /> -->
-                  <div class="text-center">
-                    <svg class="mx-auto size-10 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    <p class="mt-2 text-xs text-gray-600">[ Screenshot formulari reserva ]</p>
-                  </div>
-                </div>
+                <img
+                  src="/screenshots/Clients%20-%20Reservant%20vehicle.png"
+                  alt="Pas 2 - Formulari de reserva"
+                  class="h-48 w-full object-cover object-top"
+                  loading="lazy"
+                />
               </div>
             </div>
 
@@ -290,13 +284,12 @@
               <p class="mt-2 text-sm leading-relaxed text-gray-400">Des de la secció Reserves veus l'historial, l'estat actual i pots cancel·lar si cal. Tot en un lloc.</p>
               <!-- Screenshot placeholder -->
               <div class="mt-6 w-full overflow-hidden rounded-2xl border border-white/10 bg-gray-800">
-                <div class="flex h-48 items-center justify-center">
-                  <!-- SUBSTITUEIX PER: <img src="/screenshots/step3-mybookings.png" alt="Pas 3 - Les meves reserves" class="w-full h-full object-cover" /> -->
-                  <div class="text-center">
-                    <svg class="mx-auto size-10 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                    <p class="mt-2 text-xs text-gray-600">[ Screenshot llistat reserves ]</p>
-                  </div>
-                </div>
+                <img
+                  src="/screenshots/Clients%20-%20Reserves.png"
+                  alt="Pas 3 - Llistat de reserves"
+                  class="h-48 w-full object-cover object-top"
+                  loading="lazy"
+                />
               </div>
             </div>
 
@@ -324,16 +317,14 @@
               <span class="size-2.5 rounded-full bg-red-500/60"></span>
               <span class="size-2.5 rounded-full bg-yellow-500/60"></span>
               <span class="size-2.5 rounded-full bg-green-500/60"></span>
-              <span class="ml-2 text-xs text-gray-600">Mapa de vehicles en temps real</span>
+              <span class="ml-2 text-xs text-gray-600">Mapa d'administració en temps real</span>
             </div>
-            <div class="flex h-72 items-center justify-center bg-gray-800/30">
-              <!-- SUBSTITUEIX PER: <img src="/screenshots/map-full.png" alt="Mapa de vehicles" class="w-full h-full object-cover" /> -->
-              <div class="text-center">
-                <svg class="mx-auto size-14 text-indigo-500/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-                <p class="mt-3 text-sm font-semibold text-gray-600">Mapa de vehicles (captura gran)</p>
-                <p class="text-xs text-gray-700">[ /screenshots/map-full.png ]</p>
-              </div>
-            </div>
+            <img
+              src="/screenshots/Admin%20-%20Mapa.png"
+              alt="Mapa d'administració"
+              class="h-72 w-full object-cover object-top"
+              loading="lazy"
+            />
           </div>
 
           <!-- Screenshot 2 - Perfil -->
@@ -344,14 +335,12 @@
               <span class="size-2.5 rounded-full bg-green-500/60"></span>
               <span class="ml-2 text-xs text-gray-600">Perfil d'usuari</span>
             </div>
-            <div class="flex h-72 items-center justify-center bg-gray-800/30">
-              <!-- SUBSTITUEIX PER: <img src="/screenshots/profile.png" alt="Perfil" class="w-full h-full object-cover" /> -->
-              <div class="text-center">
-                <svg class="mx-auto size-14 text-violet-500/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                <p class="mt-3 text-sm font-semibold text-gray-600">Perfil d'usuari</p>
-                <p class="text-xs text-gray-700">[ /screenshots/profile.png ]</p>
-              </div>
-            </div>
+            <img
+              src="/screenshots/Clients%20-%20Perfil.png"
+              alt="Perfil d'usuari"
+              class="h-72 w-full object-cover object-top"
+              loading="lazy"
+            />
           </div>
 
           <!-- Screenshot 3 - Reserves -->
@@ -360,16 +349,14 @@
               <span class="size-2.5 rounded-full bg-red-500/60"></span>
               <span class="size-2.5 rounded-full bg-yellow-500/60"></span>
               <span class="size-2.5 rounded-full bg-green-500/60"></span>
-              <span class="ml-2 text-xs text-gray-600">Les meves reserves</span>
+              <span class="ml-2 text-xs text-gray-600">Reserves (admin)</span>
             </div>
-            <div class="flex h-64 items-center justify-center bg-gray-800/30">
-              <!-- SUBSTITUEIX PER: <img src="/screenshots/bookings.png" alt="Reserves" class="w-full h-full object-cover" /> -->
-              <div class="text-center">
-                <svg class="mx-auto size-14 text-amber-500/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                <p class="mt-3 text-sm font-semibold text-gray-600">Les meves reserves</p>
-                <p class="text-xs text-gray-700">[ /screenshots/bookings.png ]</p>
-              </div>
-            </div>
+            <img
+              src="/screenshots/Admin%20-%20Reserves.png"
+              alt="Reserves d'administració"
+              class="h-64 w-full object-cover object-top"
+              loading="lazy"
+            />
           </div>
 
           <!-- Screenshot 4 - Admin dashboard -->
@@ -380,14 +367,12 @@
               <span class="size-2.5 rounded-full bg-green-500/60"></span>
               <span class="ml-2 text-xs text-gray-600">Panel d'administració</span>
             </div>
-            <div class="flex h-64 items-center justify-center bg-gray-800/30">
-              <!-- SUBSTITUEIX PER: <img src="/screenshots/admin.png" alt="Admin" class="w-full h-full object-cover" /> -->
-              <div class="text-center">
-                <svg class="mx-auto size-14 text-emerald-500/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                <p class="mt-3 text-sm font-semibold text-gray-600">Panel d'administració</p>
-                <p class="text-xs text-gray-700">[ /screenshots/admin.png ]</p>
-              </div>
-            </div>
+            <img
+              src="/screenshots/Admin%20-%20Dashboard.png"
+              alt="Dashboard d'administració"
+              class="h-64 w-full object-cover object-top"
+              loading="lazy"
+            />
           </div>
 
           <!-- Screenshot 5 - Tickets -->
@@ -398,14 +383,57 @@
               <span class="size-2.5 rounded-full bg-green-500/60"></span>
               <span class="ml-2 text-xs text-gray-600">Sistema de tickets</span>
             </div>
-            <div class="flex h-64 items-center justify-center bg-gray-800/30">
-              <!-- SUBSTITUEIX PER: <img src="/screenshots/tickets.png" alt="Tickets" class="w-full h-full object-cover" /> -->
-              <div class="text-center">
-                <svg class="mx-auto size-14 text-sky-500/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
-                <p class="mt-3 text-sm font-semibold text-gray-600">Sistema de tickets de suport</p>
-                <p class="text-xs text-gray-700">[ /screenshots/tickets.png ]</p>
-              </div>
+            <img
+              src="/screenshots/Clients%20-%20Tickets.png"
+              alt="Sistema de tickets"
+              class="h-64 w-full object-cover object-top"
+              loading="lazy"
+            />
+          </div>
+
+          <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-900">
+            <div class="flex h-8 items-center gap-1.5 border-b border-white/10 bg-gray-800 px-3">
+              <span class="size-2.5 rounded-full bg-red-500/60"></span>
+              <span class="size-2.5 rounded-full bg-yellow-500/60"></span>
+              <span class="size-2.5 rounded-full bg-green-500/60"></span>
+              <span class="ml-2 text-xs text-gray-600">Gestió de clients (admin)</span>
             </div>
+            <img
+              src="/screenshots/Admin%20-%20Clients.png"
+              alt="Taula de clients d'administració"
+              class="h-64 w-full object-cover object-top"
+              loading="lazy"
+            />
+          </div>
+
+          <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-900">
+            <div class="flex h-8 items-center gap-1.5 border-b border-white/10 bg-gray-800 px-3">
+              <span class="size-2.5 rounded-full bg-red-500/60"></span>
+              <span class="size-2.5 rounded-full bg-yellow-500/60"></span>
+              <span class="size-2.5 rounded-full bg-green-500/60"></span>
+              <span class="ml-2 text-xs text-gray-600">Rols i permisos</span>
+            </div>
+            <img
+              src="/screenshots/Admin%20-%20Rols.png"
+              alt="Gestió de rols"
+              class="h-64 w-full object-cover object-top"
+              loading="lazy"
+            />
+          </div>
+
+          <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-900">
+            <div class="flex h-8 items-center gap-1.5 border-b border-white/10 bg-gray-800 px-3">
+              <span class="size-2.5 rounded-full bg-red-500/60"></span>
+              <span class="size-2.5 rounded-full bg-yellow-500/60"></span>
+              <span class="size-2.5 rounded-full bg-green-500/60"></span>
+              <span class="ml-2 text-xs text-gray-600">Reserves des de client</span>
+            </div>
+            <img
+              src="/screenshots/Clients%20-%20Reserves.png"
+              alt="Reserves de client"
+              class="h-64 w-full object-cover object-top"
+              loading="lazy"
+            />
           </div>
 
         </div>
