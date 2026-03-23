@@ -37,6 +37,17 @@ const user = ref<User | null>(null)
 
 const isAuthenticated = computed(() => !!user.value)
 
+const normalizeTenantSlug = (input: string): string => {
+  // Accept user-friendly org names and normalize to a slug expected by the API.
+  // Examples: "SIMS Corp" -> "sims-corp", "ecomove" -> "ecomove".
+  return String(input || '')
+    .trim()
+    .toLowerCase()
+    .replace(/['"]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
 export function useAuth() {
   const router = useRouter()
 
@@ -81,7 +92,12 @@ export function useAuth() {
     isLoading.value = true
     error.value = null
 
-    const normalizedTenant = tenantSlug.toLowerCase()
+    const normalizedTenant = normalizeTenantSlug(tenantSlug)
+    if (!normalizedTenant) {
+      error.value = 'Organization is required'
+      isLoading.value = false
+      return false
+    }
 
     // Central domain login: authenticate once and redirect user to tenant subdomain.
     if (isCentralHost()) {
@@ -122,10 +138,15 @@ export function useAuth() {
         apiClient.defaults.headers.common.Authorization = `Bearer ${token}`
         // Fetch user data after successful login
         const userFetched = await fetchUser()
-        // Update tenant cookie from actual user data (source of truth)
-        if (userFetched && user.value?.tenant_id) {
-          setCookie(TENANT_COOKIE_NAME, user.value.tenant_id)
-        } else if (!userFetched) {
+        // Keep tenant cookie as a valid slug (X-Tenant). Some backends return tenant_id
+        // as a numeric/uuid; only accept it if it looks like a slug.
+        if (userFetched) {
+          const tenantFromUser = typeof (user.value as any)?.tenant_id === 'string'
+            ? normalizeTenantSlug((user.value as any).tenant_id)
+            : ''
+          setCookie(TENANT_COOKIE_NAME, tenantFromUser || normalizedTenant)
+          try { localStorage.setItem('active_admin_tenant', tenantFromUser || normalizedTenant) } catch {}
+        } else {
           // Login failed after token – remove tenant cookie
           deleteCookie(TENANT_COOKIE_NAME)
         }
@@ -149,8 +170,9 @@ export function useAuth() {
     error.value = null
 
     try {
-      setCookie(TENANT_COOKIE_NAME, tenantSlug.toLowerCase())
-      localStorage.setItem('active_admin_tenant', tenantSlug.toLowerCase())
+      const normalizedTenant = normalizeTenantSlug(tenantSlug)
+      setCookie(TENANT_COOKIE_NAME, normalizedTenant)
+      localStorage.setItem('active_admin_tenant', normalizedTenant)
 
       const response = await apiClient.post<LoginResponse>('/auth/exchange-token', {
         exchange_token: exchangeToken,
@@ -168,8 +190,12 @@ export function useAuth() {
       apiClient.defaults.headers.common.Authorization = `Bearer ${token}`
 
       const userFetched = await fetchUser()
-      if (userFetched && user.value?.tenant_id) {
-        setCookie(TENANT_COOKIE_NAME, user.value.tenant_id)
+      if (userFetched) {
+        const tenantFromUser = typeof (user.value as any)?.tenant_id === 'string'
+          ? normalizeTenantSlug((user.value as any).tenant_id)
+          : ''
+        setCookie(TENANT_COOKIE_NAME, tenantFromUser || normalizedTenant)
+        try { localStorage.setItem('active_admin_tenant', tenantFromUser || normalizedTenant) } catch {}
       }
 
       return userFetched
