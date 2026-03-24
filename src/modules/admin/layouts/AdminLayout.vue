@@ -212,7 +212,7 @@ const navigationItems = [
   { key: 'roles', href: '/admin/roles', icon: ShieldCheckIcon },
   { key: 'bookings', href: '/admin/bookings', icon: CalendarDaysIcon },
   { key: 'vehicles', href: '/admin/vehicles', icon: TruckIcon },
-  { key: 'tenants', href: '/admin/tenants', icon: BuildingOfficeIcon },
+  { key: 'tenants', href: '/admin/tenants', icon: BuildingOfficeIcon, superAdminOnly: true },
   { key: 'tickets', href: '/admin/tickets', icon: TicketIcon },
 ]
 
