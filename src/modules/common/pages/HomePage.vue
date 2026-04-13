@@ -12,7 +12,7 @@
         <button @click="openMap" class="px-4 py-2 bg-indigo-600 rounded text-white hover:bg-indigo-500">Open full map</button>
       </div>
 
-      <footer class="mt-6 text-center text-sm text-gray-500">SIMS</footer>
+      <footer class="mt-6 text-center text-sm text-gray-500">Fleetly</footer>
     </div>
   </div>
 </template>

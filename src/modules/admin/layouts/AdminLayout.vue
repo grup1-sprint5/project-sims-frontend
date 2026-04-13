@@ -29,15 +29,16 @@
               <!-- Sidebar component, swap this element with another sidebar if you like -->
               <div class="relative flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2 dark:bg-gray-900 dark:ring dark:ring-white/10 dark:before:pointer-events-none dark:before:absolute dark:before:inset-0 dark:before:bg-black/10">
                 <div class="relative flex h-20 shrink-0 items-center">
-                  <img class="h-12 w-auto object-contain" src="/image.png" alt="SIMS" />
+                  <img class="h-10 w-auto object-contain dark:hidden" src="/branding/fleetly_logotip_negre.svg" alt="Fleetly" />
+                  <img class="hidden h-10 w-auto object-contain dark:block" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
                 </div>
                 <nav class="relative flex flex-1 flex-col">
                   <ul role="list" class="flex flex-1 flex-col gap-y-7">
                     <li>
                       <ul role="list" class="-mx-2 space-y-1">
                         <li v-for="item in navigation" :key="item.name">
-                          <router-link :to="item.href" :class="[item.current ? 'bg-gray-50 text-indigo-600 dark:bg-white/5 dark:text-white' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
-                            <component :is="item.icon" :class="[item.current ? 'text-indigo-600 dark:text-white' : 'text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-white', 'size-6 shrink-0']" aria-hidden="true" />
+                          <router-link :to="item.href" :class="[item.current ? 'bg-gray-100 text-[var(--fleetly-baltic-blue)] dark:bg-white/5 dark:text-white' : 'text-gray-700 hover:bg-gray-50 hover:text-[var(--fleetly-baltic-blue)] dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
+                            <component :is="item.icon" :class="[item.current ? 'text-[var(--fleetly-baltic-blue)] dark:text-white' : 'text-gray-400 group-hover:text-[var(--fleetly-baltic-blue)] dark:group-hover:text-white', 'size-6 shrink-0']" aria-hidden="true" />
                             {{ item.name }}
                           </router-link>
                         </li>
@@ -57,15 +58,16 @@
       <!-- Sidebar component, swap this element with another sidebar if you like -->
       <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 dark:border-white/10 dark:bg-black/10">
         <div class="flex h-20 shrink-0 items-center">
-          <img class="h-12 w-auto object-contain" src="/image.png" alt="SIMS" />
+          <img class="h-10 w-auto object-contain dark:hidden" src="/branding/fleetly_logotip_negre.svg" alt="Fleetly" />
+          <img class="hidden h-10 w-auto object-contain dark:block" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
         </div>
         <nav class="flex flex-1 flex-col">
           <ul role="list" class="flex flex-1 flex-col gap-y-7">
             <li>
               <ul role="list" class="-mx-2 space-y-1">
                 <li v-for="item in navigation" :key="item.name">
-                  <router-link :to="item.href" :class="[item.current ? 'bg-gray-50 text-indigo-600 dark:bg-white/5 dark:text-white' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
-                    <component :is="item.icon" :class="[item.current ? 'text-indigo-600 dark:text-white' : 'text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-white', 'size-6 shrink-0']" aria-hidden="true" />
+                  <router-link :to="item.href" :class="[item.current ? 'bg-gray-100 text-[var(--fleetly-baltic-blue)] dark:bg-white/5 dark:text-white' : 'text-gray-700 hover:bg-gray-50 hover:text-[var(--fleetly-baltic-blue)] dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
+                    <component :is="item.icon" :class="[item.current ? 'text-[var(--fleetly-baltic-blue)] dark:text-white' : 'text-gray-400 group-hover:text-[var(--fleetly-baltic-blue)] dark:group-hover:text-white', 'size-6 shrink-0']" aria-hidden="true" />
                     {{ item.name }}
                   </router-link>
                 </li>
@@ -74,7 +76,7 @@
             <li class="-mx-6 mt-auto">
               <Menu as="div" class="relative px-2 py-2">
                 <MenuButton class="w-full flex items-center gap-x-3 rounded-md px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5">
-                  <span class="size-8 rounded-full outline -outline-offset-1 outline-black/5 dark:outline-white/10 bg-indigo-700 flex items-center justify-center text-xs font-bold text-white">
+                  <span class="size-8 rounded-full outline -outline-offset-1 outline-black/5 dark:outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
                     {{ userInitials }}
                   </span>
                   <span class="truncate">{{ adminDisplayName }}</span>
@@ -123,9 +125,9 @@
       <div class="flex-1 text-sm/6 font-semibold text-gray-900 dark:text-white">{{ m.adminNav.dashboard }}</div>
       <LanguageSwitcher />
       <Menu as="div" class="relative">
-        <MenuButton class="relative flex items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+        <MenuButton class="relative flex items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]">
           <span class="sr-only">Open user menu</span>
-          <span class="size-8 rounded-full outline -outline-offset-1 outline-black/5 dark:outline-white/10 bg-indigo-700 flex items-center justify-center text-xs font-bold text-white">
+          <span class="size-8 rounded-full outline -outline-offset-1 outline-black/5 dark:outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
             {{ userInitials }}
           </span>
         </MenuButton>

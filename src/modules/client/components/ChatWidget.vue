@@ -18,11 +18,11 @@
       >
         <!-- Panel header -->
         <div class="flex items-center gap-2.5 border-b border-white/10 bg-gray-800 px-4 py-3">
-          <div class="flex size-7 shrink-0 items-center justify-center rounded-full bg-indigo-600">
+          <div class="flex size-7 shrink-0 items-center justify-center rounded-full bg-[var(--fleetly-baltic-blue)]">
             <SparklesIcon class="size-4 text-white" />
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-semibold text-white leading-none">Assistent SIMS</p>
+            <p class="text-sm font-semibold text-white leading-none">Assistent Fleetly</p>
             <p class="text-xs text-gray-400 mt-0.5">Ajuda sobre l'aplicació</p>
           </div>
           <div class="flex items-center gap-1">
@@ -55,7 +55,7 @@
             v-if="messages.length === 0"
             class="flex h-full flex-col items-center justify-center gap-3 text-center"
           >
-            <SparklesIcon class="size-8 text-indigo-400/50" />
+            <SparklesIcon class="size-8 text-[var(--fleetly-baltic-blue)]/50" />
             <p class="text-xs text-gray-400 leading-relaxed">
               Pregunta'm qualsevol cosa<br />sobre l'ús de l'aplicació!
             </p>
@@ -66,7 +66,7 @@
                 :key="s"
                 type="button"
                 @click="sendSuggestion(s)"
-                class="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-gray-300 transition hover:bg-indigo-600/30 hover:text-white"
+                class="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-gray-300 transition hover:bg-[var(--fleetly-baltic-blue)]/30 hover:text-white"
               >
                 {{ s }}
               </button>
@@ -83,7 +83,7 @@
             >
               <div
                 v-if="msg.role === 'assistant'"
-                class="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-indigo-600"
+                class="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-[var(--fleetly-baltic-blue)]"
               >
                 <SparklesIcon class="size-3.5 text-white" />
               </div>
@@ -92,7 +92,7 @@
                 class="max-w-[78%] rounded-2xl px-3 py-2 text-xs leading-relaxed"
                 :class="
                   msg.role === 'user'
-                    ? 'rounded-tr-sm bg-indigo-600 text-white'
+                    ? 'rounded-tr-sm bg-[var(--fleetly-baltic-blue)] text-white'
                     : 'rounded-tl-sm bg-gray-700/80 text-gray-100'
                 "
               >
@@ -109,7 +109,7 @@
 
             <!-- Typing indicator -->
             <div v-if="loading" class="flex items-center gap-2">
-              <div class="flex size-6 shrink-0 items-center justify-center rounded-full bg-indigo-600">
+              <div class="flex size-6 shrink-0 items-center justify-center rounded-full bg-[var(--fleetly-baltic-blue)]">
                 <SparklesIcon class="size-3.5 text-white" />
               </div>
               <div class="flex gap-1 rounded-2xl rounded-tl-sm bg-gray-700/80 px-3 py-2.5">
@@ -130,13 +130,13 @@
               placeholder="Escriu un missatge…"
               maxlength="2000"
               :disabled="loading"
-              class="flex-1 rounded-xl border border-white/10 bg-gray-700 px-3 py-2 text-xs text-white placeholder-gray-500 outline-none transition focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
+              class="flex-1 rounded-xl border border-white/10 bg-gray-700 px-3 py-2 text-xs text-white placeholder-gray-500 outline-none transition focus:border-[var(--fleetly-baltic-blue)] focus:ring-1 focus:ring-[var(--fleetly-baltic-blue)] disabled:opacity-50"
               @keydown.enter.exact.prevent="sendMessage"
             />
             <button
               type="submit"
               :disabled="loading || !inputText.trim()"
-              class="flex shrink-0 items-center justify-center rounded-xl bg-indigo-600 px-3 py-2 text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
+              class="flex shrink-0 items-center justify-center rounded-xl bg-[var(--fleetly-baltic-blue)] px-3 py-2 text-white transition hover:bg-[#1859be] disabled:cursor-not-allowed disabled:opacity-40"
             >
               <PaperAirplaneIcon class="size-4" />
             </button>
