@@ -1,12 +1,13 @@
 <template>
-  <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+  <div class="min-h-screen bg-[var(--fleetly-black)] text-white flex items-center justify-center px-6 py-12 lg:px-8">
+    <div class="w-full max-w-md rounded-2xl border border-[var(--fleetly-gunmetal)] bg-[var(--fleetly-gunmetal)]/35 p-6 shadow-2xl shadow-black/40 sm:p-8">
+      <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <img class="mx-auto h-12 w-auto object-contain" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
       <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">Sign in to your account</h2>
-    </div>
+      </div>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" @submit.prevent="handleSubmit">
+      <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form class="space-y-6" @submit.prevent="handleSubmit">
         <div>
           <label for="tenant" class="block text-sm/6 font-medium text-gray-100">Organization</label>
           <div class="mt-2">
@@ -62,7 +63,7 @@
           <button
             type="submit"
             :disabled="isLoading"
-            class="flex w-full justify-center rounded-md bg-[var(--fleetly-baltic-blue)] px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-[#1859be] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]"
+            class="flex w-full justify-center rounded-md bg-[var(--fleetly-baltic-blue)] px-3 py-1.5 text-sm/6 font-semibold text-white hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]"
           >
             {{ isLoading ? 'Signing in...' : 'Sign in' }}
           </button>
@@ -70,9 +71,10 @@
 
         <p class="text-center text-sm text-gray-400">
           Don't have an account?
-          <RouterLink to="/register" class="font-semibold leading-6 text-[var(--fleetly-baltic-blue)] hover:text-[#4a86e3]">Register</RouterLink>
+          <RouterLink to="/register" class="font-semibold leading-6 text-[var(--fleetly-baltic-blue)] hover:opacity-80">Register</RouterLink>
         </p>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 </template>

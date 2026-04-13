@@ -136,7 +136,7 @@
             <button
               type="submit"
               :disabled="loading || !inputText.trim()"
-              class="flex shrink-0 items-center justify-center rounded-xl bg-[var(--fleetly-baltic-blue)] px-3 py-2 text-white transition hover:bg-[#1859be] disabled:cursor-not-allowed disabled:opacity-40"
+              class="flex shrink-0 items-center justify-center rounded-xl bg-[var(--fleetly-baltic-blue)] px-3 py-2 text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <PaperAirplaneIcon class="size-4" />
             </button>
@@ -149,7 +149,7 @@
     <button
       type="button"
       @click="isOpen = !isOpen"
-      class="relative flex size-14 items-center justify-center rounded-full bg-indigo-600 shadow-lg shadow-indigo-900/50 transition hover:bg-indigo-500 hover:scale-105 active:scale-95"
+      class="relative flex size-14 items-center justify-center rounded-full bg-[var(--fleetly-baltic-blue)] shadow-lg shadow-black/50 transition hover:opacity-90 hover:scale-105 active:scale-95"
       :title="isOpen ? 'Tanca l\'assistent' : 'Obre l\'assistent IA'"
     >
       <Transition

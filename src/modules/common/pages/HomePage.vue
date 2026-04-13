@@ -9,7 +9,7 @@
       </div>
 
       <div class="mt-4 text-center">
-        <button @click="openMap" class="px-4 py-2 bg-indigo-600 rounded text-white hover:bg-indigo-500">Open full map</button>
+        <button @click="openMap" class="px-4 py-2 bg-[var(--fleetly-baltic-blue)] rounded text-white hover:opacity-90">Open full map</button>
       </div>
 
       <footer class="mt-6 text-center text-sm text-gray-500">Fleetly</footer>

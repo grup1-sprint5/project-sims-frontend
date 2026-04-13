@@ -8,10 +8,10 @@
 
 :root {
   --fleetly-white: #ffffff;
-  --fleetly-black: #010102;
-  --fleetly-gunmetal: #1d292c;
-  --fleetly-pale-slate: #b1c4cc;
-  --fleetly-baltic-blue: #1d67da;
+  --fleetly-black: #000000;
+  --fleetly-gunmetal: #353839;
+  --fleetly-pale-slate: #bebfc5;
+  --fleetly-baltic-blue: #26619c;
 }
 
 body {
@@ -75,11 +75,11 @@ body {
 }
 
 .Toastify__progress-bar--success {
-  background: linear-gradient(90deg, #22c55e 0%, var(--fleetly-pale-slate) 100%);
+  background: linear-gradient(90deg, var(--fleetly-baltic-blue) 0%, var(--fleetly-pale-slate) 100%);
 }
 
 .Toastify__progress-bar--error {
-  background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+  background: linear-gradient(90deg, var(--fleetly-gunmetal) 0%, var(--fleetly-black) 100%);
 }
 
 @media (max-width: 768px) {

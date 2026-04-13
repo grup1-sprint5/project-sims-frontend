@@ -26,7 +26,7 @@
           </RouterLink>
           <RouterLink
             to="/register"
-            class="rounded-lg bg-[var(--fleetly-baltic-blue)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1859be]"
+            class="rounded-lg bg-[var(--fleetly-baltic-blue)] px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
           >
             Prova-ho gratis
           </RouterLink>
@@ -40,8 +40,8 @@
     <section class="relative flex min-h-screen items-center overflow-hidden pt-16">
       <!-- Background glow -->
       <div class="pointer-events-none absolute inset-0 overflow-hidden">
-        <div class="absolute -top-40 left-1/2 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-indigo-700/20 blur-3xl"></div>
-        <div class="absolute bottom-0 right-0 h-[400px] w-[600px] rounded-full bg-violet-700/10 blur-3xl"></div>
+        <div class="absolute -top-40 left-1/2 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-[var(--fleetly-baltic-blue)]/20 blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 h-[400px] w-[600px] rounded-full bg-[var(--fleetly-pale-slate)]/15 blur-3xl"></div>
       </div>
 
       <div class="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
@@ -65,7 +65,7 @@
             <div class="mt-10 flex flex-wrap items-center gap-4">
               <RouterLink
                 to="/register"
-                class="inline-flex items-center gap-2 rounded-xl bg-[var(--fleetly-baltic-blue)] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/40 transition hover:bg-[#1859be] hover:scale-105"
+                class="inline-flex items-center gap-2 rounded-xl bg-[var(--fleetly-baltic-blue)] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/40 transition hover:opacity-90 hover:scale-105"
               >
                 Comença ara — és gratis
                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -106,15 +106,15 @@
             <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-900 shadow-2xl shadow-black/50">
               <!-- Screenshot placeholder — MAP -->
               <div class="flex h-12 items-center gap-2 border-b border-white/10 bg-gray-800/80 px-4">
-                <span class="size-3 rounded-full bg-red-500/70"></span>
-                <span class="size-3 rounded-full bg-yellow-500/70"></span>
-                <span class="size-3 rounded-full bg-green-500/70"></span>
+                <span class="size-3 rounded-full bg-[var(--fleetly-pale-slate)]/70"></span>
+                <span class="size-3 rounded-full bg-[var(--fleetly-baltic-blue)]/70"></span>
+                <span class="size-3 rounded-full bg-[var(--fleetly-gunmetal)]/85"></span>
                 <span class="ml-3 text-xs text-gray-500">localhost:5173/vehicles-map</span>
               </div>
               <div class="flex h-80 items-center justify-center bg-gray-800/40">
                 <!-- SUBSTITUEIX PER: <img src="/screenshots/map.png" alt="Mapa de vehicles" class="w-full h-full object-cover" /> -->
                 <div class="text-center">
-                  <svg class="mx-auto size-16 text-indigo-500/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="mx-auto size-16 text-[var(--fleetly-baltic-blue)]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
                   </svg>
                   <p class="mt-3 text-sm font-medium text-gray-600">Captura de pantalla del mapa</p>
@@ -124,8 +124,8 @@
             </div>
             <!-- Floating badge -->
             <div class="absolute -bottom-4 -left-4 flex items-center gap-3 rounded-2xl border border-white/10 bg-gray-900 px-4 py-3 shadow-xl">
-              <span class="flex size-9 items-center justify-center rounded-xl bg-green-500/20">
-                <svg class="size-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <span class="flex size-9 items-center justify-center rounded-xl bg-[var(--fleetly-baltic-blue)]/20">
+                <svg class="size-5 text-[var(--fleetly-pale-slate)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
               </span>
@@ -172,48 +172,48 @@
         <!-- Feature grid -->
         <div class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
-          <div class="group rounded-2xl border border-white/10 bg-gray-900 p-6 transition hover:border-indigo-500/50 hover:bg-gray-800/60">
-            <div class="flex size-12 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500/20 transition">
+          <div class="group rounded-2xl border border-white/10 bg-gray-900 p-6 transition hover:border-[var(--fleetly-baltic-blue)]/50 hover:bg-gray-800/60">
+            <div class="flex size-12 items-center justify-center rounded-xl bg-[var(--fleetly-baltic-blue)]/15 text-[var(--fleetly-baltic-blue)] group-hover:bg-[var(--fleetly-baltic-blue)]/25 transition">
               <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
             </div>
             <h3 class="mt-4 text-lg font-bold text-white">Mapa en temps real</h3>
             <p class="mt-2 text-sm leading-relaxed text-gray-400">Visualitza tots els vehicles de la flota en un mapa interactiu. Verd = disponible, groc = reservat, vermell = en marxa.</p>
           </div>
 
-          <div class="group rounded-2xl border border-white/10 bg-gray-900 p-6 transition hover:border-indigo-500/50 hover:bg-gray-800/60">
-            <div class="flex size-12 items-center justify-center rounded-xl bg-violet-500/10 text-violet-400 group-hover:bg-violet-500/20 transition">
+          <div class="group rounded-2xl border border-white/10 bg-gray-900 p-6 transition hover:border-[var(--fleetly-baltic-blue)]/50 hover:bg-gray-800/60">
+            <div class="flex size-12 items-center justify-center rounded-xl bg-[var(--fleetly-pale-slate)]/20 text-[var(--fleetly-pale-slate)] group-hover:bg-[var(--fleetly-pale-slate)]/30 transition">
               <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
             </div>
             <h3 class="mt-4 text-lg font-bold text-white">Reserves instantànies</h3>
             <p class="mt-2 text-sm leading-relaxed text-gray-400">Reserva un vehicle en menys de 30 segons. Selecciona data, hora i confirma. El preu es calcula automàticament.</p>
           </div>
 
-          <div class="group rounded-2xl border border-white/10 bg-gray-900 p-6 transition hover:border-indigo-500/50 hover:bg-gray-800/60">
-            <div class="flex size-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20 transition">
+          <div class="group rounded-2xl border border-white/10 bg-gray-900 p-6 transition hover:border-[var(--fleetly-baltic-blue)]/50 hover:bg-gray-800/60">
+            <div class="flex size-12 items-center justify-center rounded-xl bg-[var(--fleetly-baltic-blue)]/15 text-[var(--fleetly-baltic-blue)] group-hover:bg-[var(--fleetly-baltic-blue)]/25 transition">
               <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
             </div>
             <h3 class="mt-4 text-lg font-bold text-white">Panel d'administració</h3>
             <p class="mt-2 text-sm leading-relaxed text-gray-400">Gestiona vehicles, usuaris, rols i tenants. Controla totes les reserves i facturacions des d'un dashboard complet.</p>
           </div>
 
-          <div class="group rounded-2xl border border-white/10 bg-gray-900 p-6 transition hover:border-indigo-500/50 hover:bg-gray-800/60">
-            <div class="flex size-12 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 group-hover:bg-amber-500/20 transition">
+          <div class="group rounded-2xl border border-white/10 bg-gray-900 p-6 transition hover:border-[var(--fleetly-baltic-blue)]/50 hover:bg-gray-800/60">
+            <div class="flex size-12 items-center justify-center rounded-xl bg-[var(--fleetly-pale-slate)]/20 text-[var(--fleetly-pale-slate)] group-hover:bg-[var(--fleetly-pale-slate)]/30 transition">
               <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
             </div>
             <h3 class="mt-4 text-lg font-bold text-white">Sistema de tickets</h3>
             <p class="mt-2 text-sm leading-relaxed text-gray-400">Canal de suport integrat. Els usuaris poden obrir incidències i els administradors les gestionen en temps real.</p>
           </div>
 
-          <div class="group rounded-2xl border border-white/10 bg-gray-900 p-6 transition hover:border-indigo-500/50 hover:bg-gray-800/60">
-            <div class="flex size-12 items-center justify-center rounded-xl bg-sky-500/10 text-sky-400 group-hover:bg-sky-500/20 transition">
+          <div class="group rounded-2xl border border-white/10 bg-gray-900 p-6 transition hover:border-[var(--fleetly-baltic-blue)]/50 hover:bg-gray-800/60">
+            <div class="flex size-12 items-center justify-center rounded-xl bg-[var(--fleetly-baltic-blue)]/15 text-[var(--fleetly-baltic-blue)] group-hover:bg-[var(--fleetly-baltic-blue)]/25 transition">
               <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 3H3a2 2 0 00-2 2v12a2 2 0 002 2h5l3 4 3-4h5a2 2 0 002-2V5a2 2 0 00-2-2z" /></svg>
             </div>
             <h3 class="mt-4 text-lg font-bold text-white">Assistent IA</h3>
             <p class="mt-2 text-sm leading-relaxed text-gray-400">Chatbot intel·ligent integrat que respon preguntes sobre l'aplicació i guia els usuaris en temps real.</p>
           </div>
 
-          <div class="group rounded-2xl border border-white/10 bg-gray-900 p-6 transition hover:border-indigo-500/50 hover:bg-gray-800/60">
-            <div class="flex size-12 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 group-hover:bg-rose-500/20 transition">
+          <div class="group rounded-2xl border border-white/10 bg-gray-900 p-6 transition hover:border-[var(--fleetly-baltic-blue)]/50 hover:bg-gray-800/60">
+            <div class="flex size-12 items-center justify-center rounded-xl bg-[var(--fleetly-pale-slate)]/20 text-[var(--fleetly-pale-slate)] group-hover:bg-[var(--fleetly-pale-slate)]/30 transition">
               <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
             </div>
             <h3 class="mt-4 text-lg font-bold text-white">Multi-tenant segur</h3>
@@ -230,19 +230,19 @@
     <section id="how-it-works" class="bg-gray-900/60 py-24">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
-          <span class="text-sm font-semibold uppercase tracking-widest text-indigo-400">Com funciona</span>
+          <span class="text-sm font-semibold uppercase tracking-widest text-[var(--fleetly-baltic-blue)]">Com funciona</span>
           <h2 class="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl">Reserva un vehicle en 3 passos</h2>
           <p class="mt-4 text-gray-400">Sense complicacions. Des del mòbil o l'ordinador, en menys d'un minut.</p>
         </div>
 
         <div class="relative mt-16">
           <!-- Connector line (desktop) -->
-          <div class="absolute left-1/2 top-8 hidden h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent lg:block"></div>
+          <div class="absolute left-1/2 top-8 hidden h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-[var(--fleetly-baltic-blue)]/30 to-transparent lg:block"></div>
 
           <div class="grid gap-8 lg:grid-cols-3">
 
             <div class="relative flex flex-col items-center text-center">
-              <div class="relative flex size-16 items-center justify-center rounded-2xl bg-indigo-600 shadow-lg shadow-indigo-900/50 text-xl font-extrabold text-white">
+              <div class="relative flex size-16 items-center justify-center rounded-2xl bg-[var(--fleetly-baltic-blue)] shadow-lg shadow-slate-900/50 text-xl font-extrabold text-white">
                 1
               </div>
               <h3 class="mt-5 text-xl font-bold text-white">Obre el mapa</h3>
@@ -260,7 +260,7 @@
             </div>
 
             <div class="relative flex flex-col items-center text-center">
-              <div class="flex size-16 items-center justify-center rounded-2xl bg-violet-600 shadow-lg shadow-violet-900/50 text-xl font-extrabold text-white">
+              <div class="flex size-16 items-center justify-center rounded-2xl bg-[var(--fleetly-gunmetal)] shadow-lg shadow-black/60 text-xl font-extrabold text-white">
                 2
               </div>
               <h3 class="mt-5 text-xl font-bold text-white">Selecciona i reserva</h3>
@@ -278,7 +278,7 @@
             </div>
 
             <div class="relative flex flex-col items-center text-center">
-              <div class="flex size-16 items-center justify-center rounded-2xl bg-emerald-600 shadow-lg shadow-emerald-900/50 text-xl font-extrabold text-white">
+              <div class="flex size-16 items-center justify-center rounded-2xl bg-[var(--fleetly-pale-slate)] text-[var(--fleetly-black)] shadow-lg shadow-black/50 text-xl font-extrabold">
                 3
               </div>
               <h3 class="mt-5 text-xl font-bold text-white">Gestiona les teves reserves</h3>
@@ -306,7 +306,7 @@
     <section id="screenshots" class="py-24">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
-          <span class="text-sm font-semibold uppercase tracking-widest text-indigo-400">Captures de pantalla</span>
+          <span class="text-sm font-semibold uppercase tracking-widest text-[var(--fleetly-baltic-blue)]">Captures de pantalla</span>
           <h2 class="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl">Mira-ho per tu mateix</h2>
           <p class="mt-4 text-gray-400">Una interfície neta, moderna i dissenyada per ser intuïtiva des del primer dia.</p>
         </div>
@@ -316,15 +316,15 @@
           <!-- Screenshot 1 - Mapa principal -->
           <div class="group col-span-full overflow-hidden rounded-2xl border border-white/10 bg-gray-900 lg:col-span-2">
             <div class="flex h-8 items-center gap-1.5 border-b border-white/10 bg-gray-800 px-3">
-              <span class="size-2.5 rounded-full bg-red-500/60"></span>
-              <span class="size-2.5 rounded-full bg-yellow-500/60"></span>
-              <span class="size-2.5 rounded-full bg-green-500/60"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-pale-slate)]/70"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-baltic-blue)]/70"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-gunmetal)]/85"></span>
               <span class="ml-2 text-xs text-gray-600">Mapa de vehicles en temps real</span>
             </div>
             <div class="flex h-72 items-center justify-center bg-gray-800/30">
               <!-- SUBSTITUEIX PER: <img src="/screenshots/map-full.png" alt="Mapa de vehicles" class="w-full h-full object-cover" /> -->
               <div class="text-center">
-                <svg class="mx-auto size-14 text-indigo-500/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                <svg class="mx-auto size-14 text-[var(--fleetly-baltic-blue)]/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
                 <p class="mt-3 text-sm font-semibold text-gray-600">Mapa de vehicles (captura gran)</p>
                 <p class="text-xs text-gray-700">[ /screenshots/map-full.png ]</p>
               </div>
@@ -334,15 +334,15 @@
           <!-- Screenshot 2 - Perfil -->
           <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-900">
             <div class="flex h-8 items-center gap-1.5 border-b border-white/10 bg-gray-800 px-3">
-              <span class="size-2.5 rounded-full bg-red-500/60"></span>
-              <span class="size-2.5 rounded-full bg-yellow-500/60"></span>
-              <span class="size-2.5 rounded-full bg-green-500/60"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-pale-slate)]/70"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-baltic-blue)]/70"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-gunmetal)]/85"></span>
               <span class="ml-2 text-xs text-gray-600">Perfil d'usuari</span>
             </div>
             <div class="flex h-72 items-center justify-center bg-gray-800/30">
               <!-- SUBSTITUEIX PER: <img src="/screenshots/profile.png" alt="Perfil" class="w-full h-full object-cover" /> -->
               <div class="text-center">
-                <svg class="mx-auto size-14 text-violet-500/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <svg class="mx-auto size-14 text-[var(--fleetly-pale-slate)]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 <p class="mt-3 text-sm font-semibold text-gray-600">Perfil d'usuari</p>
                 <p class="text-xs text-gray-700">[ /screenshots/profile.png ]</p>
               </div>
@@ -352,15 +352,15 @@
           <!-- Screenshot 3 - Reserves -->
           <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-900">
             <div class="flex h-8 items-center gap-1.5 border-b border-white/10 bg-gray-800 px-3">
-              <span class="size-2.5 rounded-full bg-red-500/60"></span>
-              <span class="size-2.5 rounded-full bg-yellow-500/60"></span>
-              <span class="size-2.5 rounded-full bg-green-500/60"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-pale-slate)]/70"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-baltic-blue)]/70"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-gunmetal)]/85"></span>
               <span class="ml-2 text-xs text-gray-600">Les meves reserves</span>
             </div>
             <div class="flex h-64 items-center justify-center bg-gray-800/30">
               <!-- SUBSTITUEIX PER: <img src="/screenshots/bookings.png" alt="Reserves" class="w-full h-full object-cover" /> -->
               <div class="text-center">
-                <svg class="mx-auto size-14 text-amber-500/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                <svg class="mx-auto size-14 text-[var(--fleetly-baltic-blue)]/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 <p class="mt-3 text-sm font-semibold text-gray-600">Les meves reserves</p>
                 <p class="text-xs text-gray-700">[ /screenshots/bookings.png ]</p>
               </div>
@@ -370,15 +370,15 @@
           <!-- Screenshot 4 - Admin dashboard -->
           <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-900">
             <div class="flex h-8 items-center gap-1.5 border-b border-white/10 bg-gray-800 px-3">
-              <span class="size-2.5 rounded-full bg-red-500/60"></span>
-              <span class="size-2.5 rounded-full bg-yellow-500/60"></span>
-              <span class="size-2.5 rounded-full bg-green-500/60"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-pale-slate)]/70"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-baltic-blue)]/70"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-gunmetal)]/85"></span>
               <span class="ml-2 text-xs text-gray-600">Panel d'administració</span>
             </div>
             <div class="flex h-64 items-center justify-center bg-gray-800/30">
               <!-- SUBSTITUEIX PER: <img src="/screenshots/admin.png" alt="Admin" class="w-full h-full object-cover" /> -->
               <div class="text-center">
-                <svg class="mx-auto size-14 text-emerald-500/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                <svg class="mx-auto size-14 text-[var(--fleetly-pale-slate)]/35" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                 <p class="mt-3 text-sm font-semibold text-gray-600">Panel d'administració</p>
                 <p class="text-xs text-gray-700">[ /screenshots/admin.png ]</p>
               </div>
@@ -388,15 +388,15 @@
           <!-- Screenshot 5 - Tickets -->
           <div class="col-span-full overflow-hidden rounded-2xl border border-white/10 bg-gray-900 lg:col-span-1">
             <div class="flex h-8 items-center gap-1.5 border-b border-white/10 bg-gray-800 px-3">
-              <span class="size-2.5 rounded-full bg-red-500/60"></span>
-              <span class="size-2.5 rounded-full bg-yellow-500/60"></span>
-              <span class="size-2.5 rounded-full bg-green-500/60"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-pale-slate)]/70"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-baltic-blue)]/70"></span>
+              <span class="size-2.5 rounded-full bg-[var(--fleetly-gunmetal)]/85"></span>
               <span class="ml-2 text-xs text-gray-600">Sistema de tickets</span>
             </div>
             <div class="flex h-64 items-center justify-center bg-gray-800/30">
               <!-- SUBSTITUEIX PER: <img src="/screenshots/tickets.png" alt="Tickets" class="w-full h-full object-cover" /> -->
               <div class="text-center">
-                <svg class="mx-auto size-14 text-sky-500/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
+                <svg class="mx-auto size-14 text-[var(--fleetly-baltic-blue)]/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
                 <p class="mt-3 text-sm font-semibold text-gray-600">Sistema de tickets de suport</p>
                 <p class="text-xs text-gray-700">[ /screenshots/tickets.png ]</p>
               </div>
@@ -413,7 +413,7 @@
     <section id="faq" class="bg-gray-900/60 py-24">
       <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-          <span class="text-sm font-semibold uppercase tracking-widest text-indigo-400">FAQ</span>
+          <span class="text-sm font-semibold uppercase tracking-widest text-[var(--fleetly-baltic-blue)]">FAQ</span>
           <h2 class="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl">Preguntes freqüents</h2>
         </div>
 
@@ -440,20 +440,20 @@
     ═══════════════════════════════════════════════════ -->
     <section class="py-24">
       <div class="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-        <div class="overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-800 p-12 shadow-2xl shadow-indigo-900/50">
+        <div class="overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--fleetly-gunmetal)] via-[var(--fleetly-baltic-blue)] to-[var(--fleetly-black)] p-12 shadow-2xl shadow-black/50">
           <div class="pointer-events-none absolute inset-0 opacity-10"
             style="background-image: radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px); background-size: 60px 60px;">
           </div>
           <h2 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
             Preparat per gestionar la teva flota?
           </h2>
-          <p class="mx-auto mt-4 max-w-xl text-lg text-indigo-200">
-            Uneix-te a SIMS i digitalitza la gestió dels teus vehicles compartits avui mateix.
+          <p class="mx-auto mt-4 max-w-xl text-lg text-[var(--fleetly-pale-slate)]">
+            Uneix-te a Fleetly i digitalitza la gestió dels teus vehicles compartits avui mateix.
           </p>
           <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
             <RouterLink
               to="/register"
-              class="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-sm font-bold text-indigo-700 shadow-lg transition hover:bg-indigo-50 hover:scale-105"
+              class="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-sm font-bold text-[var(--fleetly-gunmetal)] shadow-lg transition hover:bg-[var(--fleetly-pale-slate)] hover:text-[var(--fleetly-black)] hover:scale-105"
             >
               Crea el teu compte gratis
               <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
