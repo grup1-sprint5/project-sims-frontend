@@ -22,7 +22,7 @@
             <SparklesIcon class="size-4 text-white" />
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-semibold text-white leading-none">Assistent SIMS</p>
+            <p class="text-sm font-semibold text-white leading-none">Assistent Fleetly</p>
             <p class="text-xs text-gray-400 mt-0.5">Ajuda sobre l'aplicació</p>
           </div>
           <div class="flex items-center gap-1">

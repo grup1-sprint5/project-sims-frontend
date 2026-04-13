@@ -19,14 +19,14 @@
       <FormInput
         v-model="form.name"
         label="Nombre"
-        placeholder="Ej: SIMS Corp"
+        placeholder="Ej: Fleetly Corp"
         :error="errors.name"
       />
 
       <FormInput
         v-model="form.slug"
         label="Slug"
-        placeholder="ej: sims-corp (solo letras, números y guiones)"
+        placeholder="ej: fleetly-corp (solo letras, números y guiones)"
         :error="errors.slug"
       />
 

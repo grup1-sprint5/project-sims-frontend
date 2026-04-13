@@ -1,6 +1,26 @@
+@import url('https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: InterVariable, sans-serif;
+  --font-sans: 'Switzer', InterVariable, sans-serif;
+  --font-display: 'Questrial', sans-serif; /* Fallback for ITC Avant Garde if not available via CDN */
   --font-sans--font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  
+  --color-fleetly-black: #010102;
+  --color-fleetly-gunmetal: #1D292C;
+  --color-fleetly-slate: #B1C4CD;
+  --color-fleetly-blue: #1D67DA;
+
+  /* Re-mapping colors to brand palette */
+  --color-indigo-400: #3b82f6;
+  --color-indigo-500: #1D67DA;
+  --color-indigo-600: #1a5bb4;
+  --color-indigo-700: #154a93;
+
+  /* Use Gunmetal for dark backgrounds instead of generic gray */
+  --color-gray-900: #1D292C;
+  --color-gray-950: #121a1c;
+  
+  /* Use Pale Slate for some grays */
+  --color-gray-400: #B1C4CD;
 }
