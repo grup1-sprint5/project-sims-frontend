@@ -7,7 +7,7 @@
     <body class="h-full">
     ```
   -->
-  <div class="min-h-screen bg-[var(--app-bg)] text-[var(--app-text)]">
+  <div class="admin-theme min-h-screen bg-[var(--app-bg)] text-[var(--app-text)]">
     <TransitionRoot as="template" :show="sidebarOpen">
       <Dialog class="relative z-50 lg:hidden" @close="sidebarOpen = false">
         <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0" enter-to="" leave="transition-opacity ease-linear duration-300" leave-from="" leave-to="opacity-0">
@@ -107,11 +107,11 @@
                   leave-from-class="transform scale-100 opacity-100"
                   leave-to-class="transform opacity-0 scale-95"
                 >
-                  <MenuItems class="absolute bottom-14 left-2 right-2 z-40 origin-bottom rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/10">
+                  <MenuItems class="absolute bottom-14 left-2 right-2 z-40 origin-bottom rounded-md bg-[var(--app-surface)] py-1 shadow-lg ring-1 ring-[var(--app-border)]">
                     <MenuItem v-slot="{ active }">
                       <router-link
                         :to="adminProfilePath"
-                        :class="[active ? 'bg-gray-100 dark:bg-white/5' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-gray-300']"
+                        :class="[active ? 'bg-[var(--app-surface-alt)]' : '', 'block px-4 py-2 text-sm text-[var(--app-text)]']"
                       >
                         {{ m.userMenu.yourProfile }}
                       </router-link>
@@ -120,7 +120,7 @@
                       <button
                         type="button"
                         @click="handleLogout"
-                        :class="[active ? 'bg-gray-100 dark:bg-white/5' : '', 'block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300']"
+                        :class="[active ? 'bg-[var(--app-surface-alt)]' : '', 'block w-full text-left px-4 py-2 text-sm text-[var(--app-text)]']"
                       >
                         {{ m.userMenu.signOut }}
                       </button>
@@ -164,11 +164,11 @@
           leave-from-class="transform scale-100 opacity-100"
           leave-to-class="transform opacity-0 scale-95"
         >
-          <MenuItems class="absolute right-0 z-40 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/10">
+          <MenuItems class="absolute right-0 z-40 mt-2 w-48 origin-top-right rounded-md bg-[var(--app-surface)] py-1 shadow-lg ring-1 ring-[var(--app-border)]">
             <MenuItem v-slot="{ active }">
               <router-link
                 :to="adminProfilePath"
-                :class="[active ? 'bg-gray-100 dark:bg-white/5' : '', 'block px-4 py-2 text-sm text-gray-700 dark:text-gray-300']"
+                :class="[active ? 'bg-[var(--app-surface-alt)]' : '', 'block px-4 py-2 text-sm text-[var(--app-text)]']"
               >
                 {{ m.userMenu.yourProfile }}
               </router-link>
@@ -177,7 +177,7 @@
               <button
                 type="button"
                 @click="handleLogout"
-                :class="[active ? 'bg-gray-100 dark:bg-white/5' : '', 'block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300']"
+                :class="[active ? 'bg-[var(--app-surface-alt)]' : '', 'block w-full text-left px-4 py-2 text-sm text-[var(--app-text)]']"
               >
                 {{ m.userMenu.signOut }}
               </button>
@@ -192,7 +192,7 @@
         <div v-if="isAdmin || isLoading">
           <router-view />
         </div>
-        <div v-else class="p-8 text-center text-gray-500">
+        <div v-else class="p-8 text-center text-[var(--app-muted-text)]">
           <h2 class="text-lg font-semibold mb-2">{{ m.admin.notAuthorizedTitle }}</h2>
           <p>{{ m.admin.notAuthorizedMsg }}</p>
         </div>

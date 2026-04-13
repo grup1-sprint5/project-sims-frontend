@@ -42,6 +42,36 @@ body {
   color: var(--app-text);
 }
 
+/* Normalize legacy Tailwind gray utilities inside admin pages to semantic theme tokens. */
+.admin-theme .text-gray-900,
+.admin-theme .text-gray-800,
+.admin-theme .text-gray-700,
+.admin-theme .dark\:text-white,
+.admin-theme .dark\:text-gray-300,
+.admin-theme .dark\:text-gray-200 {
+  color: var(--app-text) !important;
+}
+
+.admin-theme .text-gray-600,
+.admin-theme .text-gray-500,
+.admin-theme .text-gray-400,
+.admin-theme .dark\:text-gray-400 {
+  color: var(--app-muted-text) !important;
+}
+
+.admin-theme .bg-white,
+.admin-theme .dark\:bg-gray-900,
+.admin-theme .dark\:bg-gray-800 {
+  background-color: var(--app-surface) !important;
+}
+
+.admin-theme .border-gray-200,
+.admin-theme .border-gray-300,
+.admin-theme .dark\:border-gray-700,
+.admin-theme .dark\:border-gray-800 {
+  border-color: var(--app-border) !important;
+}
+
 .Toastify__toast-container {
   z-index: 9999;
   width: min(92vw, 360px);

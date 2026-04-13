@@ -1,21 +1,21 @@
 <template>
   <div class="h-full">
     <div class="mb-4">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ m.adminMapUi.title }}</h1>
-      <p class="text-gray-600 dark:text-gray-400">{{ m.adminMapUi.subtitle }}</p>
+      <h1 class="text-2xl font-bold text-[var(--app-text)]">{{ m.adminMapUi.title }}</h1>
+      <p class="text-[var(--app-muted-text)]">{{ m.adminMapUi.subtitle }}</p>
     </div>
     
     <!-- Map -->
     <!-- Reserve left space for admin sidebar (lg) and keep legend anchored inside map -->
     <div class="relative w-full h-[60vh] min-h-[420px] rounded-lg shadow-lg overflow-hidden">
       <div ref="mapContainer" class="w-full h-full lg:ml-0 lg:pl-0 z-0"></div>
-      <div class="map-legend absolute top-3 right-3 md:top-4 md:right-4 bg-white/95 dark:bg-gray-900/95 text-sm md:text-base px-3 py-2 md:px-4 md:py-3 rounded-xl shadow-lg border border-gray-200/70 dark:border-gray-700/80 min-w-[210px] max-w-[calc(100%-1.5rem)]">
+      <div class="map-legend absolute top-3 right-3 md:top-4 md:right-4 bg-[color:color-mix(in_srgb,var(--app-surface)_94%,transparent)] text-sm md:text-base px-3 py-2 md:px-4 md:py-3 rounded-xl shadow-lg border border-[var(--app-border)] min-w-[210px] max-w-[calc(100%-1.5rem)]">
       <div class="flex items-center justify-between mb-2">
-        <div class="font-semibold text-gray-900 dark:text-gray-100">{{ m.adminMapUi.legend }}</div>
-        <button @click="legendOpen = !legendOpen" class="text-xs md:text-sm px-2.5 py-1 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700">{{ legendOpen ? m.adminMapUi.hide : m.adminMapUi.show }}</button>
+        <div class="font-semibold text-[var(--app-text)]">{{ m.adminMapUi.legend }}</div>
+        <button @click="legendOpen = !legendOpen" class="text-xs md:text-sm px-2.5 py-1 rounded-md bg-[var(--app-surface-alt)] text-[var(--app-text)] hover:brightness-95">{{ legendOpen ? m.adminMapUi.hide : m.adminMapUi.show }}</button>
       </div>
       <div v-if="legendOpen">
-        <div class="space-y-1.5 text-gray-700 dark:text-gray-200">
+        <div class="space-y-1.5 text-[var(--app-text)]">
           <div class="flex items-center gap-2.5"><span style="width:14px;height:14px;border-radius:50%;background:#22c55e;display:inline-block;border:2px solid #ffffff"></span><span>{{ m.adminMapUi.available }}</span></div>
           <div class="flex items-center gap-2.5"><span style="width:14px;height:14px;border-radius:50%;background:#f59e0b;display:inline-block;border:2px solid #ffffff"></span><span>{{ m.adminMapUi.occupied }}</span></div>
           <div class="flex items-center gap-2.5"><span style="width:14px;height:14px;border-radius:50%;background:#ffffff;display:inline-block;border:3px solid #ef4444"></span><span>{{ m.adminMapUi.running }}</span></div>
@@ -27,22 +27,22 @@
     <!-- Vehicles list as responsive cards -->
     <div class="mt-4">
       <div class="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        <div v-for="vehicle in vehicles" :key="vehicle.id" class="bg-white dark:bg-gray-800 rounded-lg p-3 shadow hover:shadow-lg transition-shadow flex flex-col justify-between">
+        <div v-for="vehicle in vehicles" :key="vehicle.id" class="rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] p-3 shadow hover:shadow-lg transition-shadow flex flex-col justify-between">
           <div @click="centerOnVehicle(vehicle)" class="cursor-pointer">
             <div class="flex items-center justify-between">
               <div>
-                <p class="font-semibold text-gray-900 dark:text-white truncate">{{ vehicle.plate }}</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ vehicle.brand }} {{ vehicle.model }}</p>
+                <p class="font-semibold text-[var(--app-text)] truncate">{{ vehicle.plate }}</p>
+                <p class="text-sm text-[var(--app-muted-text)] truncate">{{ vehicle.brand }} {{ vehicle.model }}</p>
               </div>
               <div class="flex flex-col items-end gap-1">
                 <span class="text-xs px-2 py-0.5 rounded-full" :class="vehicle.postgres_active ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'">{{ vehicle.postgres_active ? m.adminMapUi.occupied : m.adminMapUi.available }}</span>
-                <span class="text-xs px-2 py-0.5 rounded-full" :class="vehicle.mongo_active ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'">{{ vehicle.mongo_active ? m.adminMapUi.running : m.adminMapUi.stopped }}</span>
+                <span class="text-xs px-2 py-0.5 rounded-full" :class="vehicle.mongo_active ? 'bg-red-100 text-red-800' : 'bg-[var(--app-surface-alt)] text-[var(--app-text)]'">{{ vehicle.mongo_active ? m.adminMapUi.running : m.adminMapUi.stopped }}</span>
               </div>
             </div>
 
-            <div class="mt-2 text-xs text-gray-500 flex items-center justify-between gap-2">
+            <div class="mt-2 text-xs text-[var(--app-muted-text)] flex items-center justify-between gap-2">
               <div class="truncate">{{ m.adminMapUi.lat }}: {{ vehicle.latitude ?? '-' }}, {{ m.adminMapUi.lng }}: {{ vehicle.longitude ?? '-' }}</div>
-              <div class="text-right text-xs text-gray-400">ID: {{ vehicle.id }}</div>
+              <div class="text-right text-xs text-[var(--app-muted-text)]">ID: {{ vehicle.id }}</div>
             </div>
           </div>
 
@@ -50,7 +50,7 @@
             <div class="flex items-center gap-2">
               <!-- Actions removed: clicking plate centers and opens popup -->
             </div>
-            <div class="text-xs text-gray-400">{{ vehicle.updated_at ? new Date(vehicle.updated_at).toLocaleString() : '' }}</div>
+            <div class="text-xs text-[var(--app-muted-text)]">{{ vehicle.updated_at ? new Date(vehicle.updated_at).toLocaleString() : '' }}</div>
           </div>
         </div>
       </div>
