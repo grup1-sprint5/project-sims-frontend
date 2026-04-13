@@ -8,12 +8,7 @@
       <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <!-- Logo -->
         <div class="flex items-center gap-2.5">
-          <div class="flex size-8 items-center justify-center rounded-lg bg-indigo-600">
-            <svg class="size-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-            </svg>
-          </div>
-          <span class="text-lg font-bold tracking-tight">SIMS</span>
+          <img class="h-8 w-auto object-contain" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
         </div>
 
         <!-- Nav links -->
@@ -31,7 +26,7 @@
           </RouterLink>
           <RouterLink
             to="/register"
-            class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500"
+            class="rounded-lg bg-[var(--fleetly-baltic-blue)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1859be]"
           >
             Prova-ho gratis
           </RouterLink>
@@ -53,24 +48,24 @@
         <div class="grid items-center gap-16 lg:grid-cols-2">
           <!-- Text -->
           <div>
-            <span class="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-400">
-              <span class="size-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+            <span class="inline-flex items-center gap-2 rounded-full border border-[var(--fleetly-baltic-blue)]/30 bg-[var(--fleetly-baltic-blue)]/10 px-3 py-1 text-xs font-semibold text-[var(--fleetly-pale-slate)]">
+              <span class="size-1.5 rounded-full bg-[var(--fleetly-baltic-blue)] animate-pulse"></span>
               Sistema Integral de Mobilitat Sostenible
             </span>
             <h1 class="mt-6 text-5xl font-extrabold leading-tight tracking-tight sm:text-6xl lg:text-7xl">
               Gestiona la teva
-              <span class="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
+              <span class="bg-gradient-to-r from-[var(--fleetly-baltic-blue)] to-[var(--fleetly-pale-slate)] bg-clip-text text-transparent">
                 flota de vehicles
               </span>
               en temps real
             </h1>
             <p class="mt-6 text-lg leading-relaxed text-gray-400">
-              SIMS és la plataforma de carsharing per a empreses i municipis. Reserva, gestiona i controla tots els vehicles del teu tenant des d'un sol lloc.
+              Fleetly és la plataforma de carsharing per a empreses i municipis. Reserva, gestiona i controla tots els vehicles del teu tenant des d'un sol lloc.
             </p>
             <div class="mt-10 flex flex-wrap items-center gap-4">
               <RouterLink
                 to="/register"
-                class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-900/40 transition hover:bg-indigo-500 hover:scale-105"
+                class="inline-flex items-center gap-2 rounded-xl bg-[var(--fleetly-baltic-blue)] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/40 transition hover:bg-[#1859be] hover:scale-105"
               >
                 Comença ara — és gratis
                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -169,9 +164,9 @@
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="mx-auto max-w-2xl text-center">
-          <span class="text-sm font-semibold uppercase tracking-widest text-indigo-400">Funcionalitats</span>
+          <span class="text-sm font-semibold uppercase tracking-widest text-[var(--fleetly-baltic-blue)]">Funcionalitats</span>
           <h2 class="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl">Tot el que necessites en un sol lloc</h2>
-          <p class="mt-4 text-gray-400">Des de la reserva fins al control administratiu, SIMS cobreix tot el cicle de vida d'un vehicle compartit.</p>
+          <p class="mt-4 text-gray-400">Des de la reserva fins al control administratiu, Fleetly cobreix tot el cicle de vida d'un vehicle compartit.</p>
         </div>
 
         <!-- Feature grid -->
@@ -483,16 +478,11 @@
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
           <div class="flex items-center gap-2.5">
-            <div class="flex size-7 items-center justify-center rounded-lg bg-indigo-600">
-              <svg class="size-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-              </svg>
-            </div>
-            <span class="font-bold text-white">SIMS</span>
+            <img class="h-7 w-auto object-contain" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
             <span class="text-gray-600">·</span>
             <span class="text-sm text-gray-500">Sistema Integral de Mobilitat Sostenible</span>
           </div>
-          <p class="text-xs text-gray-600">© 2026 SIMS · Grup 1 Sprint 5 · DAW</p>
+          <p class="text-xs text-gray-600">© 2026 Fleetly · Grup 1 Sprint 5 · DAW</p>
         </div>
       </div>
     </footer>
@@ -520,7 +510,7 @@ const faqs = [
   },
   {
     q: 'Puc gestionar múltiples organitzacions?',
-    a: 'Sí, SIMS és multi-tenant. Cada organització (empresa, ajuntament, etc.) té el seu espai independent amb els seus vehicles, usuaris i configuració pròpia.',
+    a: 'Sí, Fleetly és multi-tenant. Cada organització (empresa, ajuntament, etc.) té el seu espai independent amb els seus vehicles, usuaris i configuració pròpia.',
   },
   {
     q: 'Com contacto amb suport?',

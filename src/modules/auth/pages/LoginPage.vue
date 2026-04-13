@@ -1,7 +1,7 @@
 <template>
   <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <img class="mx-auto h-20 w-auto object-contain" src="/image.png" alt="SIMS" />
+      <img class="mx-auto h-12 w-auto object-contain" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
       <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">Sign in to your account</h2>
     </div>
 
@@ -16,12 +16,12 @@
               type="text"
               autocomplete="organization"
               required
-              placeholder="sims-corp / ecomove"
+              placeholder="fleetly-barcelona / ecomove"
               :disabled="isLoading"
-              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6"
             />
           </div>
-          <p class="mt-1 text-xs text-gray-400">Tip: you can type “SIMS Corp” and it will normalize to “sims-corp”.</p>
+          <p class="mt-1 text-xs text-gray-400">Tip: you can type “Fleetly Barcelona” and it will normalize to “fleetly-barcelona”.</p>
         </div>
 
         <div>
@@ -34,7 +34,7 @@
               autocomplete="email"
               required
               :disabled="isLoading"
-              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6"
             />
           </div>
         </div>
@@ -51,7 +51,7 @@
               autocomplete="current-password"
               required
               :disabled="isLoading"
-              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6"
             />
           </div>
         </div>
@@ -62,7 +62,7 @@
           <button
             type="submit"
             :disabled="isLoading"
-            class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+            class="flex w-full justify-center rounded-md bg-[var(--fleetly-baltic-blue)] px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-[#1859be] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]"
           >
             {{ isLoading ? 'Signing in...' : 'Sign in' }}
           </button>
@@ -70,7 +70,7 @@
 
         <p class="text-center text-sm text-gray-400">
           Don't have an account?
-          <RouterLink to="/register" class="font-semibold leading-6 text-indigo-400 hover:text-indigo-300">Register</RouterLink>
+          <RouterLink to="/register" class="font-semibold leading-6 text-[var(--fleetly-baltic-blue)] hover:text-[#4a86e3]">Register</RouterLink>
         </p>
       </form>
     </div>
