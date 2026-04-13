@@ -12,12 +12,34 @@
   --fleetly-gunmetal: #353839;
   --fleetly-pale-slate: #bebfc5;
   --fleetly-baltic-blue: #26619c;
+
+  --app-bg: var(--fleetly-white);
+  --app-text: var(--fleetly-black);
+  --app-muted-text: var(--fleetly-gunmetal);
+  --app-surface: var(--fleetly-white);
+  --app-surface-alt: #f3f4f6;
+  --app-border: var(--fleetly-pale-slate);
+  --app-sidebar-bg: #f3f4f6;
+  --app-sidebar-text: var(--fleetly-gunmetal);
+  --app-sidebar-hover: #e7eaee;
+}
+
+html.dark {
+  --app-bg: #121519;
+  --app-text: #f2f4f7;
+  --app-muted-text: var(--fleetly-pale-slate);
+  --app-surface: #1a1f24;
+  --app-surface-alt: #232a31;
+  --app-border: #313940;
+  --app-sidebar-bg: #0f1215;
+  --app-sidebar-text: var(--fleetly-pale-slate);
+  --app-sidebar-hover: var(--fleetly-gunmetal);
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--fleetly-white);
-  color: var(--fleetly-black);
+  background-color: var(--app-bg);
+  color: var(--app-text);
 }
 
 .Toastify__toast-container {

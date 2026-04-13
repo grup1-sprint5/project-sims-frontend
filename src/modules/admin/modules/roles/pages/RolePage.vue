@@ -8,7 +8,7 @@
       <template #actions>
         <router-link
           to="/admin/roles/create"
-          class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          class="rounded-md bg-[var(--fleetly-baltic-blue)] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]"
         >
           {{ m.adminRolesUi.add }}
         </router-link>
@@ -22,12 +22,12 @@
         @input="handleSearch"
         type="text"
         :placeholder="m.adminRolesUi.searchPlaceholder"
-        class="block w-full max-w-md rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
+        class="block w-full max-w-md rounded-md bg-[var(--app-surface)] px-3 py-1.5 text-[var(--app-text)] shadow-sm ring-1 ring-inset ring-[var(--app-border)] placeholder:text-[var(--app-muted-text)] focus:ring-2 focus:ring-inset focus:ring-[var(--fleetly-baltic-blue)] sm:text-sm"
       />
     </div>
 
     <!-- Loading state -->
-    <div v-if="loading" class="mt-8 text-center text-gray-500 dark:text-gray-400">
+    <div v-if="loading" class="mt-8 text-center text-[var(--app-muted-text)]">
       {{ m.adminRolesUi.loading }}
     </div>
 
@@ -62,7 +62,7 @@
         <AdminTd variant="actions">
           <div class="flex gap-2">
             <button
-              class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
+              class="text-[var(--fleetly-baltic-blue)] hover:text-[var(--fleetly-gunmetal)] transition-colors"
               @click="navigateToDetail(role)"
               :title="m.commonUi.view"
             >
@@ -71,7 +71,7 @@
             </button>
             <button
               v-if="role.name.toLowerCase() !== 'admin'"
-              class="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
+              class="text-[var(--fleetly-gunmetal)] hover:text-[var(--fleetly-black)] transition-colors"
               @click="navigateToEdit(role)"
               :title="m.commonUi.edit"
             >

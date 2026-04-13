@@ -3,8 +3,11 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import './STYLE.css'
+import { initTheme } from '@/modules/common/composables/useTheme'
 import Vue3Toastify from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
+
+initTheme()
 
 const app = createApp(App)
 const pinia = createPinia()

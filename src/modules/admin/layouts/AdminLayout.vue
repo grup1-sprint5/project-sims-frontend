@@ -7,11 +7,11 @@
     <body class="h-full">
     ```
   -->
-  <div>
+  <div class="min-h-screen bg-[var(--app-bg)] text-[var(--app-text)]">
     <TransitionRoot as="template" :show="sidebarOpen">
       <Dialog class="relative z-50 lg:hidden" @close="sidebarOpen = false">
         <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0" enter-to="" leave="transition-opacity ease-linear duration-300" leave-from="" leave-to="opacity-0">
-          <div class="fixed inset-0 bg-gray-900/80"></div>
+          <div class="fixed inset-0 bg-[var(--fleetly-black)]/70"></div>
         </TransitionChild>
 
         <div class="fixed inset-0 flex">
@@ -27,18 +27,21 @@
               </TransitionChild>
 
               <!-- Sidebar component, swap this element with another sidebar if you like -->
-              <div class="relative flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2 dark:bg-gray-900 dark:ring dark:ring-white/10 dark:before:pointer-events-none dark:before:absolute dark:before:inset-0 dark:before:bg-black/10">
+              <div class="relative flex grow flex-col gap-y-5 overflow-y-auto bg-[var(--app-sidebar-bg)] px-6 pb-2 ring ring-[var(--app-border)]/40">
                 <div class="relative flex h-20 shrink-0 items-center">
-                  <img class="h-10 w-auto object-contain dark:hidden" src="/branding/fleetly_logotip_negre.svg" alt="Fleetly" />
-                  <img class="hidden h-10 w-auto object-contain dark:block" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
+                  <img
+                    class="h-10 w-auto object-contain"
+                    :src="isDark ? '/branding/fleetly_logotip_blanc.svg' : '/branding/fleetly_logotip_negre.svg'"
+                    alt="Fleetly"
+                  />
                 </div>
                 <nav class="relative flex flex-1 flex-col">
                   <ul role="list" class="flex flex-1 flex-col gap-y-7">
                     <li>
                       <ul role="list" class="-mx-2 space-y-1">
                         <li v-for="item in navigation" :key="item.name">
-                          <router-link :to="item.href" :class="[item.current ? 'bg-gray-100 text-[var(--fleetly-baltic-blue)] dark:bg-white/5 dark:text-white' : 'text-gray-700 hover:bg-gray-50 hover:text-[var(--fleetly-baltic-blue)] dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
-                            <component :is="item.icon" :class="[item.current ? 'text-[var(--fleetly-baltic-blue)] dark:text-white' : 'text-gray-400 group-hover:text-[var(--fleetly-baltic-blue)] dark:group-hover:text-white', 'size-6 shrink-0']" aria-hidden="true" />
+                          <router-link :to="item.href" :class="[item.current ? 'bg-[var(--app-sidebar-hover)] text-[var(--app-text)]' : 'text-[var(--app-sidebar-text)] hover:bg-[var(--app-sidebar-hover)] hover:text-[var(--app-text)]', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
+                            <component :is="item.icon" :class="[item.current ? 'text-[var(--fleetly-baltic-blue)]' : 'text-[var(--app-sidebar-text)] group-hover:text-[var(--fleetly-baltic-blue)]', 'size-6 shrink-0']" aria-hidden="true" />
                             {{ item.name }}
                           </router-link>
                         </li>
@@ -54,33 +57,47 @@
     </TransitionRoot>
 
     <!-- Static sidebar for desktop -->
-    <div class="hidden lg:fixed lg:inset-y-0 lg:z-[50] lg:flex lg:w-72 lg:flex-col dark:bg-gray-900">
+    <div class="hidden lg:fixed lg:inset-y-0 lg:z-[50] lg:flex lg:w-72 lg:flex-col bg-[var(--app-sidebar-bg)]">
       <!-- Sidebar component, swap this element with another sidebar if you like -->
-      <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 dark:border-white/10 dark:bg-black/10">
+      <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-[var(--app-border)] bg-[var(--app-sidebar-bg)] px-6">
         <div class="flex h-20 shrink-0 items-center">
-          <img class="h-10 w-auto object-contain dark:hidden" src="/branding/fleetly_logotip_negre.svg" alt="Fleetly" />
-          <img class="hidden h-10 w-auto object-contain dark:block" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
+          <img
+            class="h-10 w-auto object-contain"
+            :src="isDark ? '/branding/fleetly_logotip_blanc.svg' : '/branding/fleetly_logotip_negre.svg'"
+            alt="Fleetly"
+          />
         </div>
         <nav class="flex flex-1 flex-col">
           <ul role="list" class="flex flex-1 flex-col gap-y-7">
             <li>
               <ul role="list" class="-mx-2 space-y-1">
                 <li v-for="item in navigation" :key="item.name">
-                  <router-link :to="item.href" :class="[item.current ? 'bg-gray-100 text-[var(--fleetly-baltic-blue)] dark:bg-white/5 dark:text-white' : 'text-gray-700 hover:bg-gray-50 hover:text-[var(--fleetly-baltic-blue)] dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
-                    <component :is="item.icon" :class="[item.current ? 'text-[var(--fleetly-baltic-blue)] dark:text-white' : 'text-gray-400 group-hover:text-[var(--fleetly-baltic-blue)] dark:group-hover:text-white', 'size-6 shrink-0']" aria-hidden="true" />
+                  <router-link :to="item.href" :class="[item.current ? 'bg-[var(--app-sidebar-hover)] text-[var(--app-text)]' : 'text-[var(--app-sidebar-text)] hover:bg-[var(--app-sidebar-hover)] hover:text-[var(--app-text)]', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
+                    <component :is="item.icon" :class="[item.current ? 'text-[var(--fleetly-baltic-blue)]' : 'text-[var(--app-sidebar-text)] group-hover:text-[var(--fleetly-baltic-blue)]', 'size-6 shrink-0']" aria-hidden="true" />
                     {{ item.name }}
                   </router-link>
                 </li>
               </ul>
             </li>
             <li class="-mx-6 mt-auto">
+              <div class="px-2 pb-2">
+                <button
+                  type="button"
+                  class="w-full flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-[var(--app-sidebar-text)] hover:bg-[var(--app-sidebar-hover)]"
+                  @click="toggleTheme"
+                >
+                  <MoonIcon v-if="!isDark" class="size-4" />
+                  <SunIcon v-else class="size-4" />
+                  {{ isDark ? 'Mode clar' : 'Mode fosc' }}
+                </button>
+              </div>
               <Menu as="div" class="relative px-2 py-2">
-                <MenuButton class="w-full flex items-center gap-x-3 rounded-md px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5">
+                <MenuButton class="w-full flex items-center gap-x-3 rounded-md px-4 py-2 text-sm font-semibold text-[var(--app-sidebar-text)] hover:bg-[var(--app-sidebar-hover)]">
                   <span class="size-8 rounded-full outline -outline-offset-1 outline-black/5 dark:outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
                     {{ userInitials }}
                   </span>
                   <span class="truncate">{{ adminDisplayName }}</span>
-                  <ChevronUpDownIcon class="ml-auto size-4 text-gray-400" />
+                  <ChevronUpDownIcon class="ml-auto size-4 text-[var(--fleetly-pale-slate)]" />
                 </MenuButton>
                 <transition
                   enter-active-class="transition ease-out duration-200"
@@ -117,12 +134,20 @@
       </div>
     </div>
 
-    <div class="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-xs sm:px-6 lg:hidden dark:bg-gray-900 dark:shadow-none dark:after:pointer-events-none dark:after:absolute dark:after:inset-0 dark:after:border-b dark:after:border-white/10 dark:after:bg-black/10">
-      <button type="button" class="-m-2.5 p-2.5 text-gray-700 hover:text-gray-900 lg:hidden dark:text-gray-400 dark:hover:text-white" @click="sidebarOpen = true">
+    <div class="sticky top-0 z-40 flex items-center gap-x-6 bg-[var(--app-surface)] px-4 py-4 shadow-xs sm:px-6 lg:hidden border-b border-[var(--app-border)]/60">
+      <button type="button" class="-m-2.5 p-2.5 text-[var(--fleetly-gunmetal)] hover:text-[var(--fleetly-black)] lg:hidden" @click="sidebarOpen = true">
         <span class="sr-only">Open sidebar</span>
         <Bars3Icon class="size-6" aria-hidden="true" />
       </button>
-      <div class="flex-1 text-sm/6 font-semibold text-gray-900 dark:text-white">{{ m.adminNav.dashboard }}</div>
+      <div class="flex-1 text-sm/6 font-semibold text-[var(--app-text)]">{{ m.adminNav.dashboard }}</div>
+      <button
+        type="button"
+        class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
+        @click="toggleTheme"
+      >
+        <MoonIcon v-if="!isDark" class="size-5" />
+        <SunIcon v-else class="size-5" />
+      </button>
       <LanguageSwitcher />
       <Menu as="div" class="relative">
         <MenuButton class="relative flex items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]">
@@ -162,7 +187,7 @@
       </Menu>
     </div>
 
-    <main class="py-10 lg:pl-72">
+    <main class="py-10 lg:pl-72 bg-[var(--app-bg)]">
       <div class="px-4 sm:px-6 lg:px-8">
         <div v-if="isAdmin || isLoading">
           <router-view />
@@ -199,9 +224,12 @@ import {
   TruckIcon,
   TicketIcon,
   MapIcon,
+  MoonIcon,
+  SunIcon,
   BuildingOfficeIcon,
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
+import { useTheme } from '@/modules/common/composables/useTheme'
 
 const { m } = useI18n()
 const route = useRoute()
@@ -219,6 +247,7 @@ const navigationItems = [
 ]
 
 const sidebarOpen = ref(false)
+const { isDark, toggleTheme } = useTheme()
 const { user, isLoading, logout } = useAuth()
 const isAdmin = computed(() => !!(user.value && user.value.roles && user.value.roles.some((r: any) => (r.name || '').toLowerCase().includes('admin'))))
 const isSuperAdmin = computed(() => !!(user.value && user.value.roles && user.value.roles.some((r: any) => (r.name || '').toLowerCase().includes('superadmin'))))

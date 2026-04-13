@@ -1,16 +1,15 @@
 <template>
   <div
-    class="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between
-           dark:border-white/10"
+    class="border-b border-[var(--app-border)] pb-5 sm:flex sm:items-center sm:justify-between"
   >
     <div>
-      <h3 class="text-base font-semibold text-gray-900 dark:text-white">
+      <h3 class="text-base font-semibold text-[var(--app-text)]">
         {{ title }}
       </h3>
 
       <p
         v-if="description"
-        class="mt-1 text-sm text-gray-500 dark:text-gray-400"
+        class="mt-1 text-sm text-[var(--app-muted-text)]"
       >
         {{ description }}
       </p>

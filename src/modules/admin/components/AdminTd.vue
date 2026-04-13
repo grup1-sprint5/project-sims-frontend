@@ -19,6 +19,6 @@ const classes =
   props.variant === 'actions'
     ? `${base} ${actions}`
     : props.first
-      ? `${base} ${first} ${props.variant === 'primary' ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`
-      : `${base} ${middle} ${props.variant === 'primary' ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`
+      ? `${base} ${first} ${props.variant === 'primary' ? 'font-medium text-[var(--app-text)]' : 'text-[var(--app-muted-text)]'}`
+      : `${base} ${middle} ${props.variant === 'primary' ? 'font-medium text-[var(--app-text)]' : 'text-[var(--app-muted-text)]'}`
 </script>

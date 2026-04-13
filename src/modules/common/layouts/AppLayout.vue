@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-[100dvh] bg-[var(--fleetly-black)]">
+  <div class="min-h-[100dvh] bg-[var(--app-bg)] text-[var(--app-text)]">
     <!-- Top nav (tu template) -->
-    <nav class="border-b border-white/10 bg-[var(--fleetly-black)]">
+    <nav class="border-b border-[var(--app-border)] bg-[var(--app-surface)]">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 justify-between">
           <div class="flex">
@@ -9,7 +9,7 @@
               <RouterLink to="/">
                 <img
                   class="h-9 w-auto object-contain"
-                  src="/branding/fleetly_logotip_blanc.svg"
+                  :src="isDark ? '/branding/fleetly_logotip_blanc.svg' : '/branding/fleetly_logotip_negre.svg'"
                   alt="Fleetly"
                 />
               </RouterLink>
@@ -23,8 +23,8 @@
                 :to="item.to"
                 class="inline-flex items-center gap-1.5 border-b-2 px-1 pt-1 text-sm font-medium"
                 :class="isActive(item.to)
-                  ? 'border-[var(--fleetly-baltic-blue)] text-white'
-                  : 'border-transparent text-[var(--fleetly-pale-slate)] hover:border-white/20 hover:text-white'"
+                  ? 'border-[var(--fleetly-baltic-blue)] text-[var(--app-text)]'
+                  : 'border-transparent text-[var(--app-muted-text)] hover:border-[var(--app-border)] hover:text-[var(--app-text)]'"
               >
                 <component :is="item.icon" class="size-5" aria-hidden="true" />
                 {{ item.name }}
@@ -33,6 +33,14 @@
           </div>
 
           <div class="hidden sm:ml-6 sm:flex sm:items-center gap-3">
+            <button
+              type="button"
+              class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
+              @click="toggleTheme"
+            >
+              <MoonIcon v-if="!isDark" class="size-5" />
+              <SunIcon v-else class="size-5" />
+            </button>
             <LanguageSwitcher />
             <button type="button" class="relative rounded-full p-1 text-[var(--fleetly-pale-slate)] hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)]">
               <span class="absolute -inset-1.5"></span>
@@ -58,20 +66,20 @@
                 leave-from-class="transform scale-100"
                 leave-to-class="transform opacity-0 scale-95"
               >
-                <MenuItems class="absolute right-0 z-40 mt-2 w-48 origin-top-right rounded-md bg-[var(--fleetly-gunmetal)] py-1 outline -outline-offset-1 outline-white/10">
+                <MenuItems class="absolute right-0 z-40 mt-2 w-48 origin-top-right rounded-md bg-[var(--app-surface)] py-1 outline -outline-offset-1 outline-[var(--app-border)] text-[var(--app-text)]">
                   <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
                     <button
                       v-if="item.type === 'logout'"
                       type="button"
                       @click="handleLogout"
-                      :class="[active ? 'bg-white/5 outline-none' : '', 'block w-full text-left px-4 py-2 text-sm text-gray-300']"
+                      :class="[active ? 'bg-[var(--app-surface-alt)] outline-none' : '', 'block w-full text-left px-4 py-2 text-sm text-[var(--app-text)]']"
                     >
                       {{ item.name }}
                     </button>
                     <RouterLink
                       v-else
                       :to="item.to"
-                      :class="[active ? 'bg-white/5 outline-none' : '', 'block px-4 py-2 text-sm text-gray-300']"
+                      :class="[active ? 'bg-[var(--app-surface-alt)] outline-none' : '', 'block px-4 py-2 text-sm text-[var(--app-text)]']"
                     >
                       {{ item.name }}
                     </RouterLink>
@@ -83,6 +91,14 @@
 
           <!-- Mobile: top actions -->
           <div class="-mr-2 flex items-center gap-2 sm:hidden">
+            <button
+              type="button"
+              class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
+              @click="toggleTheme"
+            >
+              <MoonIcon v-if="!isDark" class="size-5" />
+              <SunIcon v-else class="size-5" />
+            </button>
             <LanguageSwitcher />
             
             <!-- Mobile User Menu -->
@@ -101,20 +117,20 @@
                 leave-from-class="transform scale-100"
                 leave-to-class="transform opacity-0 scale-95"
               >
-                <MenuItems class="absolute right-0 z-40 mt-2 w-48 origin-top-right rounded-md bg-[var(--fleetly-gunmetal)] py-1 shadow-lg ring-1 ring-black/5 outline -outline-offset-1 outline-white/10">
+                <MenuItems class="absolute right-0 z-40 mt-2 w-48 origin-top-right rounded-md bg-[var(--app-surface)] py-1 shadow-lg ring-1 ring-[var(--app-border)] outline -outline-offset-1 outline-[var(--app-border)]">
                   <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
                     <button
                       v-if="item.type === 'logout'"
                       type="button"
                       @click="handleLogout"
-                      :class="[active ? 'bg-white/5 outline-none' : '', 'block w-full text-left px-4 py-2 text-sm text-gray-300']"
+                      :class="[active ? 'bg-[var(--app-surface-alt)] outline-none' : '', 'block w-full text-left px-4 py-2 text-sm text-[var(--app-text)]']"
                     >
                       {{ item.name }}
                     </button>
                     <RouterLink
                       v-else
                       :to="item.to"
-                      :class="[active ? 'bg-white/5 outline-none' : '', 'block px-4 py-2 text-sm text-gray-300']"
+                      :class="[active ? 'bg-[var(--app-surface-alt)] outline-none' : '', 'block px-4 py-2 text-sm text-[var(--app-text)]']"
                     >
                       {{ item.name }}
                     </RouterLink>
@@ -133,21 +149,21 @@
     </main>
 
     <!-- Bottom nav (mobile-first) -->
-    <nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-[var(--fleetly-black)]/90 backdrop-blur sm:hidden">
-      <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-5 text-center text-xs text-gray-300">
-        <RouterLink to="/" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-gray-100'">
+    <nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-[var(--app-border)] bg-[var(--app-surface)]/95 backdrop-blur sm:hidden">
+      <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-5 text-center text-xs text-[var(--app-muted-text)]">
+        <RouterLink to="/" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
           <MapIcon class="size-6" />
         </RouterLink>
-        <RouterLink to="/bookings" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/bookings') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-gray-100'">
+        <RouterLink to="/bookings" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/bookings') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
           <CalendarDaysIcon class="size-6" />
         </RouterLink>
-        <RouterLink to="/tickets" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/tickets') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-gray-100'">
+        <RouterLink to="/tickets" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/tickets') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
           <TicketIcon class="size-6" />
         </RouterLink>
-        <RouterLink to="/sensors" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/sensors') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-gray-100'">
+        <RouterLink to="/sensors" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/sensors') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
           <WifiIcon class="size-6" />
         </RouterLink>
-        <RouterLink to="/perfil" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/perfil') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-gray-100'">
+        <RouterLink to="/perfil" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/perfil') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
           <UserIcon class="size-6" />
         </RouterLink>
       </div>
@@ -162,17 +178,19 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon } from '@heroicons/vue/24/outline'
+import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon } from '@heroicons/vue/24/outline'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
 import ChatWidget from '@/modules/client/components/ChatWidget.vue'
 import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
 import { useI18n } from '@/i18n'
+import { useTheme } from '@/modules/common/composables/useTheme'
 
 const { m } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { logout, user: authUser } = useAuth()
+const { isDark, toggleTheme } = useTheme()
 const isActive = (path: string) => route.path === path
 
 const userInitials = computed(() => {
