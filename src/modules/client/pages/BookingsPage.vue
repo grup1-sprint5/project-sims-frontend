@@ -28,6 +28,30 @@
       </div>
 
       <template v-else>
+        <section class="mb-8 rounded-2xl border border-indigo-500/20 bg-indigo-900/15 p-4">
+          <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 class="text-sm font-semibold uppercase tracking-wider text-indigo-300">{{ m.bookingsUi.balanceTitle }}</h2>
+              <p class="mt-1 text-xs text-indigo-200/80">{{ m.bookingsUi.balanceSubtitle }}</p>
+            </div>
+          </div>
+
+          <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div class="rounded-xl border border-sky-500/20 bg-sky-500/10 p-3">
+              <p class="text-xs text-sky-200/80">{{ m.bookingsUi.walletAvailable }}</p>
+              <p class="mt-1 text-xl font-bold text-sky-300">{{ formatCurrency(walletBalance) }}</p>
+            </div>
+            <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3">
+              <p class="text-xs text-emerald-200/80">{{ m.bookingsUi.totalPaid }}</p>
+              <p class="mt-1 text-xl font-bold text-emerald-300">{{ formatCurrency(totalPaidAmount) }}</p>
+            </div>
+            <div class="rounded-xl border border-amber-500/20 bg-amber-500/10 p-3">
+              <p class="text-xs text-amber-200/80">{{ m.bookingsUi.pendingToPay }}</p>
+              <p class="mt-1 text-xl font-bold text-amber-300">{{ formatCurrency(pendingPaymentAmount) }}</p>
+            </div>
+          </div>
+        </section>
+
         <!-- SECCIÓ: Actives i pendents -->
         <section v-if="activeAndPendingBookings.length > 0" class="mb-8">
           <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{{ m.bookingsUi.sectionUpcoming }}</h2>
@@ -294,9 +318,11 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useBookingStore } from '@/stores/bookingStore'
 import { toast } from 'vue3-toastify'
 import { useI18n } from '@/i18n'
+import { useAuth } from '@/modules/auth/composables/useAuth'
 
 const bookingStore = useBookingStore()
 const { m, locale } = useI18n()
+const { user, fetchUser } = useAuth()
 
 const showCancelModal = ref(false)
 const showDetailsModal = ref(false)
@@ -305,6 +331,11 @@ const selectedBooking = ref<any>(null)
 const bookingIdToCancel = ref<number | null>(null)
 const countdownInterval = ref<number | null>(null)
 const expiredBookings = ref<Set<number>>(new Set())
+
+const walletBalance = computed(() => {
+  const value = Number(user.value?.wallet_balance ?? 0)
+  return Number.isFinite(value) ? value : 0
+})
 
 const activeAndPendingBookings = computed(() =>
   bookingStore.bookings
@@ -322,7 +353,26 @@ const cancelledBookings = computed(() =>
     .sort((a, b) => new Date(b.scheduled_start).getTime() - new Date(a.scheduled_start).getTime())
 )
 
+const amountForBooking = (booking: any): number => {
+  const source = booking.trip?.total_amount ?? booking.total_price ?? booking.cancellation_fee ?? 0
+  const parsed = Number(source)
+  return Number.isFinite(parsed) ? parsed : 0
+}
+
+const totalPaidAmount = computed(() =>
+  bookingStore.bookings
+    .filter(b => b.payment_status === 'paid')
+    .reduce((sum, booking) => sum + amountForBooking(booking), 0)
+)
+
+const pendingPaymentAmount = computed(() =>
+  bookingStore.bookings
+    .filter(b => ['pending', 'confirmed'].includes(b.status) && b.payment_status !== 'paid')
+    .reduce((sum, booking) => sum + amountForBooking(booking), 0)
+)
+
 onMounted(async () => {
+  await fetchUser()
   try {
     await bookingStore.fetchBookings()
   } catch {
@@ -399,6 +449,14 @@ function formatDateCompact(dateString: string) {
 
 function formatTimeOnly(dateString: string) {
   return new Date(dateString).toLocaleTimeString(getLocaleCode(), { hour: '2-digit', minute: '2-digit' })
+}
+
+function formatCurrency(value: number): string {
+  return new Intl.NumberFormat(getLocaleCode(), {
+    style: 'currency',
+    currency: 'EUR',
+    maximumFractionDigits: 2,
+  }).format(value)
 }
 
 function timeUntilStart(booking: any): string {

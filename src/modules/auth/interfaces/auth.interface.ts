@@ -40,6 +40,7 @@ export interface User {
   username: string
   email: string
   active: boolean
+  wallet_balance?: number | string | null
   tenant_id: string | null  // tenant slug (string primary key)
   roles: Role[]
 }

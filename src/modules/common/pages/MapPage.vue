@@ -265,11 +265,71 @@
               </button>
               <button
                 type="button"
-                @click="submitBooking"
+                @click="openConfirmBookingModal"
                 :disabled="bookingStore.loading || !priceInfo || !!overlapError"
                 class="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors"
               >
                 {{ bookingStore.loading ? 'Creant...' : 'Confirmar reserva' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+
+    <!-- Modal final de confirmacio -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div
+          v-if="showBookingConfirmModal"
+          class="fixed inset-0 z-[10001] flex items-center justify-center p-4"
+          @click.self="closeConfirmBookingModal"
+        >
+          <div class="fixed inset-0 bg-black/60"></div>
+          <div class="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-800" @click.stop>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Confirmar reserva</h3>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Revisa les dades abans de crear-la.</p>
+
+            <div class="mt-4 space-y-2 rounded-xl bg-gray-50 p-4 dark:bg-gray-700/40">
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-gray-500 dark:text-gray-400">Vehicle</span>
+                <span class="font-semibold text-gray-900 dark:text-white">{{ vehicleForBooking?.plate || '-' }}</span>
+              </div>
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-gray-500 dark:text-gray-400">Total reserva</span>
+                <span class="font-semibold text-indigo-600 dark:text-indigo-300">{{ bookingTotalLabel }}</span>
+              </div>
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-gray-500 dark:text-gray-400">Saldo actual</span>
+                <span class="font-semibold text-gray-900 dark:text-white">{{ walletBalanceLabel }}</span>
+              </div>
+              <div class="flex items-center justify-between border-t border-gray-200 pt-2 text-sm dark:border-gray-600">
+                <span class="text-gray-600 dark:text-gray-300">Saldo despres de reservar</span>
+                <span class="font-bold" :class="walletRemainingAfterBooking >= 0 ? 'text-emerald-600 dark:text-emerald-300' : 'text-amber-600 dark:text-amber-300'">
+                  {{ walletAfterBookingLabel }}
+                </span>
+              </div>
+            </div>
+
+            <p v-if="walletRemainingAfterBooking < 0" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
+              El saldo no cobreix tot l'import. La reserva es creara pendent de pagament amb Stripe.
+            </p>
+
+            <div class="mt-5 flex gap-3">
+              <button
+                type="button"
+                @click="closeConfirmBookingModal"
+                class="flex-1 rounded-xl bg-gray-100 py-3 font-semibold text-gray-900 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+              >
+                Tornar
+              </button>
+              <button
+                type="button"
+                @click="submitBooking"
+                :disabled="bookingStore.loading"
+                class="flex-1 rounded-xl bg-indigo-600 py-3 font-semibold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-400 dark:disabled:bg-gray-600"
+              >
+                {{ bookingStore.loading ? 'Creant...' : 'Si, reservar' }}
               </button>
             </div>
           </div>
@@ -332,6 +392,7 @@ import { onMounted, onUnmounted, ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useMap } from '@/modules/map/composables/useMap'
 import { useBookingStore } from '@/stores/bookingStore'
+import { useAuth } from '@/modules/auth/composables/useAuth'
 import { toast } from 'vue3-toastify'
 import { useI18n } from '@/i18n'
 
@@ -339,6 +400,7 @@ const route = useRoute()
 const { m } = useI18n()
 const { mapContainer, map, vehicles, markers, initMap, fetchVehicles, startPolling, setUserLocation, destroyMap, rawVehicles, userLocation, _internal, centerOnVehicle, setOnVehicleClick, setSelectedVehicle, createVehicleIcon, markVehicleAsBooked } = useMap()
 const bookingStore = useBookingStore()
+const { user, fetchUser } = useAuth()
 let userMarker: any = null
 
 const nearbyAvailable = ref<any[]>([])
@@ -363,6 +425,7 @@ const isVehicleUnavailableForBooking = computed(() =>
 )
 
 const showBookingModal = ref(false)
+const showBookingConfirmModal = ref(false)
 const vehicleForBooking = ref<any | null>(null)
 const vehicleBookings = ref<any[]>([])
 const overlapError = ref<string | null>(null)
@@ -386,6 +449,21 @@ const minDateTime = computed(() => {
   now.setSeconds(0, 0)
   return toLocalDatetimeInput(now)
 })
+
+const walletBalance = computed(() => {
+  const value = Number(user.value?.wallet_balance ?? 0)
+  return Number.isFinite(value) ? value : 0
+})
+
+const bookingTotal = computed(() => {
+  const value = Number(priceInfo.value?.final_price ?? 0)
+  return Number.isFinite(value) ? value : 0
+})
+
+const walletRemainingAfterBooking = computed(() => walletBalance.value - bookingTotal.value)
+const walletBalanceLabel = computed(() => `${walletBalance.value.toFixed(2)}€`)
+const bookingTotalLabel = computed(() => `${bookingTotal.value.toFixed(2)}€`)
+const walletAfterBookingLabel = computed(() => `${walletRemainingAfterBooking.value.toFixed(2)}€`)
 
 const refresh = () => fetchVehicles('/vehicles')
 
@@ -458,6 +536,7 @@ async function loadVehiclesAndStartPolling() {
 }
 
 onMounted(() => {
+  fetchUser().catch(() => {})
   initMap()
   
   // Registrar el callback per quan es clica un vehicle
@@ -615,11 +694,21 @@ async function openBookingModal(vehicle: any) {
 
 function closeBookingModal() {
   showBookingModal.value = false
+  showBookingConfirmModal.value = false
   vehicleForBooking.value = null
   vehicleBookings.value = []
   overlapError.value = null
   bookingForm.value = { vehicle_id: 0, scheduled_start: '', scheduled_end: '' }
   priceInfo.value = null
+}
+
+function openConfirmBookingModal() {
+  if (bookingStore.loading || !priceInfo.value || overlapError.value) return
+  showBookingConfirmModal.value = true
+}
+
+function closeConfirmBookingModal() {
+  showBookingConfirmModal.value = false
 }
 
 async function submitBooking() {
@@ -632,8 +721,10 @@ async function submitBooking() {
     }
     await bookingStore.createBooking(bookingData)
     toast.success('Reserva creada correctament!')
+    showBookingConfirmModal.value = false
     closeBookingModal()
     closeSelectedPanel()
+    await fetchUser()
     await fetchVehicles('/vehicles')
   } catch (error: any) {
     const msg = error.response?.data?.message || 'Error creant la reserva'
