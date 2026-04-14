@@ -11,6 +11,11 @@ export interface Booking {
   scheduled_end: string
   activation_deadline: string
   total_price: number
+  payment_provider?: string | null
+  payment_status?: 'unpaid' | 'paid' | 'failed' | 'refunded' | null
+  stripe_checkout_session_id?: string | null
+  stripe_payment_intent_id?: string | null
+  paid_at?: string | null
   status: 'pending' | 'active' | 'completed' | 'cancelled' | 'confirmed'
   cancelled_at?: string | null
   cancellation_fee?: number | null
@@ -124,7 +129,7 @@ export const useBookingStore = defineStore('booking', () => {
     
     try {
       const response = await apiClient.post('/reservations', bookingData)
-      const newBooking = response.data
+      const newBooking = response.data?.data ?? response.data
       bookings.value.push(newBooking)
       return newBooking
     } catch (err: any) {
@@ -229,6 +234,27 @@ export const useBookingStore = defineStore('booking', () => {
     }
   }
 
+  async function createStripeCheckoutSession(id: number, payload?: { success_url?: string; cancel_url?: string }) {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await apiClient.post(`/reservations/${id}/checkout-session`, payload ?? {})
+      return response.data as {
+        message: string
+        session_id: string | null
+        checkout_url: string | null
+        publishable_key: string | null
+      }
+    } catch (err: any) {
+      error.value = err.message || 'Error creating Stripe checkout session'
+      console.error('Error creating Stripe checkout session:', err)
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
   // Retorna les reserves actives/pending d'un vehicle concret
   async function fetchVehicleBookings(vehicleId: number): Promise<Booking[]> {
     try {
@@ -293,6 +319,7 @@ export const useBookingStore = defineStore('booking', () => {
     cancelBooking,
     confirmBooking,
     calculatePrice,
+    createStripeCheckoutSession,
     selectBooking,
     clearError,
     $reset,

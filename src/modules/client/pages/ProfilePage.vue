@@ -89,6 +89,61 @@
           </form>
         </section>
 
+        <section class="rounded-xl bg-gray-800/60 border border-white/5 p-6 mb-6">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h2 class="text-base font-semibold mb-1">{{ m.profile.paymentMethodTitle }}</h2>
+              <p class="text-sm text-gray-400">{{ m.profile.paymentMethodSubtitle }}</p>
+            </div>
+            <span class="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2.5 py-1 text-xs font-semibold text-emerald-300">
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+              {{ m.profile.paymentMethodActive }}
+            </span>
+          </div>
+
+          <div class="mt-5 rounded-xl border border-white/5 bg-gray-900/60 p-4">
+            <div class="flex items-center justify-between gap-3">
+              <div>
+                <p class="text-sm font-semibold text-white">Stripe</p>
+                <p class="text-xs text-gray-400">{{ m.profile.paymentMethodDescription }}</p>
+              </div>
+              <span class="rounded-md bg-indigo-500/20 px-2 py-1 text-xs font-semibold text-indigo-300">Checkout</span>
+            </div>
+
+            <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div class="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-2">
+                <p class="text-xs text-emerald-200/80">{{ m.profile.currentBalance }}</p>
+                <p class="text-lg font-bold text-emerald-300">{{ walletBalanceFormatted }}</p>
+              </div>
+              <div>
+                <label class="mb-1 block text-xs font-medium text-gray-300">{{ m.profile.topupAmount }}</label>
+                <input
+                  v-model.number="walletTopupAmount"
+                  type="number"
+                  min="1"
+                  step="1"
+                  class="input-field"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex justify-end">
+            <button
+              type="button"
+              @click="startWalletTopup"
+              :disabled="loadingTopup"
+              class="btn-primary"
+            >
+              <svg v-if="loadingTopup" class="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+              {{ loadingTopup ? m.profile.redirectingToStripe : m.profile.managePayments }}
+            </button>
+          </div>
+        </section>
+
         <section class="rounded-xl bg-gray-800/60 border border-white/5 p-6">
           <h2 class="text-base font-semibold mb-5">{{ m.profile.changePassword }}</h2>
 
@@ -159,8 +214,9 @@ import { useI18n } from '@/i18n'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import { useUsers } from '@/modules/admin/modules/users/composables/useUsers'
 import { useToast } from '@/modules/common/composables/useToast'
+import apiClient from '@/services/api'
 
-const { m } = useI18n()
+const { m, locale } = useI18n()
 const router = useRouter()
 const { user, fetchUser, logout } = useAuth()
 const { updateUser } = useUsers()
@@ -169,12 +225,20 @@ const toast = useToast()
 const loading = ref(false)
 const savingProfile = ref(false)
 const savingPassword = ref(false)
+const loadingTopup = ref(false)
+const walletTopupAmount = ref<number>(20)
 
 const profileForm = reactive({ name: '', username: '', email: '' })
 const passwordForm = reactive({ password: '', password_confirmation: '' })
 
 const initials = computed(() => {
   return (user.value?.name || '').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?'
+})
+
+const walletBalanceFormatted = computed(() => {
+  const localeCode = locale.value === 'es' ? 'es-ES' : (locale.value === 'en' ? 'en-GB' : 'ca-ES')
+  const value = Number(user.value?.wallet_balance ?? 0)
+  return new Intl.NumberFormat(localeCode, { style: 'currency', currency: 'EUR' }).format(value)
 })
 
 const handleLogout = async () => {
@@ -185,6 +249,37 @@ const handleLogout = async () => {
     //
   } finally {
     router.push('/login')
+  }
+}
+
+const startWalletTopup = async () => {
+  if (!Number.isFinite(walletTopupAmount.value) || walletTopupAmount.value <= 0) {
+    toast.error(m.value.profile.invalidTopupAmount)
+    return
+  }
+
+  loadingTopup.value = true
+  try {
+    const successUrl = `${window.location.origin}/perfil?wallet=success`
+    const cancelUrl = `${window.location.origin}/perfil?wallet=cancel`
+
+    const response = await apiClient.post('/wallet/checkout-session', {
+      amount: walletTopupAmount.value,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+    })
+
+    const checkoutUrl = response.data?.checkout_url
+    if (!checkoutUrl) {
+      toast.error(m.value.profile.paymentError)
+      return
+    }
+
+    window.location.assign(checkoutUrl)
+  } catch (err: any) {
+    toast.error(err?.response?.data?.message || m.value.profile.paymentError)
+  } finally {
+    loadingTopup.value = false
   }
 }
 
@@ -200,6 +295,18 @@ onMounted(async () => {
     profileForm.username = user.value.username
     profileForm.email = user.value.email
   }
+
+  const walletStatus = new URLSearchParams(window.location.search).get('wallet')
+  if (walletStatus === 'success') {
+    await fetchUser()
+    toast.success(m.value.profile.walletUpdated)
+    router.replace('/perfil')
+  }
+  if (walletStatus === 'cancel') {
+    toast.error(m.value.profile.walletCancelled)
+    router.replace('/perfil')
+  }
+
   loading.value = false
 })
 
