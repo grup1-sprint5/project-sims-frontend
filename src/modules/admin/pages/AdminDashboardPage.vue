@@ -35,7 +35,7 @@
           >
             <component
               :is="item.icon"
-              class="h-6 w-6"
+              class="h-6 w-6 [stroke-width:2.2]"
               :class="item.iconClass"
             />
           </div>
@@ -113,8 +113,8 @@ const items = computed(() => [
     description: 'Manage platform users.',
     to: '/admin/users',
     icon: UsersIcon,
-    bgClass: 'bg-[var(--fleetly-baltic-blue)]/15',
-    iconClass: 'text-[var(--fleetly-baltic-blue)]',
+    bgClass: 'bg-[#c2d7eb] dark:bg-[#1d4770]',
+    iconClass: 'text-[#145d9f] dark:text-[#8fd3ff]',
     count: usersPagination.value.total || users.value.length,
   },
   {
@@ -122,8 +122,8 @@ const items = computed(() => [
     description: 'Configure roles and permissions.',
     to: '/admin/roles',
     icon: ShieldCheckIcon,
-    bgClass: 'bg-[var(--fleetly-gunmetal)]/15',
-    iconClass: 'text-[var(--fleetly-gunmetal)]',
+    bgClass: 'bg-[#c2d7eb] dark:bg-[#1d4770]',
+    iconClass: 'text-[#145d9f] dark:text-[#8fd3ff]',
     count: rolesPagination.value.total || roles.value.length,
   },
   {
@@ -131,8 +131,8 @@ const items = computed(() => [
     description: 'Manage vehicle reservations.',
     to: '/admin/bookings',
     icon: CalendarDaysIcon,
-    bgClass: 'bg-[var(--fleetly-baltic-blue)]/15',
-    iconClass: 'text-[var(--fleetly-baltic-blue)]',
+    bgClass: 'bg-[#c2d7eb] dark:bg-[#1d4770]',
+    iconClass: 'text-[#145d9f] dark:text-[#8fd3ff]',
     count: bookingsPagination.value.total || bookings.value.length,
   },
   {
@@ -140,8 +140,8 @@ const items = computed(() => [
     description: 'Control the vehicle inventory.',
     to: '/admin/vehicles',
     icon: TruckIcon,
-    bgClass: 'bg-[var(--fleetly-gunmetal)]/15',
-    iconClass: 'text-[var(--fleetly-gunmetal)]',
+    bgClass: 'bg-[#c2d7eb] dark:bg-[#1d4770]',
+    iconClass: 'text-[#145d9f] dark:text-[#8fd3ff]',
     count: vehiclesPagination.value.total || vehicles.value.length,
   },
   {
@@ -149,8 +149,8 @@ const items = computed(() => [
     description: 'Manage user support tickets.',
     to: '/admin/tickets',
     icon: TicketIcon,
-    bgClass: 'bg-[var(--fleetly-baltic-blue)]/15',
-    iconClass: 'text-[var(--fleetly-baltic-blue)]',
+    bgClass: 'bg-[#c2d7eb] dark:bg-[#1d4770]',
+    iconClass: 'text-[#145d9f] dark:text-[#8fd3ff]',
     count: tickets.value.length,
   },
 ])

@@ -6,6 +6,8 @@
   --font-sans--font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
+
+/* Variables globals per a accessibilitat i temes */
 :root {
   --fleetly-white: #ffffff;
   --fleetly-black: #000000;
@@ -13,33 +15,233 @@
   --fleetly-pale-slate: #bebfc5;
   --fleetly-baltic-blue: #26619c;
 
-  --app-bg: var(--fleetly-white);
-  --app-text: var(--fleetly-black);
-  --app-muted-text: var(--fleetly-gunmetal);
-  --app-surface: var(--fleetly-white);
-  --app-surface-alt: #f3f4f6;
-  --app-border: var(--fleetly-pale-slate);
-  --app-sidebar-bg: #f3f4f6;
-  --app-sidebar-text: var(--fleetly-gunmetal);
-  --app-sidebar-hover: #e7eaee;
+  /* Colors base */
+  --app-bg: #f3f6fb;
+  --app-text: #181a1b;
+  --app-muted-text: #4b5563;
+  --app-border: #bcc7d6;
+
+  /* Superfícies i targetes */
+  --app-surface: #ffffff;
+  --app-surface-alt: #eef2f7;
+  --app-card-bg: #fff;
+  --app-card-border: #c8d2e0;
+
+  /* Inputs i quadres */
+  --app-input-bg: #fff;
+  --app-input-border: #cbd5e1;
+  --app-input-text: #181a1b;
+  --app-input-placeholder: #a0aec0;
+
+  /* Botons */
+  --app-btn-bg: #26619c;
+  --app-btn-text: #fff;
+  --app-btn-hover-bg: #17406b;
+
+  /* Chat widget */
+  --chat-panel-bg: #ffffff;
+  --chat-header-bg: #f8fbff;
+  --chat-panel-border: #c9d4e3;
+  --chat-header-text: #0f172a;
+  --chat-muted-text: #64748b;
+  --chat-surface-alt: #eef3f9;
+  --chat-surface-hover: #e2e8f0;
+  --chat-assistant-bubble-bg: #e8eef7;
+  --chat-assistant-bubble-text: #0f172a;
+  --chat-assistant-bubble-border: #cdd8e8;
+  --chat-input-bg: #ffffff;
+  --chat-input-text: #0f172a;
+  --chat-input-border: #b9c7da;
+  --chat-input-placeholder: #94a3b8;
+  --chat-user-avatar-bg: #64748b;
 }
 
 html.dark {
-  --app-bg: #121519;
+  --app-bg: #0f172a;
   --app-text: #f2f4f7;
-  --app-muted-text: var(--fleetly-pale-slate);
-  --app-surface: #1a1f24;
-  --app-surface-alt: #232a31;
-  --app-border: #313940;
-  --app-sidebar-bg: #0f1215;
-  --app-sidebar-text: var(--fleetly-pale-slate);
-  --app-sidebar-hover: var(--fleetly-gunmetal);
+  --app-muted-text: #c4cbd6;
+  --app-border: #3a4557;
+
+  --app-surface: #111827;
+  --app-surface-alt: #1f2937;
+  --app-card-bg: #111827;
+  --app-card-border: #334155;
+
+  --app-input-bg: #232a31;
+  --app-input-border: #313940;
+  --app-input-text: #f2f4f7;
+  --app-input-placeholder: #7b8494;
+
+  --app-btn-bg: #26619c;
+  --app-btn-text: #fff;
+  --app-btn-hover-bg: #17406b;
+
+  --chat-panel-bg: #0f172a;
+  --chat-header-bg: #111827;
+  --chat-panel-border: #334155;
+  --chat-header-text: #e5e7eb;
+  --chat-muted-text: #94a3b8;
+  --chat-surface-alt: #1f2937;
+  --chat-surface-hover: #273346;
+  --chat-assistant-bubble-bg: #1e293b;
+  --chat-assistant-bubble-text: #e5e7eb;
+  --chat-assistant-bubble-border: #334155;
+  --chat-input-bg: #1f2937;
+  --chat-input-text: #f8fafc;
+  --chat-input-border: #334155;
+  --chat-input-placeholder: #94a3b8;
+  --chat-user-avatar-bg: #475569;
 }
 
 body {
   font-family: var(--font-sans);
   background-color: var(--app-bg);
   color: var(--app-text);
+}
+
+.app-theme {
+  background-color: var(--app-bg);
+  color: var(--app-text);
+}
+
+.app-theme .text-gray-900,
+.app-theme .text-gray-800,
+.app-theme .text-gray-700,
+.app-theme .dark\:text-white,
+.app-theme .dark\:text-gray-300,
+.app-theme .dark\:text-gray-200 {
+  color: var(--app-text) !important;
+}
+
+.app-theme .text-gray-600,
+.app-theme .text-gray-500,
+.app-theme .text-gray-400,
+.app-theme .dark\:text-gray-400 {
+  color: var(--app-muted-text) !important;
+}
+
+.app-theme .text-gray-300,
+.app-theme .text-gray-200 {
+  color: var(--app-text) !important;
+}
+
+.app-theme .bg-gray-900,
+.app-theme .bg-gray-900\/95,
+.app-theme .dark\:bg-gray-900,
+.app-theme .bg-\[\#040b1f\] {
+  background-color: var(--app-bg) !important;
+}
+
+.app-theme .bg-white,
+.app-theme .bg-white\/95,
+.app-theme .bg-gray-800,
+.app-theme .bg-gray-800\/60,
+.app-theme .bg-gray-800\/50,
+.app-theme .bg-gray-800\/40,
+.app-theme .bg-gray-700,
+.app-theme .bg-gray-700\/50,
+.app-theme .bg-gray-50,
+.app-theme .dark\:bg-gray-800,
+.app-theme .dark\:bg-gray-800\/60,
+.app-theme .dark\:bg-gray-700 {
+  background-color: var(--app-card-bg) !important;
+}
+
+.app-theme .bg-gray-800,
+.app-theme .bg-gray-800\/60,
+.app-theme .bg-gray-800\/50,
+.app-theme .bg-gray-800\/40,
+.app-theme .bg-gray-700,
+.app-theme .bg-gray-700\/50,
+.app-theme .bg-white,
+.app-theme .bg-white\/95 {
+  border: 1px solid var(--app-card-border) !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.app-theme .bg-white\/5,
+.app-theme .bg-white\/10,
+.app-theme .dark\:bg-white\/10,
+.app-theme .bg-gray-100,
+.app-theme .bg-gray-100\/80,
+.app-theme .bg-gray-200,
+.app-theme .hover\:bg-gray-50:hover,
+.app-theme .hover\:bg-gray-100:hover,
+.app-theme .hover\:bg-gray-200:hover,
+.app-theme .hover\:bg-white\/10:hover,
+.app-theme .dark\:hover\:bg-gray-800:hover,
+.app-theme .dark\:hover\:bg-gray-700:hover {
+  background-color: var(--app-surface-alt) !important;
+}
+
+.app-theme .border-gray-100,
+.app-theme .border-gray-200,
+.app-theme .border-gray-300,
+.app-theme .border-gray-600,
+.app-theme .border-gray-700,
+.app-theme .border-gray-800,
+.app-theme .dark\:border-gray-700,
+.app-theme .dark\:border-gray-800,
+.app-theme .border-white\/5,
+.app-theme .outline-white\/10,
+.app-theme .ring-gray-300,
+.app-theme .dark\:ring-gray-700 {
+  border-color: var(--app-border) !important;
+}
+
+.app-theme .outline-white\/10 {
+  outline-color: var(--app-border) !important;
+}
+
+.app-theme .ring-gray-300,
+.app-theme .dark\:ring-gray-700 {
+  --tw-ring-color: var(--app-border) !important;
+}
+
+.app-theme .dark\:bg-gray-700,
+.app-theme .dark\:bg-gray-800,
+.app-theme .dark\:bg-gray-900 {
+  background-color: var(--app-card-bg) !important;
+}
+
+.app-theme .bg-indigo-600,
+.app-theme .bg-indigo-500,
+.app-theme .bg-indigo-700,
+.app-theme .hover\:bg-indigo-500:hover,
+.app-theme .hover\:bg-indigo-700:hover,
+.app-theme .bg-red-600,
+.app-theme .bg-red-700,
+.app-theme .hover\:bg-red-700:hover,
+.app-theme .bg-\[var\(--fleetly-baltic-blue\)\],
+.app-theme .bg-\[var\(--fleetly-gunmetal\)\],
+.app-theme .bg-green-600,
+.app-theme .bg-green-700,
+.app-theme .bg-blue-600,
+.app-theme .bg-blue-700,
+.app-theme .bg-yellow-600,
+.app-theme .bg-yellow-700 {
+  color: #ffffff !important;
+}
+
+.app-theme .map-controls,
+.app-theme .map-controls .map-legend-details,
+.app-theme .map-controls summary,
+.app-theme .map-controls span,
+.app-theme .map-controls p {
+  color: var(--app-text) !important;
+}
+
+.app-theme input,
+.app-theme select,
+.app-theme textarea {
+  background-color: var(--app-input-bg) !important;
+  color: var(--app-input-text) !important;
+  border: 1px solid var(--app-input-border) !important;
+}
+
+.app-theme input::placeholder,
+.app-theme textarea::placeholder {
+  color: var(--app-input-placeholder);
 }
 
 /* Normalize legacy Tailwind gray utilities inside admin pages to semantic theme tokens. */

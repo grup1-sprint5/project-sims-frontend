@@ -208,7 +208,6 @@ const navigation = computed(() => [
 
 const userNavigation = computed(() => [
   { name: m.value.userMenu.yourProfile, to: '/perfil', type: 'link' },
-  { name: m.value.userMenu.settings, to: '/settings', type: 'link' },
   { name: m.value.userMenu.signOut, to: '', type: 'logout' },
 ])
 

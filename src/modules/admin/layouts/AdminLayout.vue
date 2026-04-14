@@ -41,7 +41,7 @@
                       <ul role="list" class="-mx-2 space-y-1">
                         <li v-for="item in navigation" :key="item.name">
                           <router-link :to="item.href" :class="[item.current ? 'bg-[var(--app-sidebar-hover)] text-[var(--app-text)]' : 'text-[var(--app-sidebar-text)] hover:bg-[var(--app-sidebar-hover)] hover:text-[var(--app-text)]', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
-                            <component :is="item.icon" :class="[item.current ? 'text-[var(--fleetly-baltic-blue)]' : 'text-[var(--app-sidebar-text)] group-hover:text-[var(--fleetly-baltic-blue)]', 'size-6 shrink-0']" aria-hidden="true" />
+                            <component :is="item.icon" :class="[item.current ? 'text-[var(--fleetly-baltic-blue)]' : 'text-[var(--app-sidebar-text)] group-hover:text-[var(--fleetly-baltic-blue)]', (item.key === 'roles' || item.key === 'vehicles') ? 'admin-nav-icon-boost' : '', 'size-6 shrink-0']" aria-hidden="true" />
                             {{ item.name }}
                           </router-link>
                         </li>
@@ -73,7 +73,7 @@
               <ul role="list" class="-mx-2 space-y-1">
                 <li v-for="item in navigation" :key="item.name">
                   <router-link :to="item.href" :class="[item.current ? 'bg-[var(--app-sidebar-hover)] text-[var(--app-text)]' : 'text-[var(--app-sidebar-text)] hover:bg-[var(--app-sidebar-hover)] hover:text-[var(--app-text)]', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
-                    <component :is="item.icon" :class="[item.current ? 'text-[var(--fleetly-baltic-blue)]' : 'text-[var(--app-sidebar-text)] group-hover:text-[var(--fleetly-baltic-blue)]', 'size-6 shrink-0']" aria-hidden="true" />
+                    <component :is="item.icon" :class="[item.current ? 'text-[var(--fleetly-baltic-blue)]' : 'text-[var(--app-sidebar-text)] group-hover:text-[var(--fleetly-baltic-blue)]', (item.key === 'roles' || item.key === 'vehicles') ? 'admin-nav-icon-boost' : '', 'size-6 shrink-0']" aria-hidden="true" />
                     {{ item.name }}
                   </router-link>
                 </li>
@@ -287,3 +287,13 @@ const handleLogout = async () => {
 }
 
 </script>
+
+<style scoped>
+.admin-nav-icon-boost {
+  stroke-width: 2.2;
+}
+
+:global(html.dark) .admin-theme .admin-nav-icon-boost {
+  color: color-mix(in srgb, var(--app-text) 92%, var(--fleetly-baltic-blue) 8%);
+}
+</style>
