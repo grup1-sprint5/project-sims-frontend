@@ -30,7 +30,7 @@
     </div>
 
     <div v-else-if="vehicle" class="mt-8">
-      <dl class="divide-y divide-gray-200 dark:divide-white/10">
+      <dl class="vehicle-info-list divide-y">
         <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
           <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">ID</dt>
           <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 dark:text-white">{{ vehicle.id }}</dd>
@@ -100,3 +100,9 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+.vehicle-info-list > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--app-border-strong);
+}
+</style>

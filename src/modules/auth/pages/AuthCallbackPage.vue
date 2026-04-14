@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-screen items-center justify-center bg-[#040b1f] px-6 text-center text-white">
+  <div class="flex min-h-screen items-center justify-center px-6 text-center" style="background:var(--app-bg);color:var(--app-text);">
     <div>
       <p class="text-lg font-semibold">Completing sign in...</p>
       <p v-if="errorMessage" class="mt-3 text-sm text-red-300">{{ errorMessage }}</p>

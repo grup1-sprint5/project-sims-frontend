@@ -14,7 +14,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <router-view />
+  <div class="app-theme">
+    <router-view />
+  </div>
 </template>
 
 <style scoped></style>

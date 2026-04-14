@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-900 text-white px-4 py-8">
+  <div class="min-h-screen px-4 py-8" style="background:var(--app-bg);color:var(--app-text);">
     <h1 class="text-2xl font-bold mb-2">{{ m.clientUi.bookingDetailTitle }}</h1>
     <p class="text-gray-400">
       {{ m.clientUi.notImplemented }}

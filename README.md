@@ -14,6 +14,16 @@ This template should help get you started developing with Vue 3 in Vite.
 - **Axios** - HTTP client
 - **Vue3-Toastify** - Toast notifications
 
+## Documentation
+
+- General index: [`docs/README.md`](docs/README.md)
+- Product overview: [`docs/01-visio-general.md`](docs/01-visio-general.md)
+- Functional overview: [`docs/02-funcionalitats.md`](docs/02-funcionalitats.md)
+- Technical architecture: [`docs/03-arquitectura-tecnica.md`](docs/03-arquitectura-tecnica.md)
+- Auth & tenancy: [`docs/04-autenticacio-i-tenancy.md`](docs/04-autenticacio-i-tenancy.md)
+- Data flows: [`docs/05-fluxos-de-dades.md`](docs/05-fluxos-de-dades.md)
+- AI assistant and memory: [`docs/06-assistent-ia-i-memoria.md`](docs/06-assistent-ia-i-memoria.md)
+
 ## Recommended IDE Setup
 
 [VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
