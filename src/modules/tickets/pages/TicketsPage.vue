@@ -4,7 +4,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h1 class="text-xl font-semibold text-white">{{ m.ticketsUi.myTickets }}</h1>
+        <h1 class="text-xl font-semibold text-[var(--app-text)]">{{ m.ticketsUi.myTickets }}</h1>
         <p class="text-sm text-gray-400 mt-0.5">{{ m.ticketsUi.supportSubtitle }}</p>
       </div>
       <router-link
@@ -49,7 +49,7 @@
             <div class="flex items-start justify-between gap-3 px-4 py-3">
               <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 flex-wrap">
-                  <span class="font-medium text-white truncate">{{ t.title }}</span>
+                  <span class="font-medium text-[var(--app-text)] truncate">{{ t.title }}</span>
                   <span class="inline-flex rounded-full bg-green-900 text-green-300 px-2 py-0.5 text-xs">{{ m.ticketsUi.active }}</span>
                   <span class="text-xs text-gray-400">{{ t.messages?.length ?? 0 }} {{ m.ticketsUi.messages }}</span>
                 </div>
