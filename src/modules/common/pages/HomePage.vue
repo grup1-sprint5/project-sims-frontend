@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-gray-900 text-white flex items-start justify-center py-12 px-4">
     <div class="w-full max-w-3xl">
-      <h1 class="text-3xl font-bold text-center">Real-time Fleet Map</h1>
+      <h1 class="text-3xl font-bold text-center text-[var(--app-text)]">Real-time Fleet Map</h1>
       <p class="text-center text-gray-400 mt-2">Track your vehicles in real time. Click the map to open the full interactive map.</p>
 
       <div class="mt-6 bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-white/5">

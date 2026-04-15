@@ -79,7 +79,7 @@
                 'px-4 py-2.5 rounded-2xl text-sm whitespace-pre-wrap break-words shadow-sm',
                 msg.user_id === currentUserId
                   ? 'bg-indigo-600 text-white rounded-tr-sm'
-                  : 'bg-gray-800 text-gray-100 rounded-tl-sm',
+                  : 'bg-[var(--app-surface-alt)] text-[var(--app-text)] border border-[var(--app-border)] rounded-tl-sm',
               ]"
             >
               {{ msg.message }}

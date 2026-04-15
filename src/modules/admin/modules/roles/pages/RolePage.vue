@@ -71,7 +71,7 @@
             </button>
             <button
               v-if="role.name.toLowerCase() !== 'admin'"
-              class="text-[var(--fleetly-gunmetal)] hover:text-[var(--fleetly-black)] transition-colors"
+              class="text-[var(--fleetly-baltic-blue)] hover:text-[var(--fleetly-gunmetal)] transition-colors"
               @click="navigateToEdit(role)"
               :title="m.commonUi.edit"
             >

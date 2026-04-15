@@ -8,7 +8,7 @@
       </div>
 
       <div v-if="loading" class="flex justify-center py-16">
-        <svg class="animate-spin h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24">
+        <svg class="animate-spin h-8 w-8 text-[var(--fleetly-baltic-blue)]" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
         </svg>
@@ -17,7 +17,7 @@
       <template v-else-if="user">
 
         <div class="flex items-center gap-4 mb-8">
-          <span class="size-16 rounded-full bg-indigo-700 flex items-center justify-center text-2xl font-bold">
+          <span class="size-16 rounded-full bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-2xl font-bold">
             {{ initials }}
           </span>
           <div>
@@ -25,9 +25,9 @@
             <p class="text-sm text-gray-400">@{{ user.username }}</p>
             <span
               :class="user.active
-                ? 'bg-green-100 text-green-800 border border-green-300 dark:bg-green-900/30 dark:text-green-200 dark:border-green-700'
-                : 'bg-gray-100 text-gray-700 border border-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600'"
-              class="inline-block mt-1 rounded-full px-2 py-0.5 text-xs font-medium"
+                ? 'status-pill status-pill--active'
+                : 'status-pill status-pill--inactive'"
+              class="inline-block mt-1"
             >
               {{ user.active ? m.profile.active : m.profile.inactive }}
             </span>
@@ -95,28 +95,28 @@
               <h2 class="text-base font-semibold mb-1">{{ m.profile.paymentMethodTitle }}</h2>
               <p class="text-sm text-gray-400">{{ m.profile.paymentMethodSubtitle }}</p>
             </div>
-            <span class="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2.5 py-1 text-xs font-semibold text-emerald-300">
-              <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+            <span class="status-pill status-pill--active">
+              <span class="h-1.5 w-1.5 rounded-full bg-current opacity-80"></span>
               {{ m.profile.paymentMethodActive }}
             </span>
           </div>
 
-          <div class="mt-5 rounded-xl border border-white/5 bg-gray-900/60 p-4">
+          <div class="payment-card mt-5 rounded-xl p-4">
             <div class="flex items-center justify-between gap-3">
               <div>
-                <p class="text-sm font-semibold text-white">Stripe</p>
-                <p class="text-xs text-gray-400">{{ m.profile.paymentMethodDescription }}</p>
+                <p class="payment-provider-title text-sm font-semibold">Stripe</p>
+                <p class="payment-provider-subtitle text-xs">{{ m.profile.paymentMethodDescription }}</p>
               </div>
-              <span class="rounded-md bg-indigo-500/20 px-2 py-1 text-xs font-semibold text-indigo-300">Checkout</span>
+              <span class="rounded-md px-2 py-1 text-xs font-semibold border border-[var(--fleetly-baltic-blue)]/25 bg-[var(--fleetly-baltic-blue)]/15 text-[var(--fleetly-baltic-blue)]">Checkout</span>
             </div>
 
             <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div class="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-2">
-                <p class="text-xs text-emerald-200/80">{{ m.profile.currentBalance }}</p>
-                <p class="text-lg font-bold text-emerald-300">{{ walletBalanceFormatted }}</p>
+              <div class="payment-balance-box rounded-lg px-3 py-2">
+                <p class="payment-balance-label text-xs">{{ m.profile.currentBalance }}</p>
+                <p class="payment-balance-value text-lg font-bold">{{ walletBalanceFormatted }}</p>
               </div>
               <div>
-                <label class="mb-1 block text-xs font-medium text-gray-300">{{ m.profile.topupAmount }}</label>
+                <label class="mb-1 block text-xs font-medium text-[var(--app-text)]">{{ m.profile.topupAmount }}</label>
                 <input
                   v-model.number="walletTopupAmount"
                   type="number"
@@ -363,15 +363,15 @@ const submitPassword = async () => {
 }
 .input-field::placeholder { color: var(--app-input-placeholder); }
 .input-field:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.22);
+  border-color: var(--fleetly-baltic-blue);
+  box-shadow: 0 0 0 2px rgba(38, 97, 156, 0.22);
 }
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 0.5rem;
-  background-color: #4f46e5;
+  background-color: var(--fleetly-baltic-blue);
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 600;
@@ -379,6 +379,70 @@ const submitPassword = async () => {
   transition: background-color 0.15s;
   cursor: pointer;
 }
-.btn-primary:hover { background-color: #6366f1; }
+.btn-primary:hover { background-color: var(--app-btn-hover-bg); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 9999px;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  line-height: 1;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.status-pill--active {
+  background: color-mix(in srgb, #22c55e 18%, var(--app-surface));
+  color: #15803d;
+  border-color: color-mix(in srgb, #22c55e 48%, var(--app-border));
+}
+
+.status-pill--inactive {
+  background: var(--app-surface-alt);
+  color: var(--app-muted-text);
+  border-color: var(--app-border);
+}
+
+.payment-card {
+  border: 1px solid var(--app-border);
+  background: var(--app-surface-alt);
+}
+
+.payment-provider-title {
+  color: var(--app-text);
+}
+
+.payment-provider-subtitle {
+  color: var(--app-muted-text);
+}
+
+.payment-balance-box {
+  border: 1px solid color-mix(in srgb, #10b981 38%, var(--app-border));
+  background: color-mix(in srgb, #10b981 12%, var(--app-surface));
+}
+
+.payment-balance-label {
+  color: #047857;
+}
+
+.payment-balance-value {
+  color: #059669;
+}
+
+:global(html.dark) .status-pill--active {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+:global(html.dark) .payment-balance-label {
+  color: #d1fae5;
+}
+
+:global(html.dark) .payment-balance-value {
+  color: #6ee7b7;
+}
 </style>
