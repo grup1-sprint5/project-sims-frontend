@@ -167,7 +167,6 @@
           <div class="fixed inset-0 bg-black/60"></div>
           <div
             class="booking-modal-card relative rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[90dvh]"
-            style="background:var(--app-surface);color:var(--app-text);border:1px solid var(--app-border);"
             @click.stop
           >
 
@@ -293,7 +292,6 @@
           <div class="fixed inset-0 bg-black/60"></div>
           <div
             class="booking-modal-card relative w-full max-w-md rounded-2xl p-6 shadow-2xl"
-            style="background:var(--app-surface);color:var(--app-text);border:1px solid var(--app-border);"
             @click.stop
           >
             <h3 class="text-lg font-bold" style="color:var(--app-text)">Confirmar reserva</h3>
@@ -923,6 +921,9 @@ onUnmounted(() => {
 }
 
 .booking-modal-card {
+  background: var(--app-surface);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
   color-scheme: light;
 }
 

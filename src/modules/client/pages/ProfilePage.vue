@@ -365,6 +365,7 @@ const submitPassword = async () => {
 .input-field:focus {
   border-color: var(--fleetly-baltic-blue);
   box-shadow: 0 0 0 2px rgba(38, 97, 156, 0.22);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--fleetly-baltic-blue) 22%, transparent);
 }
 .btn-primary {
   display: inline-flex;
