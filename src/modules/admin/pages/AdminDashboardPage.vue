@@ -1,10 +1,49 @@
 <template>
   <div class="space-y-8">
     <div>
-      <h1 class="text-3xl font-semibold text-[var(--app-text)]">Admin dashboard</h1>
-      <p class="mt-2 text-sm text-[var(--app-muted-text)]/85">
-        Quick overview of administration modules.
-      </p>
+      <h1 class="text-3xl font-semibold text-[var(--app-text)]">{{ m.adminDashboardUi.title }}</h1>
+      <p class="mt-2 text-sm text-[var(--app-muted-text)]/85">{{ m.adminDashboardUi.subtitle }}</p>
+    </div>
+
+    <div class="rounded-xl bg-[var(--app-surface)] p-5 ring-1 ring-[var(--app-border)] shadow-sm">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-semibold text-[var(--app-text)]">{{ m.adminDashboardUi.revenueTitle }}</h2>
+          <p class="mt-1 text-sm text-[var(--app-muted-text)]/85">{{ m.adminDashboardUi.revenueSubtitle }}</p>
+        </div>
+        <label class="flex items-center gap-2 text-sm text-[var(--app-muted-text)]/90">
+          {{ m.adminDashboardUi.periodLabel }}
+          <select
+            v-model="revenuePeriod"
+            class="rounded-md border border-[var(--app-border)] bg-[var(--app-bg)] px-2 py-1 text-sm text-[var(--app-text)]"
+          >
+            <option value="today">{{ m.adminDashboardUi.today }}</option>
+            <option value="7d">{{ m.adminDashboardUi.last7Days }}</option>
+            <option value="30d">{{ m.adminDashboardUi.last30Days }}</option>
+            <option value="year">{{ m.adminDashboardUi.thisYear }}</option>
+            <option value="total">{{ m.adminDashboardUi.total }}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="rounded-lg bg-[var(--app-bg)] p-4 ring-1 ring-[var(--app-border)]">
+          <p class="text-xs uppercase tracking-wide text-[var(--app-muted-text)]/80">{{ m.adminDashboardUi.grossRevenue }}</p>
+          <p class="mt-2 text-2xl font-semibold text-[var(--fleetly-baltic-blue)]">{{ formatCurrency(revenueSummary.gross_revenue) }}</p>
+        </div>
+        <div class="rounded-lg bg-[var(--app-bg)] p-4 ring-1 ring-[var(--app-border)]">
+          <p class="text-xs uppercase tracking-wide text-[var(--app-muted-text)]/80">{{ m.adminDashboardUi.paidBookings }}</p>
+          <p class="mt-2 text-2xl font-semibold text-[var(--app-text)]">{{ revenueSummary.paid_reservations }}</p>
+        </div>
+        <div class="rounded-lg bg-[var(--app-bg)] p-4 ring-1 ring-[var(--app-border)]">
+          <p class="text-xs uppercase tracking-wide text-[var(--app-muted-text)]/80">{{ m.adminDashboardUi.averageTicket }}</p>
+          <p class="mt-2 text-2xl font-semibold text-[var(--app-text)]">{{ formatCurrency(revenueSummary.average_ticket) }}</p>
+        </div>
+        <div class="rounded-lg bg-[var(--app-bg)] p-4 ring-1 ring-[var(--app-border)]">
+          <p class="text-xs uppercase tracking-wide text-[var(--app-muted-text)]/80">{{ m.adminDashboardUi.pendingPayments }}</p>
+          <p class="mt-2 text-2xl font-semibold text-[var(--app-text)]">{{ revenueSummary.pending_payments }}</p>
+        </div>
+      </div>
     </div>
 
     <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
@@ -41,7 +80,7 @@
           </div>
         </div>
           <p class="mt-4 text-sm font-medium text-[var(--fleetly-baltic-blue)] group-hover:opacity-80">
-          Go to {{ item.name.toLowerCase() }}
+          {{ m.adminDashboardUi.goTo.replace('{name}', item.name.toLowerCase()) }}
         </p>
       </RouterLink>
 
@@ -50,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import {
   CalendarDaysIcon,
@@ -64,6 +103,8 @@ import { useVehicles } from '@/modules/admin/modules/vehicles/composables/useVeh
 import { useRoles } from '@/modules/admin/modules/roles/composables/useRoles'
 import { useBookings } from '@/modules/admin/bookings/composables/useBookings'
 import { useTickets } from '@/modules/tickets/composables/useTickets'
+import apiClient from '@/services/api'
+import { useI18n } from '@/i18n'
 
 const {
   users,
@@ -86,8 +127,35 @@ const {
   getBookings,
 } = useBookings()
 const { tickets, getTickets } = useTickets()
+const { m } = useI18n()
 
 const loadingStats = ref(false)
+const revenuePeriod = ref<'today' | '7d' | '30d' | 'year' | 'total'>('30d')
+const revenueSummary = ref({
+  gross_revenue: 0,
+  paid_reservations: 0,
+  average_ticket: 0,
+  pending_payments: 0,
+})
+
+const formatCurrency = (amount: number) =>
+  new Intl.NumberFormat('ca-ES', { style: 'currency', currency: 'EUR' }).format(Number(amount || 0))
+
+const loadRevenueSummary = async () => {
+  try {
+    const response = await apiClient.get('/admin/reservations/revenue-summary', {
+      params: { period: revenuePeriod.value },
+    })
+    revenueSummary.value = {
+      gross_revenue: Number(response.data?.gross_revenue || 0),
+      paid_reservations: Number(response.data?.paid_reservations || 0),
+      average_ticket: Number(response.data?.average_ticket || 0),
+      pending_payments: Number(response.data?.pending_payments || 0),
+    }
+  } catch (e) {
+    console.error('Error loading revenue summary', e)
+  }
+}
 
 onMounted(async () => {
   loadingStats.value = true
@@ -99,6 +167,7 @@ onMounted(async () => {
       getRoles(1).catch((e) => console.error('Error loading roles stats', e)),
       getBookings(1).catch((e) => console.error('Error loading bookings stats', e)),
       getTickets().catch((e) => console.error('Error loading tickets stats', e)),
+      loadRevenueSummary(),
     ])
   } catch (e) {
     console.error('Error loading admin stats', e)
@@ -107,10 +176,14 @@ onMounted(async () => {
   }
 })
 
+watch(revenuePeriod, async () => {
+  await loadRevenueSummary()
+})
+
 const items = computed(() => [
   {
-    name: 'Users',
-    description: 'Manage platform users.',
+    name: m.value.adminNav.users,
+    description: m.value.adminDashboardUi.usersDesc,
     to: '/admin/users',
     icon: UsersIcon,
     bgClass: 'bg-[#c2d7eb] dark:bg-[#1d4770]',
@@ -118,8 +191,8 @@ const items = computed(() => [
     count: usersPagination.value.total || users.value.length,
   },
   {
-    name: 'Roles',
-    description: 'Configure roles and permissions.',
+    name: m.value.adminNav.roles,
+    description: m.value.adminDashboardUi.rolesDesc,
     to: '/admin/roles',
     icon: ShieldCheckIcon,
     bgClass: 'bg-[#c2d7eb] dark:bg-[#1d4770]',
@@ -127,8 +200,8 @@ const items = computed(() => [
     count: rolesPagination.value.total || roles.value.length,
   },
   {
-    name: 'Bookings',
-    description: 'Manage vehicle reservations.',
+    name: m.value.adminNav.bookings,
+    description: m.value.adminDashboardUi.bookingsDesc,
     to: '/admin/bookings',
     icon: CalendarDaysIcon,
     bgClass: 'bg-[#c2d7eb] dark:bg-[#1d4770]',
@@ -136,8 +209,8 @@ const items = computed(() => [
     count: bookingsPagination.value.total || bookings.value.length,
   },
   {
-    name: 'Vehicles',
-    description: 'Control the vehicle inventory.',
+    name: m.value.adminNav.vehicles,
+    description: m.value.adminDashboardUi.vehiclesDesc,
     to: '/admin/vehicles',
     icon: TruckIcon,
     bgClass: 'bg-[#c2d7eb] dark:bg-[#1d4770]',
@@ -145,8 +218,8 @@ const items = computed(() => [
     count: vehiclesPagination.value.total || vehicles.value.length,
   },
   {
-    name: 'Tickets',
-    description: 'Manage user support tickets.',
+    name: m.value.adminNav.tickets,
+    description: m.value.adminDashboardUi.ticketsDesc,
     to: '/admin/tickets',
     icon: TicketIcon,
     bgClass: 'bg-[#c2d7eb] dark:bg-[#1d4770]',

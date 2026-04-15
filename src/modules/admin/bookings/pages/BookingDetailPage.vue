@@ -8,7 +8,7 @@
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
-        Back to bookings
+        {{ m.adminBookingsUi.backToBookings }}
       </router-link>
     </div>
 
@@ -17,7 +17,7 @@
         <svg class="animate-spin h-8 w-8 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
         </svg>
-        Loading booking...
+        {{ m.adminBookingsUi.loadingBooking }}
       </div>
     </div>
 
@@ -43,7 +43,7 @@
             Booking #{{ booking.id }}
           </h3>
           <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
-            Full booking information
+            {{ m.adminBookingsUi.fullBookingInfo }}
           </p>
         </div>
         <div class="flex gap-3">
@@ -51,7 +51,7 @@
             :to="`/admin/bookings/${booking.id}/edit`"
             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700"
           >
-            Edit
+            {{ m.adminBookingsUi.edit }}
           </router-link>
         </div>
       </div>
@@ -59,25 +59,25 @@
       <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
         <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Guest</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.adminBookingsUi.guestLabel }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">
               <span v-if="booking.user">{{ booking.user.name }} ({{ booking.user.email }})</span>
-              <span v-else>User #{{ booking.user_id ?? '-' }}</span>
+              <span v-else>{{ m.adminBookingsUi.guestLabel }} #{{ booking.user_id ?? '-' }}</span>
             </dd>
           </div>
 
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Vehicle</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.adminBookingsUi.vehicleLabel }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">
               <span v-if="booking.vehicle">
                 {{ booking.vehicle.brand }} {{ booking.vehicle.model }} - {{ booking.vehicle.license_plate }}
               </span>
-              <span v-else>Vehicle #{{ booking.vehicle_id ?? '-' }}</span>
+              <span v-else>{{ m.adminBookingsUi.vehicleLabel }} #{{ booking.vehicle_id ?? '-' }}</span>
             </dd>
           </div>
 
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.adminBookingsUi.statusLabel }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">
               <span
                 :class="[
@@ -87,13 +87,13 @@
                     : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
                 ]"
               >
-                {{ booking.status }}
+                {{ translateStatus(booking.status) }}
               </span>
             </dd>
           </div>
 
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Schedule</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.adminBookingsUi.scheduleLabel }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">
               <div v-if="booking.scheduled_start">
                 {{ formatDateTime(booking.scheduled_start) }}
@@ -103,7 +103,7 @@
           </div>
 
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total price</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.adminBookingsUi.totalPriceLabel }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">
               <span v-if="booking.total_price != null">{{ formatCurrency(booking.total_price) }}</span>
               <span v-else class="text-gray-400">-</span>
@@ -111,7 +111,7 @@
           </div>
 
           <div class="sm:col-span-1" v-if="booking.trip">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Trip</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.adminBookingsUi.tripLabel }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">
               {{ booking.trip.minutes_driven }} min · {{ formatCurrency(booking.trip.total_amount) }}
             </dd>
@@ -127,9 +127,11 @@ import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useBookings } from '../composables/useBookings'
 import type { Booking } from '../interfaces/booking.interface'
+import { useI18n } from '@/i18n'
 
 const route = useRoute()
 const { currentBooking, getBooking, loading, error } = useBookings()
+const { m } = useI18n()
 
 const booking = computed<Booking | null>(() => currentBooking.value)
 
@@ -146,13 +148,27 @@ onMounted(async () => {
 })
 
 const formatDateTime = (value: string) => {
-  return new Date(value).toLocaleString('es-ES')
+  return new Date(value).toLocaleString()
 }
 
 const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('es-ES', {
+  return new Intl.NumberFormat(undefined, {
     style: 'currency',
     currency: 'EUR',
   }).format(value)
+}
+
+const translateStatus = (status?: string | null) => {
+  if (!status) return m.value.adminBookingsUi.noValue
+
+  const statusMap: Record<string, string> = {
+    active: m.value.adminBookingsUi.active,
+    pending: m.value.adminBookingsUi.pending,
+    cancelled: m.value.adminBookingsUi.cancelled,
+    finished: m.value.adminBookingsUi.finished,
+    completed: m.value.adminBookingsUi.completed,
+  }
+
+  return statusMap[status] ?? status
 }
 </script>
