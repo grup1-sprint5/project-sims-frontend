@@ -73,45 +73,45 @@
           </p>
 
           <div
-            v-for="m in conversationMessages"
-            :key="`${m.id}-${m.created_at}`"
+            v-for="msg in conversationMessages"
+            :key="`${msg.id}-${msg.created_at}`"
             :class="[
               'flex gap-2',
-              m.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row',
+              msg.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row',
             ]"
           >
             <div
               :class="[
                 'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white select-none',
-                isClientMessage(m) ? 'bg-emerald-600' : (m.user_id === currentUserId ? 'bg-indigo-600' : 'bg-violet-600'),
+                isClientMessage(msg) ? 'bg-emerald-600' : (msg.user_id === currentUserId ? 'bg-indigo-600' : 'bg-violet-600'),
               ]"
             >
-              {{ initials(m.user?.name) }}
+              {{ initials(msg.user?.name) }}
             </div>
 
-            <div :class="m.user_id === currentUserId ? 'items-end' : 'items-start'" class="flex flex-col max-w-[82%]">
-              <div class="flex items-center gap-2 mb-1" :class="m.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row'">
-                <span class="text-xs font-semibold" :class="isClientMessage(m) ? 'text-emerald-400' : (m.user_id === currentUserId ? 'text-indigo-400' : 'text-violet-400')">
-                  {{ m.user?.name || 'Unknown' }}
+            <div :class="msg.user_id === currentUserId ? 'items-end' : 'items-start'" class="flex flex-col max-w-[82%]">
+              <div class="flex items-center gap-2 mb-1" :class="msg.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row'">
+                <span class="text-xs font-semibold" :class="isClientMessage(msg) ? 'text-emerald-400' : (msg.user_id === currentUserId ? 'text-indigo-400' : 'text-violet-400')">
+                  {{ msg.user?.name || 'Unknown' }}
                 </span>
                 <span class="text-[11px] px-2 py-0.5 rounded-full border"
-                  :class="isClientMessage(m) ? 'border-emerald-500/40 text-emerald-300 bg-emerald-900/20' : 'border-indigo-500/40 text-indigo-300 bg-indigo-900/20'"
+                  :class="isClientMessage(msg) ? 'border-emerald-500/40 text-emerald-300 bg-emerald-900/20' : 'border-indigo-500/40 text-indigo-300 bg-indigo-900/20'"
                 >
-                  {{ isClientMessage(m) ? m.adminTicketDetailUi.client : m.adminTicketDetailUi.admin }}
+                  {{ isClientMessage(msg) ? m.adminTicketDetailUi.client : m.adminTicketDetailUi.admin }}
                 </span>
-                <span class="text-xs text-gray-500">{{ formatDate(m.created_at) }}</span>
+                <span class="text-xs text-gray-500">{{ formatDate(msg.created_at) }}</span>
               </div>
               <div
                 :class="[
                   'px-4 py-2.5 rounded-2xl text-sm whitespace-pre-wrap break-words shadow-sm',
-                  isClientMessage(m)
+                  isClientMessage(msg)
                     ? 'bg-emerald-900/25 text-emerald-100 border border-emerald-700/30 rounded-tl-sm'
-                    : (m.user_id === currentUserId
+                    : (msg.user_id === currentUserId
                       ? 'bg-indigo-600 text-white rounded-tr-sm'
                       : 'bg-violet-900/30 text-violet-100 border border-violet-700/30 rounded-tl-sm'),
                 ]"
               >
-                {{ m.message }}
+                {{ msg.message }}
               </div>
             </div>
           </div>

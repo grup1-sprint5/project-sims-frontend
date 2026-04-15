@@ -188,7 +188,7 @@ async function removeDomain(domainId: number) {
 
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString)
-      return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat(undefined, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',

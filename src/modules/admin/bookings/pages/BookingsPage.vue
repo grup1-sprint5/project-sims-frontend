@@ -183,7 +183,7 @@
               :title="m.commonUi.view"
             >
               <span class="material-icons text-xl">visibility</span>
-              <span class="sr-only">{{ m.commonUi.view }}, {{ m.adminBookingsUi.guest }} #{{ booking.id }}</span>
+              <span class="sr-only">{{ m.commonUi.view }}, #{{ booking.id }}</span>
             </button>
             <button
               class="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
@@ -191,7 +191,7 @@
               :title="m.commonUi.edit"
             >
               <span class="material-icons text-xl">edit</span>
-              <span class="sr-only">{{ m.commonUi.edit }}, {{ m.adminBookingsUi.guest }} #{{ booking.id }}</span>
+              <span class="sr-only">{{ m.commonUi.edit }}, #{{ booking.id }}</span>
             </button>
             <button
               @click="handleDelete(booking.id)"
@@ -199,7 +199,7 @@
               :title="m.commonUi.delete"
             >
               <span class="material-icons text-xl">delete</span>
-              <span class="sr-only">{{ m.commonUi.delete }}, {{ m.adminBookingsUi.guest }} #{{ booking.id }}</span>
+              <span class="sr-only">{{ m.commonUi.delete }}, #{{ booking.id }}</span>
             </button>
           </div>
         </AdminTd>

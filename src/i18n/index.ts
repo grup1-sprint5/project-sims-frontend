@@ -232,11 +232,6 @@ const messages = {
       deleteSuccess: 'Tiquet eliminat correctament',
       deleteError: 'Error eliminant el tiquet',
     },
-    adminBookingsUi: {
-      title: 'Reserves',
-      description: 'Gestió de reserves de vehicles',
-      guest: 'Client', vehicle: 'Vehicle', schedule: 'Horari', price: 'Preu',
-    },
     superAdminUi: {
       title: 'Vista global super admin',
       description: 'Visibilitat global de tots els tenants',
@@ -340,6 +335,7 @@ const messages = {
       saveChanges: 'Desar canvis',
       saving: 'Desant...',
       loadingError: 'Error carregant la reserva',
+      invalidBookingId: 'ID de reserva invàlid',
       fillRequired: 'Ompli vehicle i data/hora d\'inici',
       createdSuccess: 'Reserva creada correctament',
       updatedSuccess: 'Reserva actualitzada correctament',
@@ -658,11 +654,6 @@ const messages = {
       deleteSuccess: 'Ticket eliminado correctamente',
       deleteError: 'Error al eliminar el ticket',
     },
-    adminBookingsUi: {
-      title: 'Reservas',
-      description: 'Gestión de reservas de vehículos',
-      guest: 'Cliente', vehicle: 'Vehículo', schedule: 'Horario', price: 'Precio',
-    },
     superAdminUi: {
       title: 'Vista global super admin',
       description: 'Visibilidad global de todos los tenants',
@@ -766,6 +757,7 @@ const messages = {
       saveChanges: 'Guardar cambios',
       saving: 'Guardando...',
       loadingError: 'Error cargando la reserva',
+      invalidBookingId: 'ID de reserva inválido',
       fillRequired: 'Rellena vehículo y fecha/hora de inicio',
       createdSuccess: 'Reserva creada correctamente',
       updatedSuccess: 'Reserva actualizada correctamente',
@@ -1084,11 +1076,6 @@ const messages = {
       deleteSuccess: 'Ticket deleted successfully',
       deleteError: 'Error deleting ticket',
     },
-    adminBookingsUi: {
-      title: 'Bookings',
-      description: 'Vehicle bookings management',
-      guest: 'Guest', vehicle: 'Vehicle', schedule: 'Schedule', price: 'Price',
-    },
     superAdminUi: {
       title: 'Super Admin Overview',
       description: 'Global visibility across all tenants',
@@ -1192,6 +1179,7 @@ const messages = {
       saveChanges: 'Save changes',
       saving: 'Saving...',
       loadingError: 'Error loading booking',
+      invalidBookingId: 'Invalid booking ID',
       fillRequired: 'Fill vehicle and start date/time',
       createdSuccess: 'Booking created successfully',
       updatedSuccess: 'Booking updated successfully',

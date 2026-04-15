@@ -87,15 +87,7 @@
                     : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
                 ]"
               >
-                {{ booking.status === 'active'
-                  ? m.adminBookingsUi.active
-                  : booking.status === 'pending'
-                    ? m.adminBookingsUi.pending
-                    : booking.status === 'cancelled'
-                      ? m.adminBookingsUi.cancelled
-                      : booking.status === 'finished'
-                        ? m.adminBookingsUi.finished
-                        : m.adminBookingsUi.completed }}
+                {{ translateStatus(booking.status) }}
               </span>
             </dd>
           </div>
@@ -164,5 +156,19 @@ const formatCurrency = (value: number) => {
     style: 'currency',
     currency: 'EUR',
   }).format(value)
+}
+
+const translateStatus = (status?: string | null) => {
+  if (!status) return m.value.adminBookingsUi.noValue
+
+  const statusMap: Record<string, string> = {
+    active: m.value.adminBookingsUi.active,
+    pending: m.value.adminBookingsUi.pending,
+    cancelled: m.value.adminBookingsUi.cancelled,
+    finished: m.value.adminBookingsUi.finished,
+    completed: m.value.adminBookingsUi.completed,
+  }
+
+  return statusMap[status] ?? status
 }
 </script>

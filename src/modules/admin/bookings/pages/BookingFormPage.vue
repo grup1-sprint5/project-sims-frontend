@@ -120,19 +120,23 @@ const form = reactive<{
 const saving = ref(false)
 
 onMounted(async () => {
-  if (bookingId.value) {
-    try {
-      const booking = await getBooking(bookingId.value)
-      if (booking.user_id) form.user_id = String(booking.user_id)
-      if (booking.vehicle_id) form.vehicle_id = String(booking.vehicle_id)
-      if (booking.scheduled_start) {
-        const d = new Date(booking.scheduled_start)
-        form.scheduled_start = d.toISOString().slice(0, 16)
-      }
-    } catch (e) {
-        toastError(error.value || m.value.adminBookingsUi.loadingError)
-      router.push('/admin/bookings')
+  if (!bookingId.value) {
+    toastError(m.value.adminBookingsUi.invalidBookingId)
+    router.push('/admin/bookings')
+    return
+  }
+
+  try {
+    const booking = await getBooking(bookingId.value)
+    if (booking.user_id) form.user_id = String(booking.user_id)
+    if (booking.vehicle_id) form.vehicle_id = String(booking.vehicle_id)
+    if (booking.scheduled_start) {
+      const d = new Date(booking.scheduled_start)
+      form.scheduled_start = d.toISOString().slice(0, 16)
     }
+  } catch (e) {
+    toastError(error.value || m.value.adminBookingsUi.loadingError)
+    router.push('/admin/bookings')
   }
 })
 
@@ -150,7 +154,7 @@ const handleSubmit = async () => {
     }
 
     if (!bookingId.value) {
-      toastError(m.value.adminBookingsUi.loadingError)
+      toastError(m.value.adminBookingsUi.invalidBookingId)
       return
     }
 
