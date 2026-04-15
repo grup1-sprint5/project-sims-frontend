@@ -20,7 +20,7 @@
               <TransitionChild as="template" enter="ease-in-out duration-300" enter-from="opacity-0" enter-to="" leave="ease-in-out duration-300" leave-from="" leave-to="opacity-0">
                 <div class="absolute top-0 left-full flex w-16 justify-center pt-5">
                   <button type="button" class="-m-2.5 p-2.5" @click="sidebarOpen = false">
-                    <span class="sr-only">Close sidebar</span>
+                    <span class="sr-only">{{ m.adminLayoutUi.closeSidebar }}</span>
                     <XMarkIcon class="size-6 text-white" aria-hidden="true" />
                   </button>
                 </div>
@@ -81,6 +81,9 @@
             </li>
             <li class="-mx-6 mt-auto">
               <div class="px-2 pb-2">
+                <div class="mb-2 flex justify-center">
+                  <LanguageSwitcher />
+                </div>
                 <button
                   type="button"
                   class="w-full flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-[var(--app-sidebar-text)] hover:bg-[var(--app-sidebar-hover)]"
@@ -88,7 +91,7 @@
                 >
                   <MoonIcon v-if="!isDark" class="size-4" />
                   <SunIcon v-else class="size-4" />
-                  {{ isDark ? 'Mode clar' : 'Mode fosc' }}
+                  {{ isDark ? m.adminLayoutUi.themeLight : m.adminLayoutUi.themeDark }}
                 </button>
               </div>
               <Menu as="div" class="relative px-2 py-2">
@@ -136,7 +139,7 @@
 
     <div class="sticky top-0 z-40 flex items-center gap-x-6 bg-[var(--app-surface)] px-4 py-4 shadow-xs sm:px-6 lg:hidden border-b border-[var(--app-border)]/60">
       <button type="button" class="-m-2.5 p-2.5 text-[var(--fleetly-gunmetal)] hover:text-[var(--fleetly-black)] lg:hidden" @click="sidebarOpen = true">
-        <span class="sr-only">Open sidebar</span>
+        <span class="sr-only">{{ m.adminLayoutUi.openSidebar }}</span>
         <Bars3Icon class="size-6" aria-hidden="true" />
       </button>
       <div class="flex-1 text-sm/6 font-semibold text-[var(--app-text)]">{{ m.adminNav.dashboard }}</div>
@@ -151,7 +154,7 @@
       <LanguageSwitcher />
       <Menu as="div" class="relative">
         <MenuButton class="relative flex items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]">
-          <span class="sr-only">Open user menu</span>
+          <span class="sr-only">{{ m.adminLayoutUi.openUserMenu }}</span>
           <span class="size-8 rounded-full outline -outline-offset-1 outline-black/5 dark:outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
             {{ userInitials }}
           </span>
