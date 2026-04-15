@@ -67,7 +67,7 @@
           <span class="text-xs text-gray-500 dark:text-gray-400">{{ conversationMessages.length }} {{ m.adminTicketDetailUi.messages }}</span>
         </div>
 
-        <div ref="chatScrollEl" class="px-4 py-4 space-y-4 max-h-[52vh] overflow-y-auto bg-gray-50/60 dark:bg-gray-950/30">
+        <div ref="chatScrollEl" class="px-4 py-4 space-y-4 max-h-[52vh] overflow-y-auto" style="background:var(--app-surface-alt);">
           <p v-if="conversationMessages.length === 0" class="text-sm text-gray-400 text-center py-4">
             {{ m.adminTicketDetailUi.noMessages }}
           </p>
@@ -91,24 +91,24 @@
 
             <div :class="msg.user_id === currentUserId ? 'items-end' : 'items-start'" class="flex flex-col max-w-[82%]">
               <div class="flex items-center gap-2 mb-1" :class="msg.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row'">
-                <span class="text-xs font-semibold" :class="isClientMessage(msg) ? 'text-emerald-400' : (msg.user_id === currentUserId ? 'text-indigo-400' : 'text-violet-400')">
+                <span class="ticket-name text-xs font-semibold" :class="isClientMessage(msg) ? 'ticket-name--client' : (msg.user_id === currentUserId ? 'ticket-name--self' : 'ticket-name--admin')">
                   {{ msg.user?.name || 'Unknown' }}
                 </span>
-                <span class="text-[11px] px-2 py-0.5 rounded-full border"
-                  :class="isClientMessage(msg) ? 'border-emerald-500/40 text-emerald-300 bg-emerald-900/20' : 'border-indigo-500/40 text-indigo-300 bg-indigo-900/20'"
+                <span class="ticket-role text-[11px] px-2 py-0.5 rounded-full border"
+                  :class="isClientMessage(msg) ? 'ticket-role--client' : 'ticket-role--admin'"
                 >
                   {{ isClientMessage(msg) ? m.adminTicketDetailUi.client : m.adminTicketDetailUi.admin }}
                 </span>
-                <span class="text-xs text-gray-500">{{ formatDate(msg.created_at) }}</span>
+                <span class="text-xs" style="color:var(--app-muted-text)">{{ formatDate(msg.created_at) }}</span>
               </div>
               <div
                 :class="[
-                  'px-4 py-2.5 rounded-2xl text-sm whitespace-pre-wrap break-words shadow-sm',
+                  'ticket-bubble px-4 py-2.5 rounded-2xl text-sm whitespace-pre-wrap break-words shadow-sm',
                   isClientMessage(msg)
-                    ? 'bg-emerald-900/25 text-emerald-100 border border-emerald-700/30 rounded-tl-sm'
+                    ? 'ticket-bubble--client rounded-tl-sm'
                     : (msg.user_id === currentUserId
-                      ? 'bg-indigo-600 text-white rounded-tr-sm'
-                      : 'bg-violet-900/30 text-violet-100 border border-violet-700/30 rounded-tl-sm'),
+                      ? 'ticket-bubble--self rounded-tr-sm'
+                      : 'ticket-bubble--admin rounded-tl-sm'),
                 ]"
               >
                 {{ msg.message }}
@@ -263,3 +263,87 @@ watch(() => conversationMessages.value.length, async () => {
 
 onMounted(load)
 </script>
+
+<style scoped>
+.ticket-name--client {
+  color: #065f46;
+}
+
+.ticket-name--self {
+  color: #3730a3;
+}
+
+.ticket-name--admin {
+  color: #5b21b6;
+}
+
+.ticket-role--client {
+  border-color: #34d399;
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+.ticket-role--admin {
+  border-color: #818cf8;
+  background: #eef2ff;
+  color: #312e81;
+}
+
+.ticket-bubble--client {
+  background: #ecfdf5;
+  border: 1px solid #6ee7b7;
+  color: #064e3b;
+}
+
+.ticket-bubble--self {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.ticket-bubble--admin {
+  background: #f5f3ff;
+  border: 1px solid #c4b5fd;
+  color: #4c1d95;
+}
+
+:global(html.dark) .ticket-name--client {
+  color: #6ee7b7;
+}
+
+:global(html.dark) .ticket-name--self {
+  color: #a5b4fc;
+}
+
+:global(html.dark) .ticket-name--admin {
+  color: #c4b5fd;
+}
+
+:global(html.dark) .ticket-role--client {
+  border-color: #047857;
+  background: rgba(6, 95, 70, 0.28);
+  color: #a7f3d0;
+}
+
+:global(html.dark) .ticket-role--admin {
+  border-color: #4f46e5;
+  background: rgba(67, 56, 202, 0.28);
+  color: #c7d2fe;
+}
+
+:global(html.dark) .ticket-bubble--client {
+  background: rgba(6, 95, 70, 0.3);
+  border-color: rgba(52, 211, 153, 0.5);
+  color: #ecfdf5;
+}
+
+:global(html.dark) .ticket-bubble--self {
+  background: #6366f1;
+  color: #ffffff;
+}
+
+:global(html.dark) .ticket-bubble--admin {
+  background: rgba(91, 33, 182, 0.35);
+  border-color: rgba(139, 92, 246, 0.5);
+  color: #f3e8ff;
+}
+</style>

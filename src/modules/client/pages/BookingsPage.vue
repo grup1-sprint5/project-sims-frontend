@@ -1,11 +1,11 @@
 <template>
-  <div class="min-h-screen bg-gray-900 pb-6">
+  <div class="min-h-screen" style="background:var(--app-bg);color:var(--app-text);padding-bottom:1.5rem;">
     <div class="container mx-auto px-4 py-6 max-w-3xl">
 
       <!-- Capçalera -->
       <div class="mb-8">
-        <h1 class="text-2xl font-bold text-white">{{ m.bookingsUi.title }}</h1>
-        <p class="text-sm text-gray-400 mt-0.5">{{ m.bookingsUi.subtitle }}</p>
+        <h1 class="text-2xl font-bold" style="color:var(--app-text)">{{ m.bookingsUi.title }}</h1>
+        <p class="text-sm mt-0.5" style="color:var(--app-muted-text)">{{ m.bookingsUi.subtitle }}</p>
       </div>
 
       <!-- Loading -->
@@ -15,14 +15,14 @@
 
       <!-- Sense reserves -->
       <div v-else-if="bookingStore.bookings.length === 0" class="text-center py-20">
-        <div class="w-16 h-16 bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
-          <svg class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background:var(--app-card-bg);">
+          <svg class="h-8 w-8" :style="{color: 'var(--app-muted-text)'}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
         </div>
-        <p class="text-white font-semibold mb-1">{{ m.bookingsUi.emptyTitle }}</p>
-        <p class="text-sm text-gray-400 mb-6">{{ m.bookingsUi.emptySubtitle }}</p>
-        <RouterLink to="/" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm">
+        <p class="font-semibold mb-1" style="color:var(--app-text)">{{ m.bookingsUi.emptyTitle }}</p>
+        <p class="text-sm mb-6" style="color:var(--app-muted-text)">{{ m.bookingsUi.emptySubtitle }}</p>
+        <RouterLink to="/" class="inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm" style="background:var(--app-btn-bg);color:var(--app-btn-text);">
           {{ m.bookingsUi.seeMap }}
         </RouterLink>
       </div>
@@ -54,12 +54,13 @@
 
         <!-- SECCIÓ: Actives i pendents -->
         <section v-if="activeAndPendingBookings.length > 0" class="mb-8">
-          <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{{ m.bookingsUi.sectionUpcoming }}</h2>
+          <h2 class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:var(--app-muted-text)">{{ m.bookingsUi.sectionUpcoming }}</h2>
           <div class="space-y-3">
             <div
               v-for="booking in activeAndPendingBookings"
               :key="booking.id"
-              class="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden shadow-sm"
+              class="rounded-2xl overflow-hidden shadow-sm"
+              style="background:var(--app-card-bg);border:1.5px solid var(--app-card-border);"
             >
               <!-- Barra d'estat de color -->
               <div class="h-1 w-full" :class="{
@@ -72,11 +73,7 @@
                 <!-- Fila principal: vehicle + estat -->
                 <div class="flex items-start justify-between gap-3 mb-3">
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" :class="{
-                      'bg-blue-900/40': booking.status === 'active',
-                      'bg-yellow-900/40': booking.status === 'pending',
-                      'bg-purple-900/40': booking.status === 'confirmed',
-                    }">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" :style="{background: 'var(--app-surface-alt)'}">
                       <svg class="h-5 w-5" :class="{
                         'text-blue-600': booking.status === 'active',
                         'text-yellow-600': booking.status === 'pending',
@@ -86,28 +83,28 @@
                       </svg>
                     </div>
                     <div>
-                      <p class="font-bold text-white">{{ booking.vehicle?.license_plate || '—' }}</p>
-                      <p class="text-sm text-gray-400">{{ booking.vehicle?.brand }} {{ booking.vehicle?.model }}</p>
+                      <p class="font-bold" style="color:var(--app-text)">{{ booking.vehicle?.license_plate || '—' }}</p>
+                      <p class="text-sm" style="color:var(--app-muted-text)">{{ booking.vehicle?.brand }} {{ booking.vehicle?.model }}</p>
                     </div>
                   </div>
                   <span class="shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full" :class="{
-                    'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300': booking.status === 'active',
-                    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300': booking.status === 'pending',
-                    'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300': booking.status === 'confirmed',
+                    'bg-blue-700 text-white dark:bg-blue-700 dark:text-white': booking.status === 'active',
+                    'bg-yellow-500 text-black dark:bg-yellow-500 dark:text-black': booking.status === 'pending',
+                    'bg-purple-700 text-white dark:bg-purple-700 dark:text-white': booking.status === 'confirmed',
                   }">{{ getStatusLabel(booking.status) }}</span>
                 </div>
 
                 <!-- Info contextual -->
-                <div v-if="booking.status === 'active'" class="flex items-center gap-2 bg-blue-900/20 rounded-xl px-3 py-2 mb-3">
+                <div v-if="booking.status === 'active'" class="flex items-center gap-2 rounded-xl px-3 py-2 mb-3 border border-blue-400 dark:border-blue-700" style="background:color-mix(in srgb, #2563eb 30%, var(--app-card-bg));">
                   <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse shrink-0"></span>
-                  <span class="text-xs font-medium text-blue-300">{{ m.bookingsUi.activeVehicleInUse }}</span>
-                  <span v-if="booking.trip?.engine_started_at" class="text-xs text-blue-500 ml-auto">{{ m.bookingsUi.activeSince }} {{ formatTimeOnly(booking.trip.engine_started_at) }}</span>
+                  <span class="text-xs font-bold" style="color:var(--app-text)">{{ m.bookingsUi.activeVehicleInUse }}</span>
+                  <span v-if="booking.trip?.engine_started_at" class="text-xs font-semibold ml-auto" style="color:var(--app-text)">{{ m.bookingsUi.activeSince }} {{ formatTimeOnly(booking.trip.engine_started_at) }}</span>
                 </div>
 
-                <div v-else-if="booking.status === 'pending'" class="flex items-center gap-2 mb-3 rounded-xl px-3 py-2" :class="isDeadlineNear(booking) ? 'bg-red-900/20' : 'bg-gray-700/50'">
-                  <svg class="h-4 w-4 shrink-0" :class="isDeadlineNear(booking) ? 'text-red-400' : 'text-gray-400'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                  <span class="text-xs font-medium" :class="isDeadlineNear(booking) ? 'text-red-300' : 'text-gray-300'">{{ timeUntilStart(booking) }}</span>
-                  <span v-if="booking.activation_deadline" class="text-xs text-gray-400 ml-auto">{{ m.bookingsUi.activateUntil }} {{ formatTimeOnly(booking.activation_deadline) }}</span>
+                <div v-else-if="booking.status === 'pending'" class="flex items-center gap-2 mb-3 rounded-xl px-3 py-2 border" :class="isDeadlineNear(booking) ? 'bg-red-100 dark:bg-red-900/20 border-red-300 dark:border-red-700' : 'bg-[var(--app-surface-alt)] border-[var(--app-border)]'">
+                  <svg class="h-4 w-4 shrink-0" :class="isDeadlineNear(booking) ? 'text-red-700 dark:text-red-300' : 'text-[var(--app-muted-text)]'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="text-xs font-semibold" :class="isDeadlineNear(booking) ? 'text-red-800 dark:text-red-200' : 'text-[var(--app-text)]'">{{ timeUntilStart(booking) }}</span>
+                  <span v-if="booking.activation_deadline" class="text-xs ml-auto" style="color:var(--app-muted-text)">{{ m.bookingsUi.activateUntil }} {{ formatTimeOnly(booking.activation_deadline) }}</span>
                 </div>
 
                 <!-- Dates -->
@@ -241,7 +238,7 @@
                 <h3 class="font-bold text-white">{{ m.bookingsUi.bookingNumber }} #{{ selectedBooking.id }}</h3>
                 <span class="text-xs font-semibold px-2 py-0.5 rounded-full" :class="{
                   'bg-yellow-900/40 text-yellow-300': selectedBooking.status === 'pending',
-                  'bg-blue-900/40 text-blue-300': selectedBooking.status === 'active',
+                  'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300': selectedBooking.status === 'active',
                   'bg-green-900/40 text-green-300': selectedBooking.status === 'completed',
                   'bg-red-900/40 text-red-300': selectedBooking.status === 'cancelled',
                   'bg-purple-900/40 text-purple-300': selectedBooking.status === 'confirmed',

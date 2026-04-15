@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[var(--fleetly-black)] text-white flex items-center justify-center px-6 py-12 lg:px-8">
+  <div class="min-h-screen flex items-center justify-center px-6 py-12 lg:px-8" style="background:var(--app-bg);color:var(--app-text);">
     <div class="w-full max-w-md rounded-2xl border border-[var(--fleetly-gunmetal)] bg-[var(--fleetly-gunmetal)]/35 p-6 shadow-2xl shadow-black/40 sm:p-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <img class="mx-auto h-12 w-auto object-contain" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />

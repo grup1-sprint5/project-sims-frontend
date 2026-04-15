@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-900 text-white px-4 py-8">
+  <div class="min-h-screen px-4 py-8" style="background:var(--app-bg);color:var(--app-text);">
     <div class="mx-auto max-w-2xl">
 
       <div class="mb-8">
@@ -25,8 +25,8 @@
             <p class="text-sm text-gray-400">@{{ user.username }}</p>
             <span
               :class="user.active
-                ? 'bg-green-500/20 text-green-400'
-                : 'bg-gray-500/20 text-gray-400'"
+                ? 'bg-green-100 text-green-800 border border-green-300 dark:bg-green-900/30 dark:text-green-200 dark:border-green-700'
+                : 'bg-gray-100 text-gray-700 border border-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600'"
               class="inline-block mt-1 rounded-full px-2 py-0.5 text-xs font-medium"
             >
               {{ user.active ? m.profile.active : m.profile.inactive }}
@@ -362,17 +362,17 @@ const submitPassword = async () => {
   display: block;
   width: 100%;
   border-radius: 0.5rem;
-  border: none;
-  background-color: rgba(55, 65, 81, 0.6);
+  border: 1px solid var(--app-input-border);
+  background-color: var(--app-input-bg);
   padding: 0.5rem 0.75rem;
-  color: #fff;
+  color: var(--app-input-text);
   font-size: 0.875rem;
-  outline: 1px solid rgba(255,255,255,0.1);
+  outline: none;
 }
-.input-field::placeholder { color: #6b7280; }
+.input-field::placeholder { color: var(--app-input-placeholder); }
 .input-field:focus {
-  outline: 2px solid #6366f1;
-  outline-offset: 0;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.22);
 }
 .btn-primary {
   display: inline-flex;

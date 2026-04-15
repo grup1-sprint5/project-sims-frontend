@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-900 p-8">
+  <div class="min-h-screen p-8" style="background:var(--app-bg);color:var(--app-text);">
     <div class="mx-auto max-w-7xl">
       <div class="lg:col-start-3 lg:row-end-1" v-if="user">
         <h2 class="mb-6 text-2xl font-bold text-white">User Profile</h2>

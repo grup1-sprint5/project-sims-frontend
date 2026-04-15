@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-900 text-white px-4 py-8">
+  <div class="min-h-screen px-4 py-8" style="background:var(--app-bg);color:var(--app-text);">
     <div class="mx-auto max-w-4xl">
       <div class="flex items-start justify-between gap-4">
         <div>
@@ -11,7 +11,8 @@
 
         <button
           type="button"
-          class="rounded-lg bg-white/5 px-3 py-2 text-sm text-gray-200 outline outline-1 outline-white/10 hover:bg-white/10"
+          class="rounded-lg px-3 py-2 text-sm font-semibold transition-colors"
+          style="background:var(--app-surface-alt);color:var(--app-text);border:1px solid var(--app-border);"
           :disabled="loadingDevices"
           @click="reload"
         >
@@ -20,7 +21,7 @@
       </div>
 
       <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div class="sm:col-span-1 rounded-xl bg-gray-800/60 border border-white/5 p-4">
+        <div class="sm:col-span-1 rounded-xl p-4" style="background:var(--app-card-bg);border:1px solid var(--app-card-border);">
           <div class="text-sm font-semibold">{{ m.sensorsUi.device }}</div>
           <div class="mt-2">
             <div v-if="loadingDevices" class="text-sm text-gray-400">{{ m.sensorsUi.loadingDevices }}</div>
@@ -29,7 +30,8 @@
             <select
               v-else
               v-model="selectedDeviceId"
-              class="mt-1 w-full rounded-lg bg-gray-900/40 px-3 py-2 text-sm text-white outline outline-1 outline-white/10 focus:outline-2 focus:outline-indigo-500"
+              class="mt-1 w-full rounded-lg px-3 py-2 text-sm focus:outline-2 focus:outline-indigo-500"
+              style="background:var(--app-input-bg);color:var(--app-input-text);border:1px solid var(--app-input-border);"
               @change="onDeviceChange"
             >
               <option v-for="d in devices" :key="d" :value="d">{{ d }}</option>
@@ -41,7 +43,7 @@
           </div>
         </div>
 
-        <div class="sm:col-span-2 rounded-xl bg-gray-800/60 border border-white/5 p-4">
+        <div class="sm:col-span-2 rounded-xl p-4" style="background:var(--app-card-bg);border:1px solid var(--app-card-border);">
           <div class="flex items-center justify-between gap-4">
             <div>
               <div class="text-sm font-semibold">{{ m.sensorsUi.latestReading }}</div>
@@ -56,12 +58,12 @@
             </div>
           </div>
 
-          <div v-if="error" class="mt-4 rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-200 outline outline-1 outline-red-500/20">
+          <div v-if="error" class="mt-4 rounded-lg px-3 py-2 text-sm" style="background:color-mix(in srgb, #ef4444 12%, var(--app-card-bg));color:#b91c1c;border:1px solid color-mix(in srgb, #ef4444 35%, var(--app-border));">
             {{ error }}
           </div>
 
           <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div class="rounded-lg bg-gray-900/40 p-4 outline outline-1 outline-white/10">
+            <div class="rounded-lg p-4" style="background:var(--app-surface-alt);border:1px solid var(--app-border);">
               <div class="text-xs uppercase tracking-wide text-gray-400">{{ m.sensorsUi.distance }}</div>
               <div class="mt-2 text-3xl font-bold">
                 <span v-if="latest">{{ formatValue(latest.value) }}</span>
@@ -70,7 +72,7 @@
               </div>
             </div>
 
-            <div class="rounded-lg bg-gray-900/40 p-4 outline outline-1 outline-white/10">
+            <div class="rounded-lg p-4" style="background:var(--app-surface-alt);border:1px solid var(--app-border);">
               <div class="text-xs uppercase tracking-wide text-gray-400">{{ m.sensorsUi.sensorType }}</div>
               <div class="mt-2 text-lg font-semibold">
                 <span v-if="latest">{{ latest.sensor_type }}</span>
@@ -78,7 +80,7 @@
               </div>
             </div>
 
-            <div class="rounded-lg bg-gray-900/40 p-4 outline outline-1 outline-white/10">
+            <div class="rounded-lg p-4" style="background:var(--app-surface-alt);border:1px solid var(--app-border);">
               <div class="text-xs uppercase tracking-wide text-gray-400">{{ m.sensorsUi.timestamp }}</div>
               <div class="mt-2 text-sm text-gray-200">
                 <span v-if="latest">{{ latest.timestamp || latest.created_at || '—' }}</span>
@@ -102,14 +104,16 @@
             </button>
             <button
               type="button"
-              class="rounded-lg bg-white/5 px-3 py-2 text-sm font-semibold text-gray-200 outline outline-1 outline-white/10 hover:bg-white/10"
+              class="rounded-lg px-3 py-2 text-sm font-semibold transition-colors"
+              style="background:var(--app-surface-alt);color:var(--app-text);border:1px solid var(--app-border);"
               @click="stop"
             >
               {{ m.sensorsUi.stop }}
             </button>
             <button
               type="button"
-              class="rounded-lg bg-white/5 px-3 py-2 text-sm font-semibold text-gray-200 outline outline-1 outline-white/10 hover:bg-white/10"
+              class="rounded-lg px-3 py-2 text-sm font-semibold transition-colors"
+              style="background:var(--app-surface-alt);color:var(--app-text);border:1px solid var(--app-border);"
               :disabled="loadingLatest || !selectedDeviceId"
               @click="refreshOnce"
             >
@@ -192,8 +196,8 @@ onMounted(async () => {
 
 const pollingLabel = computed(() => (isPolling.value ? m.value.sensorsUi.live : m.value.sensorsUi.paused))
 const pollingClass = computed(() =>
-  isPolling.value ? 'text-green-300 bg-green-500/10 px-2 py-1 rounded-md outline outline-1 outline-green-500/20'
-    : 'text-gray-300 bg-white/5 px-2 py-1 rounded-md outline outline-1 outline-white/10'
+  isPolling.value ? 'text-green-800 dark:text-green-300 bg-green-100 dark:bg-green-900/25 px-2 py-1 rounded-md border border-green-300 dark:border-green-700'
+    : 'text-[var(--app-text)] bg-[var(--app-surface-alt)] px-2 py-1 rounded-md border border-[var(--app-border)]'
 )
 
 const formatValue = (v: any) => {
