@@ -23,6 +23,8 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 1303
+          timeout: 30s
+          command_timeout: 10m
           script: |
             mkdir -p /var/www/sims-front/dist
             rm -rf /var/www/sims-front/dist/*
@@ -34,6 +36,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 1303
+          timeout: 60s
           source: "dist/*"
           target: "/var/www/sims-front"
           strip_components: 1
