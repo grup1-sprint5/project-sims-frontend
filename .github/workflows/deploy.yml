@@ -1,8 +1,20 @@
-- name: Build Project
-  run: |
-        npm ci
-        npm run build
-        ls -la dist
+name: Deploy Front
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install and Build
+        run: |
+          npm ci
+          npm run build
+          ls -la dist
 
       - name: Prepare remote folder
         uses: appleboy/ssh-action@v1.0.3
@@ -10,10 +22,10 @@
           host: ${{ secrets.DEPLOY_HOST_IP }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: ${{ secrets.DEPLOY_SSH_PORT }}
+          port: 1303
           script: |
-            mkdir -p /var/www/sims-frontend/dist
-            rm -rf /var/www/sims-frontend/dist/*
+            mkdir -p /var/www/sims-front/dist
+            rm -rf /var/www/sims-front/dist/*
 
       - name: Upload Files (SCP)
         uses: appleboy/scp-action@v0.1.7
@@ -21,9 +33,9 @@
           host: ${{ secrets.DEPLOY_HOST_IP }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: ${{ secrets.DEPLOY_SSH_PORT }}
-          source: "dist/**"
-          target: "/var/www/sims-frontend"
+          port: 1303
+          source: "dist/*"
+          target: "/var/www/sims-front"
           strip_components: 1
 
       - name: Reload Nginx
@@ -32,5 +44,5 @@
           host: ${{ secrets.DEPLOY_HOST_IP }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: ${{ secrets.DEPLOY_SSH_PORT }}
+          port: 1303
           script: sudo systemctl reload nginx
