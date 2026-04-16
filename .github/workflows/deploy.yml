@@ -22,7 +22,7 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST_IP }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: 1303
+          port: ${{ secrets.DEPLOY_SSH_PORT }}
           timeout: 30s
           command_timeout: 10m
           script: |
@@ -35,10 +35,10 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST_IP }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: 1303
+          port: ${{ secrets.DEPLOY_SSH_PORT }}
           timeout: 60s
           source: "dist/*"
-          target: "/var/www/sims-front"
+          target: "/var/www/sims-front/dist"
           strip_components: 1
 
       - name: Reload Nginx
@@ -47,5 +47,5 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST_IP }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: 1303
+          port: ${{ secrets.DEPLOY_SSH_PORT }}
           script: sudo systemctl reload nginx
