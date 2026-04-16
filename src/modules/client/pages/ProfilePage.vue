@@ -298,6 +298,14 @@ onMounted(async () => {
 
   const walletStatus = new URLSearchParams(window.location.search).get('wallet')
   if (walletStatus === 'success') {
+    const sessionId = new URLSearchParams(window.location.search).get('session_id')
+    if (sessionId) {
+      try {
+        await apiClient.post('/wallet/confirm-session', { session_id: sessionId })
+      } catch {
+        // Keep UX resilient: fetch current user even if session confirmation fails.
+      }
+    }
     await fetchUser()
     toast.success(m.value.profile.walletUpdated)
     router.replace('/perfil')

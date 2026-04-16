@@ -10,12 +10,12 @@
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
-        Back to tickets
+        {{ m.adminTicketDetailUi.back }}
       </router-link>
     </div>
 
     <!-- Loading -->
-    <div v-if="loading && !ticket" class="text-center text-gray-500 py-12">Loading ticket...</div>
+    <div v-if="loading && !ticket" class="text-center text-gray-500 py-12">{{ m.adminTicketDetailUi.loading }}</div>
 
     <!-- Error -->
     <div v-else-if="error" class="text-center text-red-500 py-8">{{ error }}</div>
@@ -29,7 +29,7 @@
               {{ ticket.title }}
             </h2>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              By <span class="font-medium">{{ ticket.user?.name || '-' }}</span>
+              {{ m.adminTicketDetailUi.by }} <span class="font-medium">{{ ticket.user?.name || '-' }}</span>
               ({{ ticket.user?.email || '-' }}) ·
               {{ formatDate(ticket.created_at) }}
             </p>
@@ -63,67 +63,67 @@
       <!-- Conversation: chat style -->
       <div class="bg-white dark:bg-gray-900 shadow rounded-lg mb-6 overflow-hidden">
         <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between gap-3">
-          <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Conversation</h3>
-          <span class="text-xs text-gray-500 dark:text-gray-400">{{ conversationMessages.length }} messages</span>
+          <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ m.adminTicketDetailUi.conversation }}</h3>
+          <span class="text-xs text-gray-500 dark:text-gray-400">{{ conversationMessages.length }} {{ m.adminTicketDetailUi.messages }}</span>
         </div>
 
         <div ref="chatScrollEl" class="px-4 py-4 space-y-4 max-h-[52vh] overflow-y-auto" style="background:var(--app-surface-alt);">
           <p v-if="conversationMessages.length === 0" class="text-sm text-gray-400 text-center py-4">
-            No messages yet.
+            {{ m.adminTicketDetailUi.noMessages }}
           </p>
 
           <div
-            v-for="m in conversationMessages"
-            :key="`${m.id}-${m.created_at}`"
+            v-for="msg in conversationMessages"
+            :key="`${msg.id}-${msg.created_at}`"
             :class="[
               'flex gap-2',
-              m.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row',
+              msg.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row',
             ]"
           >
             <div
               :class="[
                 'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white select-none',
-                isClientMessage(m) ? 'bg-emerald-600' : (m.user_id === currentUserId ? 'bg-indigo-600' : 'bg-violet-600'),
+                isClientMessage(msg) ? 'bg-emerald-600' : (msg.user_id === currentUserId ? 'bg-indigo-600' : 'bg-violet-600'),
               ]"
             >
-              {{ initials(m.user?.name) }}
+              {{ initials(msg.user?.name) }}
             </div>
 
-            <div :class="m.user_id === currentUserId ? 'items-end' : 'items-start'" class="flex flex-col max-w-[82%]">
-              <div class="flex items-center gap-2 mb-1" :class="m.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row'">
-                <span class="ticket-name text-xs font-semibold" :class="isClientMessage(m) ? 'ticket-name--client' : (m.user_id === currentUserId ? 'ticket-name--self' : 'ticket-name--admin')">
-                  {{ m.user?.name || 'Unknown' }}
+            <div :class="msg.user_id === currentUserId ? 'items-end' : 'items-start'" class="flex flex-col max-w-[82%]">
+              <div class="flex items-center gap-2 mb-1" :class="msg.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row'">
+                <span class="ticket-name text-xs font-semibold" :class="isClientMessage(msg) ? 'ticket-name--client' : (msg.user_id === currentUserId ? 'ticket-name--self' : 'ticket-name--admin')">
+                  {{ msg.user?.name || 'Unknown' }}
                 </span>
                 <span class="ticket-role text-[11px] px-2 py-0.5 rounded-full border"
-                  :class="isClientMessage(m) ? 'ticket-role--client' : 'ticket-role--admin'"
+                  :class="isClientMessage(msg) ? 'ticket-role--client' : 'ticket-role--admin'"
                 >
-                  {{ isClientMessage(m) ? 'Client' : 'Admin' }}
+                  {{ isClientMessage(msg) ? m.adminTicketDetailUi.client : m.adminTicketDetailUi.admin }}
                 </span>
-                <span class="text-xs" style="color:var(--app-muted-text)">{{ formatDate(m.created_at) }}</span>
+                <span class="text-xs" style="color:var(--app-muted-text)">{{ formatDate(msg.created_at) }}</span>
               </div>
               <div
                 :class="[
                   'ticket-bubble px-4 py-2.5 rounded-2xl text-sm whitespace-pre-wrap break-words shadow-sm',
-                  isClientMessage(m)
+                  isClientMessage(msg)
                     ? 'ticket-bubble--client rounded-tl-sm'
-                    : (m.user_id === currentUserId
+                    : (msg.user_id === currentUserId
                       ? 'ticket-bubble--self rounded-tr-sm'
                       : 'ticket-bubble--admin rounded-tl-sm'),
                 ]"
               >
-                {{ m.message }}
+                {{ msg.message }}
               </div>
             </div>
           </div>
         </div>
 
         <div class="px-4 py-4 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-          <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-2">Reply</h3>
+          <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-2">{{ m.adminTicketDetailUi.reply }}</h3>
           <textarea
             v-model="replyText"
             rows="4"
             class="block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
-            placeholder="Write your reply..."
+            :placeholder="m.adminTicketDetailUi.replyPlaceholder"
           />
           <div class="mt-3 flex justify-end">
             <button
@@ -131,7 +131,7 @@
               @click="handleReply"
               class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {{ sending ? 'Sending…' : 'Send reply' }}
+              {{ sending ? m.adminTicketDetailUi.sending : m.adminTicketDetailUi.sendReply }}
             </button>
           </div>
         </div>
@@ -141,8 +141,8 @@
     <!-- Delete confirmation -->
     <ConfirmDialog
       :visible="confirmingDelete"
-      title="Delete ticket"
-      :message="`Are you sure you want to permanently delete this ticket? This action cannot be undone.`"
+      :title="m.adminTicketDetailUi.deleteTicket"
+      :message="m.adminTicketDetailUi.deleteMessage"
       @confirm="handleDelete"
       @cancel="confirmingDelete = false"
     />
@@ -155,6 +155,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useTickets } from '@/modules/tickets/composables/useTickets'
 import { useToast } from '@/modules/common/composables/useToast'
 import { useAuth } from '@/modules/auth/composables/useAuth'
+import { useI18n } from '@/i18n'
 import type { TicketMessage } from '@/modules/tickets/interfaces/ticket.interface'
 import ConfirmDialog from '@/modules/admin/components/ConfirmDialog.vue'
 
@@ -163,6 +164,7 @@ const router = useRouter()
 const toast = useToast()
 const { user: authUser } = useAuth()
 const { ticket, loading, error, getTicket, updateTicket, deleteTicket, sendMessage } = useTickets()
+const { m } = useI18n()
 
 const id = Number(route.params.id)
 const currentUserId = computed(() => authUser.value?.id ?? null)
@@ -208,7 +210,7 @@ const load = async () => {
     await nextTick()
     scrollChatToBottom()
   } catch {
-    toast.error('Error loading ticket')
+    toast.error(m.value.adminTicketDetailUi.loadingError)
   }
 }
 
@@ -216,9 +218,9 @@ const toggleStatus = async (event: Event) => {
   const active = (event.target as HTMLSelectElement).value === 'true'
   try {
     await updateTicket(id, { active })
-    toast.success('Status updated')
+    toast.success(m.value.adminTicketDetailUi.statusUpdated)
   } catch {
-    toast.error('Error updating status')
+    toast.error(m.value.adminTicketDetailUi.statusError)
   }
 }
 
@@ -231,9 +233,9 @@ const handleReply = async () => {
     replyText.value = ''
     await nextTick()
     scrollChatToBottom()
-    toast.success('Reply sent')
+    toast.success(m.value.adminTicketDetailUi.replySent)
   } catch (err: any) {
-    const detail = err?.response?.data?.message || 'Error sending message'
+    const detail = err?.response?.data?.message || m.value.adminTicketDetailUi.replyError
     toast.error(detail)
   } finally {
     sending.value = false
@@ -243,10 +245,10 @@ const handleReply = async () => {
 const handleDelete = async () => {
   try {
     await deleteTicket(id)
-    toast.success('Ticket deleted')
+    toast.success(m.value.adminTicketDetailUi.ticketDeleted)
     router.push('/admin/tickets')
   } catch {
-    toast.error('Error deleting ticket')
+    toast.error(m.value.adminTicketDetailUi.deleteError)
     confirmingDelete.value = false
   }
 }
