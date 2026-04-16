@@ -22,11 +22,12 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST_IP }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: ${{ secrets.DEPLOY_SSH_PORT }}
+          port: 1303
           timeout: 30s
           command_timeout: 10m
           script: |
-            mkdir -p /var/www/sims-front/dist
+            sudo mkdir -p /var/www/sims-front/dist
+            sudo chown -R ${{ secrets.DEPLOY_USER }}:${{ secrets.DEPLOY_USER }} /var/www/sims-front
             rm -rf /var/www/sims-front/dist/*
 
       - name: Upload Files (SCP)
@@ -35,7 +36,7 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST_IP }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: ${{ secrets.DEPLOY_SSH_PORT }}
+          port: 1303
           timeout: 60s
           source: "dist/*"
           target: "/var/www/sims-front/dist"
@@ -47,5 +48,5 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST_IP }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: ${{ secrets.DEPLOY_SSH_PORT }}
+          port: 1303
           script: sudo systemctl reload nginx
