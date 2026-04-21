@@ -99,7 +99,9 @@ router.beforeEach(async (to, from, next) => {
 
   // Treat any role containing "admin" (case-insensitive) as an administrative role
   const isAdmin = user.value?.roles?.some((r: any) => {
-    return typeof r.name === 'string' && r.name.toLowerCase().includes('admin')
+    if (typeof r.name !== 'string') return false
+    const roleName = r.name.toLowerCase()
+    return roleName.includes('admin') || roleName === 'tenantworker' || roleName.includes('worker')
   }) ?? false
 
   const isSuperAdmin = user.value?.roles?.some((r: any) => {

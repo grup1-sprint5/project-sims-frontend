@@ -16,6 +16,7 @@ node_modules
 .DS_Store
 dist
 dist-ssr
+.dist.root-owned.bak
 coverage
 *.local
 

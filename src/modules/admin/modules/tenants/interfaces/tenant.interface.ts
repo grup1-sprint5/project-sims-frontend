@@ -13,14 +13,6 @@ export interface Tenant {
   updated_at: string
 }
 
-export interface TenantDomain {
-  id: number
-  domain: string
-  tenant_id: string
-  created_at: string
-  updated_at: string
-}
-
 export interface TenantForm {
   name: string
   slug: string

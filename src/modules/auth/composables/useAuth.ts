@@ -3,8 +3,6 @@ import { useRouter } from "vue-router";
 import apiClient from "@/services/api";
 import type {
   CentralLoginResponse,
-  LoginRequest,
-  LoginResponse,
   RegisterRequest,
   RegisterResponse,
   User,
@@ -77,54 +75,6 @@ const looksLikeTenancyHeaderError = (err: any): boolean => {
 export function useAuth() {
   const router = useRouter();
 
-  const isCentralHost = (): boolean => {
-    if (typeof window === "undefined") return false;
-    const host = window.location.hostname.toLowerCase();
-
-    // Allow forcing central mode via env (useful in production deployments)
-    const forced = String(
-      (import.meta as any)?.env?.VITE_FORCE_CENTRAL_LOGIN || "",
-    ).toLowerCase();
-    if (["true", "1", "yes"].includes(forced)) return true;
-
-    const configuredCentralHosts = String(
-      (import.meta as any)?.env?.VITE_CENTRAL_HOSTNAMES || "",
-    )
-      .split(",")
-      .map((s) => s.trim().toLowerCase())
-      .filter(Boolean);
-    if (configuredCentralHosts.includes(host)) return true;
-
-    // Local dev central host(s)
-    if (
-      host === "localhost" ||
-      host === "127.0.0.1" ||
-      host === "app.localhost"
-    )
-      return true;
-
-    // Heuristic: treat the base deployment domain as central.
-    // Example central: grup1-sims-c7271.ondigitalocean.app
-    // Example tenant:  sims-corp.grup1-sims-c7271.ondigitalocean.app
-    if (host.endsWith(".ondigitalocean.app")) {
-      const parts = host.split(".");
-      if (parts.length === 3) return true;
-    }
-
-    return false;
-  };
-
-  const redirectToTenantDomain = (
-    tenantHost: string,
-    exchangeToken: string,
-    tenantRef: string,
-  ): void => {
-    const protocol = window.location.protocol;
-    const portSuffix = window.location.port ? `:${window.location.port}` : "";
-    const tenantUrl = `${protocol}//${tenantHost}${portSuffix}/auth/callback?exchange_token=${encodeURIComponent(exchangeToken)}&tenant=${encodeURIComponent(tenantRef)}`;
-    window.location.assign(tenantUrl);
-  };
-
   const getToken = (): string | null => {
     return getCookie(TOKEN_COOKIE_NAME);
   };
@@ -150,174 +100,61 @@ export function useAuth() {
   };
 
   const login = async (
-    tenantSlug: string,
     email: string,
     password: string,
+    organization: string = "",
   ): Promise<boolean> => {
     isLoading.value = true;
     error.value = null;
 
-    const normalizedTenant = normalizeTenantSlug(tenantSlug);
-    if (!normalizedTenant) {
-      error.value = "Organization is required";
-      isLoading.value = false;
-      return false;
-    }
+    const normalizedOrganization = normalizeTenantSlug(organization);
 
-    const tryCentralLogin = async (): Promise<boolean> => {
+    try {
       const response = await apiClient.post<CentralLoginResponse>(
         "/central/login",
         {
-          organization: normalizedTenant,
           email,
           password,
+          ...(normalizedOrganization
+            ? { organization: normalizedOrganization }
+            : {}),
         },
       );
-      redirectToTenantDomain(
-        response.data.tenant_host,
-        response.data.exchange_token,
-        response.data.tenant_id,
-      );
-      return false;
-    };
-
-    // Central domain login: authenticate once and redirect user to tenant subdomain.
-    if (isCentralHost()) {
-      try {
-        return await tryCentralLogin();
-      } catch (err: any) {
-        error.value = formatApiError(err, "Error logging in");
-        return false;
-      } finally {
-        isLoading.value = false;
-      }
-    }
-
-    // Tenant-domain login flow (same-domain session)
-    setCookie(TENANT_COOKIE_NAME, normalizedTenant);
-
-    try {
-      const loginData: LoginRequest = { email, password };
-      const response = await apiClient.post<LoginResponse>(
-        "/login",
-        loginData,
-        {
-          headers: {
-            "X-Tenant": normalizedTenant,
-          },
-        },
-      );
-
       const token = response.data.token;
+      const tenantId = normalizeTenantSlug(response.data.tenant_id || "");
 
-      if (token) {
-        setCookie(TOKEN_COOKIE_NAME, token);
-        // Ensure the immediate follow-up /user request uses the fresh token.
-        apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
-        // Fetch user data after successful login
-        const userFetched = await fetchUser();
-        // Keep tenant cookie as a valid slug (X-Tenant). Some backends return tenant_id
-        // as a numeric/uuid; only accept it if it looks like a slug.
-        if (userFetched) {
-          const tenantFromUser =
-            typeof (user.value as any)?.tenant_id === "string"
-              ? normalizeTenantSlug((user.value as any).tenant_id)
-              : "";
-          setCookie(TENANT_COOKIE_NAME, tenantFromUser || normalizedTenant);
-          try {
-            localStorage.setItem(
-              "active_admin_tenant",
-              tenantFromUser || normalizedTenant,
-            );
-          } catch {}
-        } else {
-          // Login failed after token – remove tenant cookie
-          deleteCookie(TENANT_COOKIE_NAME);
-        }
-        return userFetched;
-      } else {
+      if (!token || !tenantId) {
         error.value = "No token received from server";
-        return false;
-      }
-    } catch (err: any) {
-      // In some deployments the app is hosted on a central domain (no tenant subdomains)
-      // and the backend expects central login. If tenant login fails due to tenancy,
-      // automatically retry central login for a smoother UX.
-      const status = err?.response?.status;
-      if (looksLikeTenancyHeaderError(err) || status === 500) {
-        try {
-          return await tryCentralLogin();
-        } catch (err2: any) {
-          error.value = formatApiError(err2, "Error logging in");
-          deleteCookie(TENANT_COOKIE_NAME);
-          return false;
-        } finally {
-          isLoading.value = false;
-        }
-      }
-
-      error.value = formatApiError(err, "Error logging in");
-      deleteCookie(TENANT_COOKIE_NAME);
-      return false;
-    } finally {
-      isLoading.value = false;
-    }
-  };
-
-  const completeTenantRedirectLogin = async (
-    exchangeToken: string,
-    tenantSlug: string,
-  ): Promise<boolean> => {
-    isLoading.value = true;
-    error.value = null;
-
-    try {
-      const normalizedTenant = normalizeTenantSlug(tenantSlug);
-      setCookie(TENANT_COOKIE_NAME, normalizedTenant);
-      localStorage.setItem("active_admin_tenant", normalizedTenant);
-
-      const response = await apiClient.post<LoginResponse>(
-        "/auth/exchange-token",
-        {
-          exchange_token: exchangeToken,
-        },
-        {
-          headers: {
-            "X-Tenant": normalizedTenant,
-          },
-        },
-      );
-
-      const token = response.data.token;
-      if (!token) {
-        error.value = "No token received from exchange endpoint";
         deleteCookie(TOKEN_COOKIE_NAME);
         deleteCookie(TENANT_COOKIE_NAME);
         return false;
       }
 
+      setCookie(TENANT_COOKIE_NAME, tenantId);
       setCookie(TOKEN_COOKIE_NAME, token);
       apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
 
+      try {
+        localStorage.setItem("active_admin_tenant", tenantId);
+      } catch {
+        // Ignore unavailable localStorage in restricted contexts.
+      }
+
       const userFetched = await fetchUser();
-      if (userFetched) {
-        const tenantFromUser =
-          typeof (user.value as any)?.tenant_id === "string"
-            ? normalizeTenantSlug((user.value as any).tenant_id)
-            : "";
-        setCookie(TENANT_COOKIE_NAME, tenantFromUser || normalizedTenant);
-        try {
-          localStorage.setItem(
-            "active_admin_tenant",
-            tenantFromUser || normalizedTenant,
-          );
-        } catch {}
+      if (!userFetched) {
+        deleteCookie(TOKEN_COOKIE_NAME);
+        deleteCookie(TENANT_COOKIE_NAME);
+        error.value = "Could not load user profile after login";
+        return false;
       }
 
       return userFetched;
     } catch (err: any) {
-      const msg = err.response?.data?.message || "Error completing login";
-      error.value = msg;
+      if (looksLikeTenancyHeaderError(err)) {
+        error.value = "Tenant not identified for this account.";
+      } else {
+        error.value = formatApiError(err, "Error logging in");
+      }
       deleteCookie(TOKEN_COOKIE_NAME);
       deleteCookie(TENANT_COOKIE_NAME);
       return false;
@@ -388,7 +225,6 @@ export function useAuth() {
     isAuthenticated,
     getToken,
     fetchUser,
-    completeTenantRedirectLogin,
     login,
     register,
     logout,

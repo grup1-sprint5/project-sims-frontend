@@ -8,11 +8,11 @@
 - **Notificacions**: via `vue3-toastify` amb comportament adaptat a mòbil.
 - **Canvi d'idioma**: component de `LanguageSwitcher` + diccionari `i18n`.
 
-## Autenticació (`/login`, `/register`, `/auth/callback`)
+## Autenticació (`/login`, `/register`)
 
-- Login amb tenant + credencials.
-- Flux centralitzat (domini central) amb redirecció a subdomini tenant.
-- Intercanvi de `exchange_token` per token final a `AuthCallback`.
+- Login amb `email/password` i organització opcional.
+- El backend retorna token final i `tenant_id` en una sola resposta.
+- Si el compte existeix en més d’una organització, el frontend demana indicar-la.
 - Persistència de sessió en cookies (`token`, `tenant`).
 - `fetchUser()` per hidratar l'usuari autenticat.
 

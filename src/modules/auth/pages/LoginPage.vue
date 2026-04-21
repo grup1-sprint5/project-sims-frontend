@@ -9,20 +9,19 @@
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form class="space-y-6" @submit.prevent="handleSubmit">
         <div>
-          <label for="tenant" class="block text-sm/6 font-medium text-gray-100">Organization</label>
+          <label for="tenant" class="block text-sm/6 font-medium text-gray-100">Organization (optional)</label>
           <div class="mt-2">
             <input
               id="tenant"
               v-model="tenantSlug"
               type="text"
               autocomplete="organization"
-              required
-              placeholder="fleetly-barcelona / ecomove"
+              placeholder="sims-corp / ecomove"
               :disabled="isLoading"
               class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6"
             />
           </div>
-          <p class="mt-1 text-xs text-gray-400">Tip: you can type “Fleetly Barcelona” and it will normalize to “fleetly-barcelona”.</p>
+          <p class="mt-1 text-xs text-gray-400">Si tu email existe en más de una organización, indica aquí cuál usar.</p>
         </div>
 
         <div>
@@ -92,7 +91,7 @@ const email = ref('')
 const password = ref('')
 
 const handleSubmit = async () => {
-  const success = await login(tenantSlug.value, email.value, password.value)
+  const success = await login(email.value, password.value, tenantSlug.value)
   
   if (success) {
     router.push('/admin')

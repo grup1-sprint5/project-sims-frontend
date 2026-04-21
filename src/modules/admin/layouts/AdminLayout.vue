@@ -249,7 +249,10 @@ const navigationItems = [
 const sidebarOpen = ref(false)
 const { isDark, toggleTheme } = useTheme()
 const { user, isLoading, logout } = useAuth()
-const isAdmin = computed(() => !!(user.value && user.value.roles && user.value.roles.some((r: any) => (r.name || '').toLowerCase().includes('admin'))))
+const isAdmin = computed(() => !!(user.value && user.value.roles && user.value.roles.some((r: any) => {
+  const name = (r.name || '').toLowerCase()
+  return name.includes('admin') || name === 'tenantworker' || name.includes('worker')
+})))
 const isSuperAdmin = computed(() => !!(user.value && user.value.roles && user.value.roles.some((r: any) => (r.name || '').toLowerCase().includes('superadmin'))))
 
 const navigation = computed(() =>

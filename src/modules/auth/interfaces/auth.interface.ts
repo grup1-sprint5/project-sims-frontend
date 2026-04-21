@@ -8,9 +8,8 @@ export interface LoginResponse {
 }
 
 export interface CentralLoginResponse {
-  exchange_token: string
+  token: string
   tenant_id: string
-  tenant_host: string
 }
 
 export interface RegisterRequest {

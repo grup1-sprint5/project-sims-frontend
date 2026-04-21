@@ -80,7 +80,7 @@ export function useSuperAdmin() {
 
   const loadVehiclesForSuperAdmin = async (): Promise<SuperAdminVehicle[]> => {
     const response = await api.get('/vehicles', {
-      params: { per_page: 300 },
+      params: { per_page: 300, global: 1 },
     })
 
     const rows = normalizeCollection(response.data)
@@ -96,7 +96,9 @@ export function useSuperAdmin() {
   }
 
   const loadUsersForSuperAdmin = async (): Promise<SuperAdminUser[]> => {
-    const response = await api.get('/users')
+    const response = await api.get('/users', {
+      params: { global: 1 },
+    })
 
     const rows = normalizeCollection(response.data)
     return rows.map((row: AnyRecord) => ({
