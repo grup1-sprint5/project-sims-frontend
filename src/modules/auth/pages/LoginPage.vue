@@ -1,15 +1,15 @@
 <template>
   <div class="min-h-screen flex items-center justify-center px-6 py-12 lg:px-8" style="background:var(--app-bg);color:var(--app-text);">
-    <div class="w-full max-w-md rounded-2xl border border-[var(--fleetly-gunmetal)] bg-[var(--fleetly-gunmetal)]/35 p-6 shadow-2xl shadow-black/40 sm:p-8">
+    <div class="w-full max-w-md rounded-2xl border p-6 shadow-2xl sm:p-8" style="background:var(--app-surface);border-color:var(--app-border);color:var(--app-text);">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <img class="mx-auto h-14 w-auto object-contain sm:h-16" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
-      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">Sign in to your account</h2>
+      <img class="mx-auto h-14 w-auto object-contain sm:h-16" :src="isDark ? '/branding/fleetly_logotip_blanc.svg' : '/branding/fleetly_logotip_negre.svg'" alt="Fleetly" />
+      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight" style="color:var(--app-text)">Sign in to your account</h2>
       </div>
 
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form class="space-y-6" @submit.prevent="handleSubmit">
         <div>
-          <label for="tenant" class="block text-sm/6 font-medium text-gray-100">Organization</label>
+          <label for="tenant" class="block text-sm/6 font-medium" style="color:var(--app-muted-text)">Organization</label>
           <div class="mt-2">
             <input
               id="tenant"
@@ -19,14 +19,15 @@
               required
               placeholder="fleetly-barcelona / ecomove"
               :disabled="isLoading"
-              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6"
+              class="block w-full rounded-md px-3 py-1.5 text-base shadow-sm sm:text-sm/6 focus:ring-2 focus:ring-[var(--fleetly-baltic-blue)]"
+              style="background:var(--app-input-bg);color:var(--app-input-text);border:1px solid var(--app-input-border);outline:none"
             />
           </div>
-          <p class="mt-1 text-xs text-gray-400">Tip: you can type “Fleetly Barcelona” and it will normalize to “fleetly-barcelona”.</p>
+          <p class="mt-1 text-xs" style="color:var(--app-muted-text)">Tip: you can type “Fleetly Barcelona” and it will normalize to “fleetly-barcelona”.</p>
         </div>
 
         <div>
-          <label for="email" class="block text-sm/6 font-medium text-gray-100">Email address</label>
+          <label for="email" class="block text-sm/6 font-medium" style="color:var(--app-muted-text)">Email address</label>
           <div class="mt-2">
             <input
               id="email"
@@ -35,25 +36,43 @@
               autocomplete="email"
               required
               :disabled="isLoading"
-              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6"
+              class="block w-full rounded-md px-3 py-1.5 text-base shadow-sm sm:text-sm/6 focus:ring-2 focus:ring-[var(--fleetly-baltic-blue)]"
+              style="background:var(--app-input-bg);color:var(--app-input-text);border:1px solid var(--app-input-border);outline:none"
             />
           </div>
         </div>
 
         <div>
           <div class="flex items-center justify-between">
-            <label for="password" class="block text-sm/6 font-medium text-gray-100">Password</label>
+            <label for="password" class="block text-sm/6 font-medium" style="color:var(--app-muted-text)">Password</label>
           </div>
-          <div class="mt-2">
+          <div class="mt-2 relative">
             <input
               id="password"
               v-model="password"
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               autocomplete="current-password"
               required
               :disabled="isLoading"
-              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6"
+              class="block w-full rounded-md px-3 py-1.5 pr-10 text-base shadow-sm sm:text-sm/6 focus:ring-2 focus:ring-[var(--fleetly-baltic-blue)]"
+              style="background:var(--app-input-bg);color:var(--app-input-text);border:1px solid var(--app-input-border);outline:none"
             />
+            <button
+              type="button"
+              :disabled="isLoading"
+              @click="showPassword = !showPassword"
+              class="absolute inset-y-0 right-0 px-3 flex items-center"
+              style="color:var(--app-muted-text)"
+              :aria-label="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <svg v-if="!showPassword" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <svg v-else class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.293-3.95m3.122-2.317A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.97 9.97 0 01-4.104 5.063M15 12a3 3 0 00-4.243-2.829M9.88 9.88A3 3 0 0014.12 14.12M3 3l18 18" />
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -83,13 +102,16 @@
 import { ref } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
+import { useTheme } from '@/modules/common/composables/useTheme'
 
 const router = useRouter()
 const { login, isLoading, error } = useAuth()
+const { isDark } = useTheme()
 
 const tenantSlug = ref('')
 const email = ref('')
 const password = ref('')
+const showPassword = ref(false)
 
 const handleSubmit = async () => {
   const success = await login(tenantSlug.value, email.value, password.value)
