@@ -9,7 +9,7 @@
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
-        Back to users
+        {{ m.adminUsersUi.backToUsers }}
       </router-link>
     </div>
 
@@ -19,7 +19,7 @@
         <svg class="animate-spin h-8 w-8 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
         </svg>
-        Loading user...
+        {{ m.adminUsersUi.loadingUser }}
       </div>
     </div>
 
@@ -42,7 +42,7 @@
           {{ user.name }}
         </h3>
         <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
-          Full user information
+          {{ m.adminUsersUi.fullUserInformation }}
         </p>
       </div>
 
@@ -50,25 +50,25 @@
         <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
           <!-- Nombre -->
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Full name</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.adminUsersUi.name }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ user.name }}</dd>
           </div>
 
           <!-- Username -->
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Username</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.adminUsersUi.username }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ user.username || '-' }}</dd>
           </div>
 
           <!-- Email -->
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.commonUi.email }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ user.email }}</dd>
           </div>
 
           <!-- Rol -->
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Role</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.adminUsersUi.role }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">
               <span v-if="user.roles && user.roles.length > 0" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" :class="user.roles[0]?.name === 'Admin' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'">
                 {{ user.roles[0]?.name }}
@@ -79,23 +79,23 @@
 
           <!-- Estado -->
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.commonUi.status }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">
               <span :class="['inline-flex rounded-full px-2 py-1 text-xs font-semibold', user.active ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200']">
-                {{ user.active ? 'Active' : 'Inactive' }}
+                {{ user.active ? m.commonUi.active : m.commonUi.inactive }}
               </span>
             </dd>
           </div>
 
           <!-- Created at -->
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Created at</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.commonUi.created }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ formatDate(user.created_at) }}</dd>
           </div>
 
           <!-- Last updated -->
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Updated at</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.commonUi.updated }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ formatDate(user.updated_at) }}</dd>
           </div>
         </dl>
@@ -110,7 +110,7 @@
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
           </svg>
-          Edit
+          {{ m.commonUi.edit }}
         </router-link>
         <button
           v-if="canDeleteViewedUser"
@@ -120,7 +120,7 @@
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
           </svg>
-          Delete
+          {{ m.commonUi.delete }}
         </button>
       </div>
     </div>
@@ -140,6 +140,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUsers } from '../composables/useUsers'
 import { useToast } from '@/modules/common/composables/useToast'
+import { useI18n } from '@/i18n'
 import type { User } from '../interfaces/user.interface'
 import UserDeleteModal from '../components/UserDeleteModal.vue'
 
@@ -147,6 +148,7 @@ const router = useRouter()
 const route = useRoute()
 const { getUser, isCurrentUserAdmin } = useUsers()
 const toast = useToast()
+const { m, locale } = useI18n()
 
 const user = ref<User | null>(null)
 const loading = ref(false)
@@ -181,14 +183,15 @@ const loadUser = async () => {
   try {
     user.value = await getUser(userId.value)
   } catch (err: any) {
-    error.value = err.response?.data?.message || 'Error loading user'
+    error.value = err.response?.data?.message || m.value.adminUsersUi.errorLoadingUser
   } finally {
     loading.value = false
   }
 }
 
 const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
+  const localeCode = locale.value === 'es' ? 'es-ES' : (locale.value === 'en' ? 'en-GB' : 'ca-ES')
+  return new Date(dateString).toLocaleDateString(localeCode, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',

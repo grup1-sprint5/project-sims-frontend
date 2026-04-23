@@ -1,18 +1,18 @@
 <template>
   <div class="min-h-[calc(100vh-4rem)] bg-gray-900 text-white flex items-start justify-center py-12 px-4">
     <div class="w-full max-w-3xl">
-      <h1 class="text-3xl font-bold text-center text-[var(--app-text)]">Real-time Fleet Map</h1>
-      <p class="text-center text-gray-400 mt-2">Track your vehicles in real time. Click the map to open the full interactive map.</p>
+      <h1 class="text-3xl font-bold text-center text-[var(--app-text)]">{{ m.homeUi.title }}</h1>
+      <p class="text-center text-gray-400 mt-2">{{ m.homeUi.subtitle }}</p>
 
       <div class="mt-6 bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-white/5">
         <div ref="miniMap" class="w-full h-96 cursor-pointer"></div>
       </div>
 
       <div class="mt-4 text-center">
-        <button @click="openMap" class="px-4 py-2 bg-[var(--fleetly-baltic-blue)] rounded text-white hover:opacity-90">Open full map</button>
+        <button @click="openMap" class="px-4 py-2 bg-[var(--fleetly-baltic-blue)] rounded text-white hover:opacity-90">{{ m.homeUi.openFullMap }}</button>
       </div>
 
-      <footer class="mt-6 text-center text-sm text-gray-500">Fleetly</footer>
+      <footer class="mt-6 text-center text-sm text-gray-500">{{ m.homeUi.brand }}</footer>
     </div>
   </div>
 </template>
@@ -21,8 +21,10 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMap } from '@/modules/map/composables/useMap'
+import { useI18n } from '@/i18n'
 
 const router = useRouter()
+const { m } = useI18n()
 const openMap = () => router.push('/vehicles-map')
 
 const { map, mapContainer, initMap, destroyMap, fetchVehicles, rawVehicles } = useMap()
