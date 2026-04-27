@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-screen px-4 py-8" style="background:var(--app-bg);color:var(--app-text);">
-    <div class="mx-auto max-w-4xl">
-      <div class="flex items-start justify-between gap-4">
+  <div class="min-h-screen" style="background:var(--app-bg);color:var(--app-text);padding-bottom:1.5rem;">
+    <div class="container mx-auto px-4 py-7 max-w-4xl">
+      <div class="mb-10 flex items-start justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-bold">{{ m.sensorsUi.title }}</h1>
-          <p class="mt-1 text-sm text-gray-400">
+          <h1 class="text-2xl font-bold" style="color:var(--app-text)">{{ m.sensorsUi.title }}</h1>
+          <p class="mt-1 text-sm" style="color:var(--app-muted-text)">
             {{ m.sensorsUi.subtitle }}
           </p>
         </div>

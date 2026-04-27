@@ -1,11 +1,12 @@
 <template>
-  <div class="p-4 max-w-4xl mx-auto">
+  <div class="min-h-screen" style="background:var(--app-bg);color:var(--app-text);padding-bottom:1.5rem;">
+    <div class="container mx-auto px-4 py-7 max-w-4xl">
 
     <!-- Header -->
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center justify-between mb-10">
       <div>
-        <h1 class="text-xl font-semibold text-white">{{ m.ticketsUi.myTickets }}</h1>
-        <p class="text-sm text-gray-400 mt-0.5">{{ m.ticketsUi.supportSubtitle }}</p>
+        <h1 class="text-2xl font-bold" style="color:var(--app-text)">{{ m.ticketsUi.myTickets }}</h1>
+        <p class="text-sm mt-1" style="color:var(--app-muted-text)">{{ m.ticketsUi.supportSubtitle }}</p>
       </div>
       <router-link
         to="/tickets/create"
@@ -49,7 +50,7 @@
             <div class="flex items-start justify-between gap-3 px-4 py-3">
               <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 flex-wrap">
-                  <span class="font-medium text-white truncate">{{ t.title }}</span>
+                  <span class="font-medium text-[var(--app-text)] truncate">{{ t.title }}</span>
                   <span class="inline-flex rounded-full bg-green-900 text-green-300 px-2 py-0.5 text-xs">{{ m.ticketsUi.active }}</span>
                   <span class="text-xs text-gray-400">{{ t.messages?.length ?? 0 }} {{ m.ticketsUi.messages }}</span>
                 </div>
@@ -101,6 +102,7 @@
       </section>
 
     </template>
+    </div>
   </div>
 </template>
 

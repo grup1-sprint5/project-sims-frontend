@@ -1,11 +1,11 @@
 <template>
   <div class="min-h-screen" style="background:var(--app-bg);color:var(--app-text);padding-bottom:1.5rem;">
-    <div class="container mx-auto px-4 py-6 max-w-3xl">
+    <div class="container mx-auto px-4 py-7 max-w-4xl">
 
       <!-- Capçalera -->
-      <div class="mb-8">
+      <div class="mb-10">
         <h1 class="text-2xl font-bold" style="color:var(--app-text)">{{ m.bookingsUi.title }}</h1>
-        <p class="text-sm mt-0.5" style="color:var(--app-muted-text)">{{ m.bookingsUi.subtitle }}</p>
+        <p class="text-sm mt-1" style="color:var(--app-muted-text)">{{ m.bookingsUi.subtitle }}</p>
       </div>
 
       <!-- Loading -->
@@ -28,34 +28,39 @@
       </div>
 
       <template v-else>
-        <section class="mb-8 rounded-2xl border border-indigo-500/20 bg-indigo-900/15 p-4">
+        <section class="mb-10 rounded-3xl p-5 md:p-6 balance-panel">
           <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <h2 class="text-sm font-semibold uppercase tracking-wider text-indigo-300">{{ m.bookingsUi.balanceTitle }}</h2>
-              <p class="mt-1 text-xs text-indigo-200/80">{{ m.bookingsUi.balanceSubtitle }}</p>
+              <h2 class="text-sm font-semibold uppercase tracking-wider balance-panel__title">{{ m.bookingsUi.balanceTitle }}</h2>
+              <p class="mt-1 text-xs balance-panel__subtitle">{{ m.bookingsUi.balanceSubtitle }}</p>
             </div>
           </div>
 
-          <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <div class="rounded-xl border border-sky-500/20 bg-sky-500/10 p-3">
-              <p class="text-xs text-sky-200/80">{{ m.bookingsUi.walletAvailable }}</p>
-              <p class="mt-1 text-xl font-bold text-sky-300">{{ formatCurrency(walletBalance) }}</p>
+          <div class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-12">
+            <div class="rounded-2xl p-4 balance-card balance-card--available sm:col-span-6">
+              <p class="text-xs balance-card__label">{{ m.bookingsUi.walletAvailable }}</p>
+              <p class="mt-2 text-3xl md:text-4xl font-extrabold leading-none balance-card__value balance-card__value--primary">{{ formatCurrency(walletBalance) }}</p>
             </div>
-            <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3">
-              <p class="text-xs text-emerald-200/80">{{ m.bookingsUi.totalPaid }}</p>
-              <p class="mt-1 text-xl font-bold text-emerald-300">{{ formatCurrency(totalPaidAmount) }}</p>
+            <div class="rounded-2xl p-3.5 balance-card balance-card--paid sm:col-span-3">
+              <p class="text-xs balance-card__label">{{ m.bookingsUi.totalPaid }}</p>
+              <p class="mt-3 text-2xl md:text-[1.75rem] font-extrabold leading-none balance-card__value">{{ formatCurrency(totalPaidAmount) }}</p>
             </div>
-            <div class="rounded-xl border border-amber-500/20 bg-amber-500/10 p-3">
-              <p class="text-xs text-amber-200/80">{{ m.bookingsUi.pendingToPay }}</p>
-              <p class="mt-1 text-xl font-bold text-amber-300">{{ formatCurrency(pendingPaymentAmount) }}</p>
+            <div class="rounded-2xl p-3.5 balance-card balance-card--pending sm:col-span-3">
+              <p class="text-xs balance-card__label">{{ m.bookingsUi.pendingToPay }}</p>
+              <p class="mt-3 text-2xl md:text-[1.75rem] font-extrabold leading-none balance-card__value">{{ formatCurrency(pendingPaymentAmount) }}</p>
             </div>
+          </div>
+
+          <div v-if="isZeroBalance" class="mt-4 rounded-2xl px-4 py-3 balance-empty-state">
+            <p class="text-sm font-semibold">{{ m.bookingsUi.balanceNoMovementsTitle }}</p>
+            <p class="text-xs mt-0.5">{{ m.bookingsUi.balanceNoMovementsSubtitle }}</p>
           </div>
         </section>
 
         <!-- SECCIÓ: Actives i pendents -->
-        <section v-if="activeAndPendingBookings.length > 0" class="mb-8">
+        <section v-if="activeAndPendingBookings.length > 0" class="mb-10">
           <h2 class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:var(--app-muted-text)">{{ m.bookingsUi.sectionUpcoming }}</h2>
-          <div class="space-y-3">
+          <div class="space-y-4">
             <div
               v-for="booking in activeAndPendingBookings"
               :key="booking.id"
@@ -63,22 +68,14 @@
               style="background:var(--app-card-bg);border:1.5px solid var(--app-card-border);"
             >
               <!-- Barra d'estat de color -->
-              <div class="h-1 w-full" :class="{
-                'bg-blue-500': booking.status === 'active',
-                'bg-yellow-400': booking.status === 'pending',
-                'bg-purple-500': booking.status === 'confirmed',
-              }"></div>
+              <div class="h-1 w-full" :style="getStatusBarStyle(booking.status)"></div>
 
               <div class="p-4">
                 <!-- Fila principal: vehicle + estat -->
                 <div class="flex items-start justify-between gap-3 mb-3">
                   <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" :style="{background: 'var(--app-surface-alt)'}">
-                      <svg class="h-5 w-5" :class="{
-                        'text-blue-600': booking.status === 'active',
-                        'text-yellow-600': booking.status === 'pending',
-                        'text-purple-600': booking.status === 'confirmed',
-                      }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg class="h-5 w-5" :style="getStatusIconStyle(booking.status)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
                       </svg>
                     </div>
@@ -87,35 +84,47 @@
                       <p class="text-sm" style="color:var(--app-muted-text)">{{ booking.vehicle?.brand }} {{ booking.vehicle?.model }}</p>
                     </div>
                   </div>
-                  <span class="shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full" :class="{
-                    'bg-blue-700 text-white dark:bg-blue-700 dark:text-white': booking.status === 'active',
-                    'bg-yellow-500 text-black dark:bg-yellow-500 dark:text-black': booking.status === 'pending',
-                    'bg-purple-700 text-white dark:bg-purple-700 dark:text-white': booking.status === 'confirmed',
-                  }">{{ getStatusLabel(booking.status) }}</span>
+                  <span class="shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full" :style="getStatusBadgeStyle(booking.status)">{{ getStatusLabel(booking.status) }}</span>
                 </div>
 
                 <!-- Info contextual -->
-                <div v-if="booking.status === 'active'" class="flex items-center gap-2 rounded-xl px-3 py-2 mb-3 border border-blue-400 dark:border-blue-700" style="background:color-mix(in srgb, #2563eb 30%, var(--app-card-bg));">
-                  <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse shrink-0"></span>
+                <div v-if="booking.status === 'active'" class="flex items-center gap-2 rounded-xl px-3 py-2 mb-3 border" style="background:var(--app-surface-alt);border-color:var(--app-border);">
+                  <span class="w-2 h-2 rounded-full animate-pulse shrink-0" style="background:var(--fleetly-baltic-blue);"></span>
                   <span class="text-xs font-bold" style="color:var(--app-text)">{{ m.bookingsUi.activeVehicleInUse }}</span>
                   <span v-if="booking.trip?.engine_started_at" class="text-xs font-semibold ml-auto" style="color:var(--app-text)">{{ m.bookingsUi.activeSince }} {{ formatTimeOnly(booking.trip.engine_started_at) }}</span>
                 </div>
 
-                <div v-else-if="booking.status === 'pending'" class="flex items-center gap-2 mb-3 rounded-xl px-3 py-2 border" :class="isDeadlineNear(booking) ? 'bg-red-100 dark:bg-red-900/20 border-red-300 dark:border-red-700' : 'bg-[var(--app-surface-alt)] border-[var(--app-border)]'">
-                  <svg class="h-4 w-4 shrink-0" :class="isDeadlineNear(booking) ? 'text-red-700 dark:text-red-300' : 'text-[var(--app-muted-text)]'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                  <span class="text-xs font-semibold" :class="isDeadlineNear(booking) ? 'text-red-800 dark:text-red-200' : 'text-[var(--app-text)]'">{{ timeUntilStart(booking) }}</span>
-                  <span v-if="booking.activation_deadline" class="text-xs ml-auto" style="color:var(--app-muted-text)">{{ m.bookingsUi.activateUntil }} {{ formatTimeOnly(booking.activation_deadline) }}</span>
+                <div
+                  v-else-if="booking.status === 'pending'"
+                  class="flex items-center gap-2 mb-3 rounded-xl px-3 py-2 border"
+                  :style="isDeadlineNear(booking)
+                    ? 'background:color-mix(in srgb, #ef4444 14%, var(--app-surface));border-color:#ef4444;'
+                    : 'background:var(--app-surface-alt);border-color:var(--app-border);'"
+                >
+                  <svg
+                    class="h-4 w-4 shrink-0"
+                    :style="isDeadlineNear(booking) ? 'color:#b91c1c' : 'color:var(--app-muted-text)'"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="text-xs font-semibold" style="color:var(--app-text)">{{ timeUntilStart(booking) }}</span>
+                  <span
+                    v-if="booking.activation_deadline"
+                    class="text-xs ml-auto"
+                    :style="isDeadlineNear(booking) ? 'color:var(--app-text)' : 'color:var(--app-muted-text)'"
+                  >{{ m.bookingsUi.activateUntil }} {{ formatTimeOnly(booking.activation_deadline) }}</span>
                 </div>
 
                 <!-- Dates -->
                 <div class="grid grid-cols-2 gap-2 mb-3">
-                  <div class="bg-gray-800 rounded-xl p-2.5">
-                    <p class="text-xs text-gray-400 mb-0.5">{{ m.bookingsUi.start }}</p>
-                    <p class="text-xs font-semibold text-white">{{ formatDateCompact(booking.scheduled_start) }}</p>
+                  <div class="rounded-xl p-2.5" style="background:var(--app-surface-alt);border:1px solid var(--app-border);">
+                    <p class="text-xs mb-0.5" style="color:var(--app-muted-text)">{{ m.bookingsUi.start }}</p>
+                    <p class="text-xs font-semibold" style="color:var(--app-text)">{{ formatDateCompact(booking.scheduled_start) }}</p>
                   </div>
-                  <div v-if="booking.scheduled_end" class="bg-gray-800 rounded-xl p-2.5">
-                    <p class="text-xs text-gray-400 mb-0.5">{{ m.bookingsUi.end }}</p>
-                    <p class="text-xs font-semibold text-white">{{ formatDateCompact(booking.scheduled_end) }}</p>
+                  <div v-if="booking.scheduled_end" class="rounded-xl p-2.5" style="background:var(--app-surface-alt);border:1px solid var(--app-border);">
+                    <p class="text-xs mb-0.5" style="color:var(--app-muted-text)">{{ m.bookingsUi.end }}</p>
+                    <p class="text-xs font-semibold" style="color:var(--app-text)">{{ formatDateCompact(booking.scheduled_end) }}</p>
                   </div>
                 </div>
 
@@ -124,11 +133,13 @@
                   <button
                     v-if="booking.status === 'pending'"
                     @click="initCancelBooking(booking.id)"
-                    class="flex-1 bg-red-900/20 hover:bg-red-900/40 text-red-400 text-sm font-semibold py-2 rounded-xl transition-colors"
+                    class="flex-1 text-sm font-semibold py-2 rounded-xl transition-colors"
+                    style="background:color-mix(in srgb, #ef4444 14%, var(--app-surface));color:#b91c1c;border:1px solid color-mix(in srgb, #ef4444 45%, transparent);"
                   >{{ m.bookingsUi.cancel }}</button>
                   <button
                     @click="viewDetails(booking)"
-                    class="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm font-semibold py-2 rounded-xl transition-colors"
+                    class="flex-1 text-sm font-semibold py-2 rounded-xl transition-colors"
+                    style="background:var(--app-surface-alt);color:var(--app-text);border:1px solid var(--app-border);"
                   >{{ m.bookingsUi.details }}</button>
                 </div>
               </div>
@@ -137,27 +148,32 @@
         </section>
 
         <!-- SECCIÓ: Completades -->
-        <section v-if="completedBookings.length > 0" class="mb-8">
-          <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{{ m.bookingsUi.sectionHistory }}</h2>
-          <div class="space-y-2">
+        <section v-if="completedBookings.length > 0" class="mb-10">
+          <h2 class="text-xs font-semibold uppercase tracking-wider mb-4" style="color:var(--app-muted-text)">{{ m.bookingsUi.sectionHistory }}</h2>
+          <div class="space-y-3">
             <div
               v-for="booking in completedBookings"
               :key="booking.id"
-              class="bg-gray-800 rounded-2xl border border-gray-700 p-4 flex items-center gap-4 cursor-pointer hover:bg-gray-700/50 transition-colors"
+              class="rounded-2xl p-4 flex items-center gap-4 cursor-pointer transition-colors history-card"
+              style="background:var(--app-card-bg);border:1px solid var(--app-card-border);"
               @click="viewDetails(booking)"
             >
-              <div class="w-9 h-9 bg-green-900/30 rounded-xl flex items-center justify-center shrink-0">
-                <svg class="h-4 w-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style="background:color-mix(in srgb, #10b981 16%, var(--app-surface));">
+                <svg class="h-4 w-4" style="color:#10b981" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
               </div>
               <div class="flex-1 min-w-0">
-                <p class="font-semibold text-white text-sm">{{ booking.vehicle?.license_plate || '—' }}</p>
-                <p class="text-xs text-gray-400 truncate">{{ formatDateCompact(booking.scheduled_start) }} · {{ booking.vehicle?.brand }} {{ booking.vehicle?.model }}</p>
+                <p class="font-bold text-base truncate" style="color:var(--app-text)">{{ booking.vehicle?.brand }} {{ booking.vehicle?.model }}</p>
+                <div class="mt-1 flex flex-wrap items-center gap-2 text-xs">
+                  <span class="history-meta history-meta--code">{{ booking.vehicle?.license_plate || '—' }}</span>
+                  <span class="history-meta">{{ formatDateOnly(booking.scheduled_start) }}</span>
+                  <span class="history-meta">{{ formatTimeOnly(booking.scheduled_start) }}</span>
+                </div>
               </div>
               <div class="text-right shrink-0">
-                <p class="font-bold text-white text-sm">{{ getBookingPrice(booking) !== 'Pendent' ? getBookingPrice(booking) + '€' : '—' }}</p>
-                <p class="text-xs text-green-400">{{ m.bookingsUi.completed }}</p>
+                <p class="font-bold text-sm" style="color:var(--app-text)">{{ getBookingPrice(booking) !== 'Pendent' ? getBookingPrice(booking) + '€' : '—' }}</p>
+                <span class="inline-flex mt-1 text-[11px] font-semibold px-2 py-0.5 rounded-full history-status history-status--completed">{{ m.bookingsUi.completed }}</span>
               </div>
             </div>
           </div>
@@ -167,7 +183,8 @@
         <section v-if="cancelledBookings.length > 0">
           <button
             @click="showCancelled = !showCancelled"
-            class="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 hover:text-gray-300 transition-colors"
+            class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-3 transition-colors"
+            style="color:var(--app-muted-text)"
           >
             <svg class="h-3.5 w-3.5 transition-transform duration-200" :class="showCancelled ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
@@ -175,23 +192,28 @@
             {{ m.bookingsUi.sectionCancelled }} ({{ cancelledBookings.length }})
           </button>
           <Transition name="fade">
-            <div v-if="showCancelled" class="space-y-2">
+            <div v-if="showCancelled" class="space-y-3">
               <div
                 v-for="booking in cancelledBookings"
                 :key="booking.id"
-                class="bg-gray-800 rounded-2xl border border-gray-700 p-4 flex items-center gap-4 opacity-60 cursor-pointer hover:opacity-80 transition-opacity"
+                class="rounded-2xl p-4 flex items-center gap-4 opacity-80 cursor-pointer hover:opacity-95 transition-opacity history-card"
+                style="background:var(--app-card-bg);border:1px solid var(--app-card-border);"
                 @click="viewDetails(booking)"
               >
-                <div class="w-9 h-9 bg-gray-800 rounded-xl flex items-center justify-center shrink-0">
-                  <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style="background:var(--app-surface-alt)">
+                  <svg class="h-4 w-4" style="color:var(--app-muted-text)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                   </svg>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="font-semibold text-gray-300 text-sm">{{ booking.vehicle?.license_plate || '—' }}</p>
-                  <p class="text-xs text-gray-400 truncate">{{ formatDateCompact(booking.scheduled_start) }} · {{ booking.vehicle?.brand }} {{ booking.vehicle?.model }}</p>
+                  <p class="font-bold text-base truncate" style="color:var(--app-text)">{{ booking.vehicle?.brand }} {{ booking.vehicle?.model }}</p>
+                  <div class="mt-1 flex flex-wrap items-center gap-2 text-xs">
+                    <span class="history-meta history-meta--code">{{ booking.vehicle?.license_plate || '—' }}</span>
+                    <span class="history-meta">{{ formatDateOnly(booking.scheduled_start) }}</span>
+                    <span class="history-meta">{{ formatTimeOnly(booking.scheduled_start) }}</span>
+                  </div>
                 </div>
-                <p class="text-xs text-red-400 shrink-0">{{ m.bookingsUi.cancelled }}</p>
+                <span class="inline-flex text-[11px] font-semibold px-2 py-0.5 rounded-full history-status history-status--cancelled">{{ m.bookingsUi.cancelled }}</span>
               </div>
             </div>
           </Transition>
@@ -236,13 +258,7 @@
             <div class="flex items-center justify-between px-5 py-4 border-b border-gray-700 shrink-0">
               <div>
                 <h3 class="font-bold text-white">{{ m.bookingsUi.bookingNumber }} #{{ selectedBooking.id }}</h3>
-                <span class="text-xs font-semibold px-2 py-0.5 rounded-full" :class="{
-                  'bg-yellow-900/40 text-yellow-300': selectedBooking.status === 'pending',
-                  'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300': selectedBooking.status === 'active',
-                  'bg-green-900/40 text-green-300': selectedBooking.status === 'completed',
-                  'bg-red-900/40 text-red-300': selectedBooking.status === 'cancelled',
-                  'bg-purple-900/40 text-purple-300': selectedBooking.status === 'confirmed',
-                }">{{ getStatusLabel(selectedBooking.status) }}</span>
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full" :style="getStatusBadgeStyle(selectedBooking.status)">{{ getStatusLabel(selectedBooking.status) }}</span>
               </div>
               <button @click="closeDetailsModal" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
                 <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -368,6 +384,10 @@ const pendingPaymentAmount = computed(() =>
     .reduce((sum, booking) => sum + amountForBooking(booking), 0)
 )
 
+const isZeroBalance = computed(() =>
+  walletBalance.value === 0 && totalPaidAmount.value === 0 && pendingPaymentAmount.value === 0
+)
+
 onMounted(async () => {
   await fetchUser()
   try {
@@ -444,6 +464,10 @@ function formatDateCompact(dateString: string) {
   return d.toLocaleDateString(getLocaleCode(), { day: '2-digit', month: '2-digit' }) + ' ' + time
 }
 
+function formatDateOnly(dateString: string) {
+  return new Date(dateString).toLocaleDateString(getLocaleCode(), { day: '2-digit', month: '2-digit', year: 'numeric' })
+}
+
 function formatTimeOnly(dateString: string) {
   return new Date(dateString).toLocaleTimeString(getLocaleCode(), { hour: '2-digit', minute: '2-digit' })
 }
@@ -489,6 +513,32 @@ function getStatusLabel(status: string) {
   return labels[status] ?? status
 }
 
+function getStatusTone(status: string): string {
+  const tones: Record<string, string> = {
+    active: 'var(--fleetly-baltic-blue)',
+    confirmed: 'var(--fleetly-baltic-blue)',
+    pending: '#d97706',
+    completed: '#059669',
+    cancelled: '#dc2626',
+  }
+  return tones[status] ?? 'var(--fleetly-baltic-blue)'
+}
+
+function getStatusBarStyle(status: string): string {
+  const tone = getStatusTone(status)
+  return `background:color-mix(in srgb, ${tone} 68%, var(--app-card-border));`
+}
+
+function getStatusIconStyle(status: string): string {
+  const tone = getStatusTone(status)
+  return `color:color-mix(in srgb, ${tone} 74%, var(--app-text));`
+}
+
+function getStatusBadgeStyle(status: string): string {
+  const tone = getStatusTone(status)
+  return `background:color-mix(in srgb, ${tone} 18%, var(--app-surface));color:var(--app-text);border:1px solid color-mix(in srgb, ${tone} 45%, var(--app-border));`
+}
+
 function getBookingPrice(booking: any): string {
   if (booking.trip?.total_amount != null) return booking.trip.total_amount.toFixed(2)
   if (booking.total_price != null) return booking.total_price.toFixed(2)
@@ -514,4 +564,183 @@ function getBookingPriceLabel(booking: any): string {
 }
 .fade-enter-active, .fade-leave-active { transition: opacity 0.2s ease, transform 0.2s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(-4px); }
+
+.balance-panel {
+  border: 1px solid var(--app-border);
+  background: var(--app-surface-alt);
+}
+
+.balance-panel__title {
+  color: var(--fleetly-baltic-blue);
+  font-weight: 700;
+}
+
+.balance-panel__subtitle {
+  color: var(--app-muted-text);
+}
+
+.balance-card {
+  border-width: 1px;
+  border-style: solid;
+  color: var(--app-text);
+}
+
+.balance-card__label {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--app-muted-text);
+}
+
+.balance-card__value {
+  color: var(--app-text);
+}
+
+.balance-card__value--primary {
+  letter-spacing: -0.01em;
+}
+
+.balance-card--available {
+  border-color: #7dd3fc;
+  background: color-mix(in srgb, #7dd3fc 20%, var(--app-surface));
+}
+
+.balance-card--available .balance-card__value {
+  color: #0369a1;
+}
+
+.balance-card--paid {
+  border-color: #6ee7b7;
+  background: color-mix(in srgb, #6ee7b7 18%, var(--app-surface));
+}
+
+.balance-card--paid .balance-card__value {
+  color: #047857;
+}
+
+.balance-card--pending {
+  border-color: #fbbf24;
+  background: color-mix(in srgb, #fbbf24 18%, var(--app-surface));
+}
+
+.balance-card--pending .balance-card__value {
+  color: #b45309;
+}
+
+.balance-empty-state {
+  border: 1px dashed color-mix(in srgb, var(--app-border) 80%, #38bdf8 20%);
+  background: color-mix(in srgb, var(--app-surface) 76%, #0ea5e9 24%);
+  color: var(--app-text);
+}
+
+.history-card {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--app-card-border) 85%, transparent);
+}
+
+.history-meta {
+  padding: 2px 8px;
+  border-radius: 9999px;
+  border: 1px solid var(--app-border);
+  background: var(--app-surface-alt);
+  color: var(--app-text);
+  font-weight: 600;
+}
+
+.history-meta--code {
+  color: var(--app-muted-text);
+  font-weight: 500;
+}
+
+.history-status {
+  border: 1px solid transparent;
+}
+
+.history-status--completed {
+  color: #065f46;
+  background: color-mix(in srgb, #10b981 16%, var(--app-surface));
+  border-color: color-mix(in srgb, #10b981 40%, transparent);
+}
+
+.history-status--cancelled {
+  color: #991b1b;
+  background: color-mix(in srgb, #ef4444 14%, var(--app-surface));
+  border-color: color-mix(in srgb, #ef4444 42%, transparent);
+}
+
+:global(html.dark) .balance-card--available {
+  border-color: color-mix(in srgb, #38bdf8 42%, var(--app-border));
+  background: color-mix(in srgb, #38bdf8 12%, var(--app-surface));
+  color: var(--app-text);
+}
+
+:global(html.dark) .balance-card--available .balance-card__label {
+  color: var(--app-muted-text);
+}
+
+:global(html.dark) .balance-card--available .balance-card__value {
+  color: #7dd3fc;
+}
+
+:global(html.dark) .balance-card--paid {
+  border-color: color-mix(in srgb, #10b981 40%, var(--app-border));
+  background: color-mix(in srgb, #10b981 12%, var(--app-surface));
+  color: var(--app-text);
+}
+
+:global(html.dark) .balance-card--paid .balance-card__label {
+  color: var(--app-muted-text);
+}
+
+:global(html.dark) .balance-card--paid .balance-card__value {
+  color: #34d399;
+}
+
+:global(html.dark) .balance-card--pending {
+  border-color: color-mix(in srgb, #f59e0b 44%, var(--app-border));
+  background: color-mix(in srgb, #f59e0b 12%, var(--app-surface));
+  color: var(--app-text);
+}
+
+:global(html.dark) .balance-card--pending .balance-card__label {
+  color: var(--app-muted-text);
+}
+
+:global(html.dark) .balance-card--pending .balance-card__value {
+  color: #fbbf24;
+}
+
+:global(html.dark) .balance-panel {
+  border-color: #3b4b66;
+  background: color-mix(in srgb, var(--app-surface) 78%, #1f2937 22%);
+}
+
+:global(html.dark) .balance-panel__title {
+  color: var(--app-text);
+}
+
+:global(html.dark) .balance-panel__subtitle {
+  color: #cbd5e1;
+}
+
+:global(html.dark) .balance-empty-state {
+  border-color: color-mix(in srgb, #38bdf8 44%, var(--app-border));
+  background: color-mix(in srgb, #0ea5e9 10%, var(--app-surface));
+}
+
+:global(html.dark) .history-meta {
+  border-color: color-mix(in srgb, var(--app-border) 80%, #475569 20%);
+  background: color-mix(in srgb, var(--app-surface) 80%, #334155 20%);
+  color: #e2e8f0;
+}
+
+:global(html.dark) .history-meta--code {
+  color: #94a3b8;
+}
+
+:global(html.dark) .history-status--completed {
+  color: #34d399;
+}
+
+:global(html.dark) .history-status--cancelled {
+  color: #f87171;
+}
 </style>

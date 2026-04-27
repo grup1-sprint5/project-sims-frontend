@@ -165,15 +165,18 @@
       <Transition name="modal">
         <div v-if="showBookingModal" class="fixed inset-0 z-[10000] flex items-center justify-center p-4" @click.self="closeBookingModal">
           <div class="fixed inset-0 bg-black/60"></div>
-          <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[90dvh]" @click.stop>
+          <div
+            class="booking-modal-card relative rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[90dvh]"
+            @click.stop
+          >
 
             <!-- Header modal -->
-            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700 shrink-0">
+            <div class="flex items-center justify-between px-6 py-4 shrink-0" style="border-bottom:1px solid var(--app-border);">
               <div>
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Reservar Vehicle</h3>
-                <p v-if="vehicleForBooking" class="text-sm text-gray-500 dark:text-gray-400">{{ vehicleForBooking.brand }} {{ vehicleForBooking.model }} · {{ vehicleForBooking.plate }}</p>
+                <h3 class="text-xl font-bold" style="color:var(--app-text)">Reservar Vehicle</h3>
+                <p v-if="vehicleForBooking" class="text-sm" style="color:var(--app-muted-text)">{{ vehicleForBooking.brand }} {{ vehicleForBooking.model }} · {{ vehicleForBooking.plate }}</p>
               </div>
-              <button @click="closeBookingModal" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <button @click="closeBookingModal" class="p-2 rounded-full transition-colors hover:opacity-80" style="color:var(--app-muted-text);background:var(--app-surface-alt);">
                 <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -207,59 +210,60 @@
               <!-- Camps del formulari -->
               <div class="grid grid-cols-1 gap-3">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Inici</label>
+                  <label class="block text-sm font-medium mb-1" style="color:var(--app-muted-text)">Inici</label>
                   <input
                     type="datetime-local"
                     v-model="bookingForm.scheduled_start"
                     :min="minDateTime"
                     required
-                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    class="booking-datetime-input w-full px-3 py-2 rounded-lg text-sm"
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fi</label>
+                  <label class="block text-sm font-medium mb-1" style="color:var(--app-muted-text)">Fi</label>
                   <input
                     type="datetime-local"
                     v-model="bookingForm.scheduled_end"
                     :min="bookingForm.scheduled_start || minDateTime"
                     required
-                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                    class="booking-datetime-input w-full px-3 py-2 rounded-lg text-sm"
                   />
                 </div>
               </div>
 
               <!-- Resum de preu -->
-              <div v-if="priceInfo && !overlapError" class="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-4 space-y-2">
+              <div v-if="priceInfo && !overlapError" class="rounded-xl p-4 space-y-2 border border-[var(--app-border)]" style="background:var(--app-surface-alt);">
                 <div class="flex justify-between text-sm">
-                  <span class="text-gray-600 dark:text-gray-400">Durada</span>
-                  <span class="font-medium text-gray-900 dark:text-white">{{ formatDuration(priceInfo.total_minutes) }}</span>
+                  <span style="color:var(--app-muted-text)">Durada</span>
+                  <span class="font-medium" style="color:var(--app-text)">{{ formatDuration(priceInfo.total_minutes) }}</span>
                 </div>
                 <div class="flex justify-between text-sm">
-                  <span class="text-gray-600 dark:text-gray-400">Tarifa</span>
-                  <span class="font-medium text-gray-900 dark:text-white">{{ priceInfo.price_per_minute }}€/min · màx {{ priceInfo.max_per_hour }}€/h</span>
+                  <span style="color:var(--app-muted-text)">Tarifa</span>
+                  <span class="font-medium" style="color:var(--app-text)">{{ priceInfo.price_per_minute }}€/min · màx {{ priceInfo.max_per_hour }}€/h</span>
                 </div>
                 <div v-if="priceInfo.base_price !== priceInfo.final_price" class="flex justify-between text-sm">
-                  <span class="text-gray-600 dark:text-gray-400">Preu base</span>
-                  <span class="line-through text-gray-400">{{ priceInfo.base_price }}€</span>
+                  <span style="color:var(--app-muted-text)">Preu base</span>
+                  <span class="line-through" style="color:var(--app-muted-text)">{{ priceInfo.base_price }}€</span>
                 </div>
-                <div class="flex justify-between items-center pt-2 border-t border-indigo-200 dark:border-indigo-700">
-                  <span class="font-bold text-gray-900 dark:text-white">Total</span>
-                  <span class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ priceInfo.final_price }}€</span>
+                <div class="flex justify-between items-center pt-2 border-t border-[var(--app-border)]">
+                  <span class="font-bold" style="color:var(--app-text)">Total</span>
+                  <span class="text-2xl font-bold text-[var(--fleetly-baltic-blue)]">{{ priceInfo.final_price }}€</span>
                 </div>
               </div>
 
               <!-- Càlcul en curs -->
               <div v-if="bookingForm.scheduled_start && bookingForm.scheduled_end && !priceInfo && !overlapError" class="text-center py-2">
-                <span class="text-sm text-gray-400 animate-pulse">Calculant preu...</span>
+                <span class="text-sm animate-pulse" style="color:var(--app-muted-text)">Calculant preu...</span>
               </div>
             </div>
 
             <!-- Accions -->
-            <div class="shrink-0 px-6 py-4 border-t border-gray-100 dark:border-gray-700 flex gap-3">
+            <div class="shrink-0 px-6 py-4 flex gap-3" style="border-top:1px solid var(--app-border);">
               <button
                 type="button"
                 @click="closeBookingModal"
-                class="flex-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold py-3 rounded-xl transition-colors"
+                class="flex-1 font-semibold py-3 rounded-xl transition-colors"
+                style="background:var(--app-surface-alt);color:var(--app-text);border:1px solid var(--app-border);"
               >
                 Cancel·lar
               </button>
@@ -267,7 +271,7 @@
                 type="button"
                 @click="openConfirmBookingModal"
                 :disabled="bookingStore.loading || !priceInfo || !!overlapError"
-                class="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors"
+                class="flex-1 bg-[var(--fleetly-baltic-blue)] hover:opacity-90 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors"
               >
                 {{ bookingStore.loading ? 'Creant...' : 'Confirmar reserva' }}
               </button>
@@ -286,24 +290,27 @@
           @click.self="closeConfirmBookingModal"
         >
           <div class="fixed inset-0 bg-black/60"></div>
-          <div class="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-800" @click.stop>
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Confirmar reserva</h3>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Revisa les dades abans de crear-la.</p>
+          <div
+            class="booking-modal-card relative w-full max-w-md rounded-2xl p-6 shadow-2xl"
+            @click.stop
+          >
+            <h3 class="text-lg font-bold" style="color:var(--app-text)">Confirmar reserva</h3>
+            <p class="mt-1 text-sm" style="color:var(--app-muted-text)">Revisa les dades abans de crear-la.</p>
 
-            <div class="mt-4 space-y-2 rounded-xl bg-gray-50 p-4 dark:bg-gray-700/40">
+            <div class="mt-4 space-y-2 rounded-xl p-4" style="background:var(--app-surface-alt);border:1px solid var(--app-border);">
               <div class="flex items-center justify-between text-sm">
                 <span class="text-gray-500 dark:text-gray-400">Vehicle</span>
                 <span class="font-semibold text-gray-900 dark:text-white">{{ vehicleForBooking?.plate || '-' }}</span>
               </div>
               <div class="flex items-center justify-between text-sm">
                 <span class="text-gray-500 dark:text-gray-400">Total reserva</span>
-                <span class="font-semibold text-indigo-600 dark:text-indigo-300">{{ bookingTotalLabel }}</span>
+                <span class="font-semibold text-[var(--fleetly-baltic-blue)]">{{ bookingTotalLabel }}</span>
               </div>
               <div class="flex items-center justify-between text-sm">
                 <span class="text-gray-500 dark:text-gray-400">Saldo actual</span>
                 <span class="font-semibold text-gray-900 dark:text-white">{{ walletBalanceLabel }}</span>
               </div>
-              <div class="flex items-center justify-between border-t border-gray-200 pt-2 text-sm dark:border-gray-600">
+              <div class="flex items-center justify-between border-t pt-2 text-sm" style="border-color:var(--app-border);">
                 <span class="text-gray-600 dark:text-gray-300">Saldo despres de reservar</span>
                 <span class="font-bold" :class="walletRemainingAfterBooking >= 0 ? 'text-emerald-600 dark:text-emerald-300' : 'text-amber-600 dark:text-amber-300'">
                   {{ walletAfterBookingLabel }}
@@ -319,7 +326,8 @@
               <button
                 type="button"
                 @click="closeConfirmBookingModal"
-                class="flex-1 rounded-xl bg-gray-100 py-3 font-semibold text-gray-900 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                class="flex-1 rounded-xl py-3 font-semibold transition-colors"
+                style="background:var(--app-surface-alt);color:var(--app-text);border:1px solid var(--app-border);"
               >
                 Tornar
               </button>
@@ -327,7 +335,7 @@
                 type="button"
                 @click="submitBooking"
                 :disabled="bookingStore.loading"
-                class="flex-1 rounded-xl bg-indigo-600 py-3 font-semibold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-400 dark:disabled:bg-gray-600"
+                class="flex-1 rounded-xl bg-[var(--fleetly-baltic-blue)] py-3 font-semibold text-white transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:bg-gray-400 dark:disabled:bg-gray-600"
               >
                 {{ bookingStore.loading ? 'Creant...' : 'Si, reservar' }}
               </button>
@@ -898,5 +906,28 @@ onUnmounted(() => {
 }
 .modal-leave-to .modal-card {
   transform: scale(0.92) translateY(8px);
+}
+
+.booking-datetime-input {
+  background: var(--app-input-bg);
+  color: var(--app-input-text);
+  border: 1px solid var(--app-input-border);
+}
+
+.booking-datetime-input:focus {
+  outline: none;
+  border-color: var(--fleetly-baltic-blue);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--fleetly-baltic-blue) 24%, transparent);
+}
+
+.booking-modal-card {
+  background: var(--app-surface);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
+  color-scheme: light;
+}
+
+:global(html.dark) .booking-modal-card {
+  color-scheme: dark;
 }
 </style>

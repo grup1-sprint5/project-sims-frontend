@@ -11,7 +11,7 @@
           @click="openCreateModal"
           class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
-          New booking
+          {{ m.adminBookingsUi.newBooking }}
         </button>
       </template>
     </PageHeading>
@@ -23,7 +23,7 @@
           v-model="filters.search"
           @input="handleSearch"
           type="text"
-          placeholder="Search by guest, email or plate..."
+          :placeholder="m.adminBookingsUi.searchPlaceholder"
           class="block w-full max-w-md rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
         />
 
@@ -32,11 +32,11 @@
           @change="handleStatusChange"
           class="block w-full sm:w-48 rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
         >
-          <option value="">All statuses</option>
-          <option value="active">Active</option>
-          <option value="pending">Pending</option>
-          <option value="finished">Finished</option>
-          <option value="cancelled">Cancelled</option>
+          <option value="">{{ m.adminBookingsUi.allStatuses }}</option>
+          <option value="active">{{ m.adminBookingsUi.active }}</option>
+          <option value="pending">{{ m.adminBookingsUi.pending }}</option>
+          <option value="finished">{{ m.adminBookingsUi.finished }}</option>
+          <option value="cancelled">{{ m.adminBookingsUi.cancelled }}</option>
         </select>
       </div>
 
@@ -48,23 +48,23 @@
     <!-- Creation form (modal) -->
     <Modal :show="showCreateModal" @close="closeCreateModal">
       <template #header>
-        <h3 class="text-lg font-medium">Create booking</h3>
+        <h3 class="text-lg font-medium">{{ m.adminBookingsUi.createBooking }}</h3>
       </template>
 
       <div class="grid gap-4 sm:grid-cols-2">
         <FormInput
           v-model="createForm.user_id"
-          label="User ID (optional)"
+          :label="m.adminBookingsUi.userIdOptional"
           placeholder="e.g. 1"
           type="number"
         />
         <FormInput
           v-model="createForm.vehicle_id"
-          label="Vehicle ID"
+          :label="m.adminBookingsUi.vehicleId"
           placeholder="e.g. 3"
           type="number"
         />
-        <FormField label="Start date and time (scheduled_start)">
+        <FormField :label="m.adminBookingsUi.startDateTime">
           <input
             v-model="createForm.scheduled_start"
             type="datetime-local"
@@ -79,7 +79,7 @@
           class="mr-2 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-50"
           @click="closeCreateModal"
         >
-          Cancel
+          {{ m.commonUi.cancel }}
         </button>
         <button
           type="button"
@@ -87,14 +87,14 @@
           class="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
           @click="handleCreate"
         >
-          {{ creating ? 'Creating...' : 'Create booking' }}
+          {{ creating ? m.adminBookingsUi.creating : m.adminBookingsUi.createBooking }}
         </button>
       </template>
     </Modal>
 
     <!-- Loading state -->
     <div v-if="loading" class="mt-8 text-center text-gray-500 dark:text-gray-400">
-      Loading bookings...
+      {{ m.adminBookingsUi.loading }}
     </div>
 
     <!-- Error state -->
@@ -109,7 +109,7 @@
       :empty="bookings.length === 0"
     >
       <template #empty>
-        No bookings available
+        {{ m.adminBookingsUi.empty }}
       </template>
 
       <tr v-for="booking in bookings" :key="booking.id">
@@ -145,7 +145,7 @@
           </div>
           <div v-else>
             <div class="text-sm text-gray-900 dark:text-white">
-              Vehicle #{{ booking.vehicle_id ?? '-' }}
+              {{ m.adminBookingsUi.vehicleLabel }} #{{ booking.vehicle_id ?? '-' }}
             </div>
           </div>
         </AdminTd>
@@ -171,7 +171,7 @@
               getStatusClasses(booking.status),
             ]"
           >
-            {{ booking.status }}
+            {{ translateStatus(booking.status) }}
           </span>
         </AdminTd>
 
@@ -180,26 +180,26 @@
             <button
               class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
               @click="navigateToDetail(booking.id)"
-              title="View"
+              :title="m.commonUi.view"
             >
               <span class="material-icons text-xl">visibility</span>
-              <span class="sr-only">View, booking #{{ booking.id }}</span>
+              <span class="sr-only">{{ m.commonUi.view }}, #{{ booking.id }}</span>
             </button>
             <button
               class="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
               @click="navigateToEdit(booking.id)"
-              title="Edit"
+              :title="m.commonUi.edit"
             >
               <span class="material-icons text-xl">edit</span>
-              <span class="sr-only">Edit, booking #{{ booking.id }}</span>
+              <span class="sr-only">{{ m.commonUi.edit }}, #{{ booking.id }}</span>
             </button>
             <button
               @click="handleDelete(booking.id)"
               class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors"
-              title="Delete"
+              :title="m.commonUi.delete"
             >
               <span class="material-icons text-xl">delete</span>
-              <span class="sr-only">Delete, booking #{{ booking.id }}</span>
+              <span class="sr-only">{{ m.commonUi.delete }}, #{{ booking.id }}</span>
             </button>
           </div>
         </AdminTd>
@@ -218,11 +218,11 @@
     <!-- Delete confirmation modal -->
     <Modal :show="showDeleteModal" @close="showDeleteModal = false">
       <template #header>
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Confirmar esborrat</h3>
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ m.adminBookingsUi.confirmDeleteTitle }}</h3>
       </template>
 
       <p class="text-sm text-gray-600 dark:text-gray-400">
-        Estàs segur que vols esborrar aquesta reserva? Aquesta acció no es pot desfer.
+        {{ m.adminBookingsUi.confirmDeleteMessage }}
       </p>
 
       <template #footer>
@@ -231,7 +231,7 @@
           class="mr-2 rounded-md border border-gray-300 px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
           @click="showDeleteModal = false"
         >
-          Cancel·lar
+          {{ m.commonUi.cancel }}
         </button>
         <button
           type="button"
@@ -239,7 +239,7 @@
           class="rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-red-500 disabled:opacity-50"
           @click="confirmDelete"
         >
-          {{ deleting ? 'Esborrant...' : 'Esborrar' }}
+          {{ deleting ? m.adminBookingsUi.deleting : m.adminBookingsUi.delete }}
         </button>
       </template>
     </Modal>
@@ -336,7 +336,7 @@ const closeCreateModal = () => {
 
 const handleCreate = async () => {
   if (!createForm.value.vehicle_id || !createForm.value.scheduled_start) {
-    toastError('Fill vehicle and start date/time')
+    toastError(m.value.adminBookingsUi.fillRequired)
     return
   }
 
@@ -352,7 +352,7 @@ const handleCreate = async () => {
   creating.value = true
   try {
     await createBooking(payload)
-    toastSuccess('Booking created successfully')
+    toastSuccess(m.value.adminBookingsUi.createdSuccess)
     createForm.value = { user_id: '', vehicle_id: '', scheduled_start: '' }
     showCreateModal.value = false
     loadBookings(pagination.value.current_page)
@@ -374,7 +374,7 @@ const confirmDelete = async () => {
   deleting.value = true
   try {
     await deleteBooking(bookingToDelete.value)
-    toastSuccess('Reserva esborrada correctament')
+    toastSuccess(m.value.adminBookingsUi.bookingDeleted)
     loadBookings(pagination.value.current_page)
     showDeleteModal.value = false
     bookingToDelete.value = null
@@ -413,6 +413,17 @@ const getStatusClasses = (s: string) => {
     pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
   }
   return map[s] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+}
+
+const translateStatus = (status: string) => {
+  const map: Record<string, string> = {
+    active: m.value.adminBookingsUi.active,
+    pending: m.value.adminBookingsUi.pending,
+    finished: m.value.adminBookingsUi.finished,
+    completed: m.value.adminBookingsUi.completed,
+    cancelled: m.value.adminBookingsUi.cancelled,
+  }
+  return map[status] || status
 }
 
 const getStartDate = (booking: Booking) =>

@@ -1,52 +1,51 @@
-name: Deploy Frontend
-
+name: Deploy Front
 on:
   push:
     branches: [ develop ]
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+      - name: Check SSH port reachable
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y netcat-openbsd
+          nc -vz ${{ secrets.DEPLOY_HOST_IP }} 1303
 
-      - name: Build Project
+      - name: Install and Build
         run: |
           npm ci
           npm run build
           ls -la dist
-
-      - name: Decode SSH key
-        run: |
-          echo "${{ secrets.DEPLOY_SSH_KEY_B64 }}" | base64 -d > /tmp/deploy_key
-          chmod 600 /tmp/deploy_key
 
       - name: Prepare remote folder
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DEPLOY_HOST_IP }}
           username: ${{ secrets.DEPLOY_USER }}
-          key_path: /tmp/deploy_key
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: 1303
+          timeout: 30s
+          command_timeout: 10m
           script: |
-            mkdir -p /var/www/sims-frontend/dist
-            rm -rf /var/www/sims-frontend/dist/*
+            sudo mkdir -p /var/www/sims-front/dist
+            sudo chown -R ${{ secrets.DEPLOY_USER }}:${{ secrets.DEPLOY_USER }} /var/www/sims-front
+            rm -rf /var/www/sims-front/dist/*
 
       - name: Upload Files (SCP)
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DEPLOY_HOST_IP }}
           username: ${{ secrets.DEPLOY_USER }}
-          key_path: /tmp/deploy_key
-          source: "dist/**"
-          target: "/var/www/sims-frontend/dist"
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: 1303
+          timeout: 60s
+          source: "dist/*"
+          target: "/var/www/sims-front/dist"
           strip_components: 1
 
       - name: Reload Nginx
@@ -54,5 +53,6 @@ jobs:
         with:
           host: ${{ secrets.DEPLOY_HOST_IP }}
           username: ${{ secrets.DEPLOY_USER }}
-          key_path: /tmp/deploy_key
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: 1303
           script: sudo systemctl reload nginx
