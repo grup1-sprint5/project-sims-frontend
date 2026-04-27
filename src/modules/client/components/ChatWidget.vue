@@ -13,6 +13,7 @@
     >
       <div
         v-if="isOpen"
+        data-tour-id="chat-widget-panel"
         class="chat-panel flex w-[22rem] flex-col overflow-hidden rounded-2xl sm:w-96"
         style="height: 30rem"
       >
@@ -149,6 +150,7 @@
     <!-- Trigger bubble -->
     <button
       type="button"
+      data-tour-id="chat-widget-trigger"
       @click="isOpen = !isOpen"
       class="relative flex size-14 items-center justify-center rounded-full bg-[var(--fleetly-baltic-blue)] shadow-lg shadow-black/50 transition hover:opacity-90 hover:scale-105 active:scale-95"
       :title="isOpen ? 'Tanca l\'assistent' : 'Obre l\'assistent IA'"

@@ -16,7 +16,7 @@
             </div>
 
             <!-- Desktop nav -->
-            <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+            <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8" data-tour-id="client-main-nav">
               <RouterLink
                 v-for="item in navigation"
                 :key="item.name"
@@ -35,19 +35,32 @@
           <div class="hidden sm:ml-6 sm:flex sm:items-center gap-3">
             <button
               type="button"
+              data-tour-id="client-tour-button"
+              class="rounded-md px-3 py-1.5 text-sm font-medium text-[var(--app-text)] border border-[var(--app-border)] hover:bg-[var(--app-surface-alt)]"
+              @click="startGuide(true)"
+            >
+              <QuestionMarkCircleIcon class="size-4 inline mr-1" />
+              {{ m.guidedTour.startGuide }}
+            </button>
+            <button
+              type="button"
+              data-tour-id="theme-toggle"
               class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
               @click="toggleTheme"
             >
               <MoonIcon v-if="!isDark" class="size-5" />
               <SunIcon v-else class="size-5" />
             </button>
-            <LanguageSwitcher />
+            <div data-tour-id="language-switcher">
+              <LanguageSwitcher />
+            </div>
             <button type="button" class="relative rounded-full p-1 text-[var(--fleetly-pale-slate)] hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)]">
               <span class="absolute -inset-1.5"></span>
               <span class="sr-only">View notifications</span>
               <BellIcon class="size-6" aria-hidden="true" />
             </button>
 
+<<<<<<< HEAD
             <button
               type="button"
               class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
@@ -57,6 +70,17 @@
               <span class="sr-only">{{ m.userMenu.signOut }}</span>
               <ArrowRightOnRectangleIcon class="size-6" aria-hidden="true" />
             </button>
+=======
+            <!-- Profile dropdown -->
+            <Menu as="div" class="relative ml-3" data-tour-id="user-menu">
+              <MenuButton class="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]">
+                <span class="absolute -inset-1.5"></span>
+                <span class="sr-only">Open user menu</span>
+                <span class="size-8 rounded-full outline -outline-offset-1 outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
+                  {{ userInitials }}
+                </span>
+              </MenuButton>
+>>>>>>> 0ba77a7 (implement guided tour feature with driver.js integration and localization support)
 
             <RouterLink
               to="/perfil"
@@ -74,14 +98,26 @@
           <div class="-mr-2 flex items-center gap-2 sm:hidden">
             <button
               type="button"
+              data-tour-id="client-tour-button"
+              class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
+              @click="startGuide(true)"
+            >
+              <QuestionMarkCircleIcon class="size-5" />
+            </button>
+            <button
+              type="button"
+              data-tour-id="theme-toggle"
               class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
               @click="toggleTheme"
             >
               <MoonIcon v-if="!isDark" class="size-5" />
               <SunIcon v-else class="size-5" />
             </button>
-            <LanguageSwitcher />
+            <div data-tour-id="language-switcher">
+              <LanguageSwitcher />
+            </div>
             
+<<<<<<< HEAD
             <button
               type="button"
               class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
@@ -91,6 +127,15 @@
               <span class="sr-only">{{ m.userMenu.signOut }}</span>
               <ArrowRightOnRectangleIcon class="size-5" aria-hidden="true" />
             </button>
+=======
+            <!-- Mobile User Menu -->
+            <Menu as="div" class="relative" data-tour-id="user-menu-mobile">
+              <MenuButton class="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]">
+                <span class="size-8 rounded-full outline -outline-offset-1 outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
+                  {{ userInitials }}
+                </span>
+              </MenuButton>
+>>>>>>> 0ba77a7 (implement guided tour feature with driver.js integration and localization support)
 
             <RouterLink
               to="/perfil"
@@ -107,12 +152,12 @@
     </nav>
 
     <!-- Content (MAP / PAGES) -->
-    <main class="relative min-h-[calc(100dvh-4rem)] pb-16">
+    <main class="relative min-h-[calc(100dvh-4rem)] pb-16" data-tour-id="client-content">
       <router-view />
     </main>
 
     <!-- Bottom nav (mobile-first) -->
-    <nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-[var(--app-border)] bg-[var(--app-surface)]/95 backdrop-blur sm:hidden">
+    <nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-[var(--app-border)] bg-[var(--app-surface)]/95 backdrop-blur sm:hidden" data-tour-id="client-mobile-nav">
       <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-5 text-center text-xs text-[var(--app-muted-text)]">
         <RouterLink to="/" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
           <MapIcon class="size-6" />
@@ -133,26 +178,35 @@
     </nav>
 
     <!-- AI Chat floating widget -->
-    <ChatWidget />
+    <div data-tour-id="chat-widget">
+      <ChatWidget />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, nextTick, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+<<<<<<< HEAD
 import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
+=======
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
+>>>>>>> 0ba77a7 (implement guided tour feature with driver.js integration and localization support)
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
 import ChatWidget from '@/modules/client/components/ChatWidget.vue'
 import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
 import { useI18n } from '@/i18n'
 import { useTheme } from '@/modules/common/composables/useTheme'
+import { useGuidedTour } from '@/modules/common/composables/useGuidedTour'
 
 const { m } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const { logout, user: authUser } = useAuth()
 const { isDark, toggleTheme } = useTheme()
+const { startClientTour } = useGuidedTour()
 const isActive = (path: string) => route.path === path
 
 const userInitials = computed(() => {
@@ -178,4 +232,16 @@ const handleLogout = async () => {
     router.push('/login')
   }
 }
+
+const startGuide = (force = false) => {
+  startClientTour({
+    userScope: String(authUser.value?.id ?? 'guest'),
+    force,
+  })
+}
+
+onMounted(async () => {
+  await nextTick()
+  startGuide(false)
+})
 </script>
