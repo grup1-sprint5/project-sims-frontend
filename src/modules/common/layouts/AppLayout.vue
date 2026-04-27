@@ -59,8 +59,6 @@
               <span class="sr-only">View notifications</span>
               <BellIcon class="size-6" aria-hidden="true" />
             </button>
-
-<<<<<<< HEAD
             <button
               type="button"
               class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
@@ -70,17 +68,6 @@
               <span class="sr-only">{{ m.userMenu.signOut }}</span>
               <ArrowRightOnRectangleIcon class="size-6" aria-hidden="true" />
             </button>
-=======
-            <!-- Profile dropdown -->
-            <Menu as="div" class="relative ml-3" data-tour-id="user-menu">
-              <MenuButton class="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]">
-                <span class="absolute -inset-1.5"></span>
-                <span class="sr-only">Open user menu</span>
-                <span class="size-8 rounded-full outline -outline-offset-1 outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
-                  {{ userInitials }}
-                </span>
-              </MenuButton>
->>>>>>> 0ba77a7 (implement guided tour feature with driver.js integration and localization support)
 
             <RouterLink
               to="/perfil"
@@ -116,8 +103,6 @@
             <div data-tour-id="language-switcher">
               <LanguageSwitcher />
             </div>
-            
-<<<<<<< HEAD
             <button
               type="button"
               class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
@@ -127,15 +112,6 @@
               <span class="sr-only">{{ m.userMenu.signOut }}</span>
               <ArrowRightOnRectangleIcon class="size-5" aria-hidden="true" />
             </button>
-=======
-            <!-- Mobile User Menu -->
-            <Menu as="div" class="relative" data-tour-id="user-menu-mobile">
-              <MenuButton class="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]">
-                <span class="size-8 rounded-full outline -outline-offset-1 outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
-                  {{ userInitials }}
-                </span>
-              </MenuButton>
->>>>>>> 0ba77a7 (implement guided tour feature with driver.js integration and localization support)
 
             <RouterLink
               to="/perfil"
@@ -187,12 +163,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-<<<<<<< HEAD
-import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
-=======
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
->>>>>>> 0ba77a7 (implement guided tour feature with driver.js integration and localization support)
+import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, ArrowRightOnRectangleIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
 import ChatWidget from '@/modules/client/components/ChatWidget.vue'
