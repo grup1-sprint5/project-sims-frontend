@@ -273,30 +273,18 @@ body {
 .app-theme .text-indigo-700,
 .app-theme .text-indigo-800,
 .app-theme .text-indigo-900,
-.app-theme .text-purple-300,
-.app-theme .text-purple-400,
 .app-theme .text-purple-500,
 .app-theme .text-purple-600,
 .app-theme .text-purple-700,
-.app-theme .text-purple-800,
-.app-theme .text-purple-900,
-.app-theme .text-violet-300,
-.app-theme .text-violet-400,
 .app-theme .text-violet-500,
 .app-theme .text-violet-600,
 .app-theme .text-violet-700,
-.app-theme .text-violet-800,
-.app-theme .text-violet-900,
 .app-theme .dark\:text-indigo-300,
 .app-theme .dark\:text-indigo-400,
 .app-theme .dark\:text-indigo-500,
 .app-theme .dark\:text-indigo-600,
-.app-theme .dark\:text-purple-300,
-.app-theme .dark\:text-purple-400,
 .app-theme .dark\:text-purple-500,
 .app-theme .dark\:text-purple-600,
-.app-theme .dark\:text-violet-300,
-.app-theme .dark\:text-violet-400,
 .app-theme .dark\:text-violet-500,
 .app-theme .dark\:text-violet-600 {
   color: var(--fleetly-baltic-blue) !important;
@@ -305,14 +293,17 @@ body {
 .app-theme .border-indigo-200,
 .app-theme .border-indigo-300,
 .app-theme .border-indigo-500,
+.app-theme .border-indigo-600,
 .app-theme .border-indigo-700,
 .app-theme .border-purple-200,
 .app-theme .border-purple-300,
 .app-theme .border-purple-500,
+.app-theme .border-purple-600,
 .app-theme .border-purple-700,
 .app-theme .border-violet-200,
 .app-theme .border-violet-300,
 .app-theme .border-violet-500,
+.app-theme .border-violet-600,
 .app-theme .border-violet-700,
 .app-theme .dark\:border-indigo-700,
 .app-theme .dark\:border-indigo-800,
@@ -469,6 +460,29 @@ body {
     padding: 0.65rem 0.75rem;
     min-height: auto;
   }
+}
+
+/* LEAFLET DRAW - Hide edit handles that appear as white squares */
+.leaflet-editing-icon,
+.leaflet-div-icon.leaflet-editing-icon,
+.leaflet-marker-icon.leaflet-editing-icon,
+.leaflet-edit-move,
+.leaflet-edit-resize,
+.leaflet-touch-icon,
+.leaflet-draw-marker,
+.leaflet-draw-vertex-marker,
+.leaflet-draw-middle-marker,
+.leaflet-draw-resize-marker,
+.leaflet-draw-resize-marker-center,
+.leaflet-marker-icon.leaflet-draw-marker-draggable {
+  display: none !important;
+}
+
+/* Hide during edit mode */
+.leaflet-draw-edit-mode .leaflet-draw-marker,
+.leaflet-draw-edit-mode .leaflet-draw-resize-marker,
+.leaflet-draw-edit-mode .leaflet-editing-icon {
+  display: none !important;
 }
 
 .driver-popover {

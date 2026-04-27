@@ -59,6 +59,15 @@
               <span class="sr-only">View notifications</span>
               <BellIcon class="size-6" aria-hidden="true" />
             </button>
+            <button
+              type="button"
+              class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
+              :title="m.userMenu.signOut"
+              @click="handleLogout"
+            >
+              <span class="sr-only">{{ m.userMenu.signOut }}</span>
+              <ArrowRightOnRectangleIcon class="size-6" aria-hidden="true" />
+            </button>
 
             <!-- Profile dropdown -->
             <Menu as="div" class="relative ml-3" data-tour-id="user-menu">
@@ -140,7 +149,7 @@
                 leave-from-class="transform scale-100"
                 leave-to-class="transform opacity-0 scale-95"
               >
-                <MenuItems class="absolute right-0 z-40 mt-2 w-48 origin-top-right rounded-md bg-[var(--app-surface)] py-1 shadow-lg ring-1 ring-[var(--app-border)] outline -outline-offset-1 outline-[var(--app-border)]">
+                <MenuItems class="absolute right-0 z-40 mt-2 w-48 origin-top-right rounded-md bg-[var(--app-surface)] py-1 outline -outline-offset-1 outline-[var(--app-border)] text-[var(--app-text)]">
                   <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
                     <button
                       v-if="item.type === 'logout'"
@@ -161,6 +170,16 @@
                 </MenuItems>
               </transition>
             </Menu>
+
+            <RouterLink
+              to="/perfil"
+              class="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]"
+            >
+              <span class="sr-only">{{ m.userMenu.yourProfile }}</span>
+              <span class="size-8 rounded-full outline -outline-offset-1 outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
+                {{ userInitials }}
+              </span>
+            </RouterLink>
           </div>
         </div>
       </div>
@@ -184,12 +203,8 @@
           <TicketIcon class="size-6" />
         </RouterLink>
         <RouterLink to="/sensors" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/sensors') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
-          <WifiIcon class="size-6" />
-        </RouterLink>
-        <RouterLink to="/perfil" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/perfil') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
-          <UserIcon class="size-6" />
-        </RouterLink>
-      </div>
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
     </nav>
 
     <!-- AI Chat floating widget -->
@@ -202,8 +217,12 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+<<<<<<< HEAD
+import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, ArrowRightOnRectangleIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
+=======
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
+>>>>>>> 0ba77a7 (implement guided tour feature with driver.js integration and localization support)
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
 import ChatWidget from '@/modules/client/components/ChatWidget.vue'
@@ -231,11 +250,6 @@ const navigation = computed(() => [
   { name: m.value.nav.tickets, to: '/tickets', icon: TicketIcon },
   { name: 'Sensors', to: '/sensors', icon: WifiIcon },
   { name: m.value.nav.profile, to: '/perfil', icon: UserIcon },
-])
-
-const userNavigation = computed(() => [
-  { name: m.value.userMenu.yourProfile, to: '/perfil', type: 'link' },
-  { name: m.value.userMenu.signOut, to: '', type: 'logout' },
 ])
 
 const handleLogout = async () => {
