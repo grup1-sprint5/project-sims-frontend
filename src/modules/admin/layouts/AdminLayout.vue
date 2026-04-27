@@ -35,7 +35,7 @@
                     alt="Fleetly"
                   />
                 </div>
-                <nav class="relative flex flex-1 flex-col">
+                <nav class="relative flex flex-1 flex-col" data-tour-id="admin-mobile-nav">
                   <ul role="list" class="flex flex-1 flex-col gap-y-7">
                     <li>
                       <ul role="list" class="-mx-2 space-y-1">
@@ -67,7 +67,7 @@
             alt="Fleetly"
           />
         </div>
-        <nav class="flex flex-1 flex-col">
+        <nav class="flex flex-1 flex-col" data-tour-id="admin-main-nav">
           <ul role="list" class="flex flex-1 flex-col gap-y-7">
             <li>
               <ul role="list" class="-mx-2 space-y-1">
@@ -81,11 +81,21 @@
             </li>
             <li class="-mx-6 mt-auto">
               <div class="px-2 pb-2">
-                <div class="mb-2 flex justify-center">
+                <div class="mb-2 flex justify-center" data-tour-id="language-switcher">
                   <LanguageSwitcher />
                 </div>
                 <button
                   type="button"
+                  data-tour-id="admin-tour-button"
+                  class="mb-2 w-full flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-[var(--app-sidebar-text)] hover:bg-[var(--app-sidebar-hover)]"
+                  @click="startGuide(true)"
+                >
+                  <QuestionMarkCircleIcon class="size-4" />
+                  {{ m.guidedTour.startGuide }}
+                </button>
+                <button
+                  type="button"
+                  data-tour-id="theme-toggle"
                   class="w-full flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-[var(--app-sidebar-text)] hover:bg-[var(--app-sidebar-hover)]"
                   @click="toggleTheme"
                 >
@@ -94,7 +104,7 @@
                   {{ isDark ? m.adminLayoutUi.themeLight : m.adminLayoutUi.themeDark }}
                 </button>
               </div>
-              <Menu as="div" class="relative px-2 py-2">
+              <Menu as="div" class="relative px-2 py-2" data-tour-id="admin-user-menu">
                 <MenuButton class="w-full flex items-center gap-x-3 rounded-md px-4 py-2 text-sm font-semibold text-[var(--app-sidebar-text)] hover:bg-[var(--app-sidebar-hover)]">
                   <span class="size-8 rounded-full outline -outline-offset-1 outline-black/5 dark:outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
                     {{ userInitials }}
@@ -145,14 +155,25 @@
       <div class="flex-1 text-sm/6 font-semibold text-[var(--app-text)]">{{ m.adminNav.dashboard }}</div>
       <button
         type="button"
+        data-tour-id="theme-toggle"
         class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
         @click="toggleTheme"
       >
         <MoonIcon v-if="!isDark" class="size-5" />
         <SunIcon v-else class="size-5" />
       </button>
-      <LanguageSwitcher />
-      <Menu as="div" class="relative">
+      <div data-tour-id="language-switcher">
+        <LanguageSwitcher />
+      </div>
+      <button
+        type="button"
+        data-tour-id="admin-tour-button"
+        class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
+        @click="startGuide(true)"
+      >
+        <QuestionMarkCircleIcon class="size-5" />
+      </button>
+      <Menu as="div" class="relative" data-tour-id="admin-user-menu-mobile">
         <MenuButton class="relative flex items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]">
           <span class="sr-only">{{ m.adminLayoutUi.openUserMenu }}</span>
           <span class="size-8 rounded-full outline -outline-offset-1 outline-black/5 dark:outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
@@ -190,7 +211,7 @@
       </Menu>
     </div>
 
-    <main class="py-10 lg:pl-72 bg-[var(--app-bg)]">
+    <main class="py-10 lg:pl-72 bg-[var(--app-bg)]" data-tour-id="admin-content">
       <div class="px-4 sm:px-6 lg:px-8">
         <div v-if="isAdmin || isLoading">
           <router-view />
@@ -203,18 +224,21 @@
     </main>
 
     <!-- AI Chat floating widget -->
-    <ChatWidget />
+    <div data-tour-id="chat-widget">
+      <ChatWidget />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick, onMounted } from 'vue'
 import ChatWidget from '@/modules/client/components/ChatWidget.vue'
 import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import { useI18n } from '@/i18n'
 import showToast from '@/modules/common/composables/useToast'
+import { useGuidedTour } from '@/modules/common/composables/useGuidedTour'
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import {
@@ -231,6 +255,7 @@ import {
   SunIcon,
   BuildingOfficeIcon,
   XMarkIcon,
+  QuestionMarkCircleIcon,
 } from '@heroicons/vue/24/outline'
 import { useTheme } from '@/modules/common/composables/useTheme'
 
@@ -252,6 +277,7 @@ const navigationItems = [
 const sidebarOpen = ref(false)
 const { isDark, toggleTheme } = useTheme()
 const { user, isLoading, logout } = useAuth()
+const { startAdminTour } = useGuidedTour()
 const isAdmin = computed(() => !!(user.value && user.value.roles && user.value.roles.some((r: any) => (r.name || '').toLowerCase().includes('admin'))))
 const isSuperAdmin = computed(() => !!(user.value && user.value.roles && user.value.roles.some((r: any) => (r.name || '').toLowerCase().includes('superadmin'))))
 
@@ -288,6 +314,18 @@ const handleLogout = async () => {
     router.push('/login')
   }
 }
+
+const startGuide = (force = false) => {
+  startAdminTour({
+    userScope: String(user.value?.id ?? 'guest'),
+    force,
+  })
+}
+
+onMounted(async () => {
+  await nextTick()
+  startGuide(false)
+})
 
 </script>
 
