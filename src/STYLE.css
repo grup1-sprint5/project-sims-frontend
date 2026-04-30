@@ -461,6 +461,29 @@ body {
     min-height: auto;
   }
 }
+/* LEAFLET DRAW - Hide edit handles that appear as white squares */
+.leaflet-editing-icon,
+.leaflet-div-icon.leaflet-editing-icon,
+.leaflet-marker-icon.leaflet-editing-icon,
+.leaflet-edit-move,
+.leaflet-edit-resize,
+.leaflet-touch-icon,
+.leaflet-draw-marker,
+.leaflet-draw-vertex-marker,
+.leaflet-draw-middle-marker,
+.leaflet-draw-resize-marker,
+.leaflet-draw-resize-marker-center,
+.leaflet-marker-icon.leaflet-draw-marker-draggable {
+  display: none !important;
+}
+
+/* Hide during edit mode */
+.leaflet-draw-edit-mode .leaflet-draw-marker,
+.leaflet-draw-edit-mode .leaflet-draw-resize-marker,
+.leaflet-draw-edit-mode .leaflet-editing-icon {
+  display: none !important;
+}
+
 
 .driver-popover {
   background: var(--app-surface) !important;

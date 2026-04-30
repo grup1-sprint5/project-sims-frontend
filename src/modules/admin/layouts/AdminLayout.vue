@@ -251,6 +251,8 @@ import {
   TruckIcon,
   TicketIcon,
   MapIcon,
+  MapPinIcon,
+  ExclamationTriangleIcon,
   MoonIcon,
   SunIcon,
   BuildingOfficeIcon,
@@ -270,6 +272,8 @@ const navigationItems = [
   { key: 'roles', href: '/admin/roles', icon: ShieldCheckIcon },
   { key: 'bookings', href: '/admin/bookings', icon: CalendarDaysIcon },
   { key: 'vehicles', href: '/admin/vehicles', icon: TruckIcon },
+  { key: 'geofences', href: '/admin/geofences', icon: MapPinIcon },
+  { key: 'geofenceEvents', href: '/admin/geofence-events', icon: ExclamationTriangleIcon },
   { key: 'tenants', href: '/admin/tenants', icon: BuildingOfficeIcon, superAdminOnly: true },
   { key: 'tickets', href: '/admin/tickets', icon: TicketIcon },
 ]
