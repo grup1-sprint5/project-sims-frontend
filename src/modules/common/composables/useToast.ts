@@ -2,9 +2,10 @@ import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+const toastPosition: 'top-right' | 'bottom-right' = isMobile ? 'top-right' : 'bottom-right'
 const baseToastOptions = {
   theme: 'dark' as const,
-  position: (isMobile ? 'top-right' : 'bottom-right') as const,
+  position: toastPosition,
   pauseOnHover: true,
   pauseOnFocusLoss: true,
 }
