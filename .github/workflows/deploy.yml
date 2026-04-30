@@ -14,12 +14,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y netcat-openbsd
-          nc -vz ${{ secrets.DEPLOY_HOST_IP }} 1303
+          # El port és el 1303, assegura't que DEPLOY_HOST_IP existeix a Secrets
+          nc -vz -w 5 ${{ secrets.DEPLOY_HOST_IP }} 1303
 
       - name: Install and Build
         run: |
           npm ci
           npm run build
+          # Ens assegurem que la carpeta dist existeix
           ls -la dist
 
       - name: Prepare remote folder
@@ -29,9 +31,8 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 1303
-          timeout: 30s
-          command_timeout: 10m
           script: |
+            # Creem la carpeta si no existeix i la netegem
             sudo mkdir -p /var/www/sims-front/dist
             sudo chown -R ${{ secrets.DEPLOY_USER }}:${{ secrets.DEPLOY_USER }} /var/www/sims-front
             rm -rf /var/www/sims-front/dist/*
@@ -43,16 +44,20 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 1303
-          timeout: 60s
           source: "dist/*"
           target: "/var/www/sims-front/dist"
           strip_components: 1
 
-      - name: Reload Nginx
+      - name: Reload Web Server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DEPLOY_HOST_IP }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 1303
-          script: sudo systemctl reload nginx
+          script: |
+            if sudo systemctl is-active --quiet nginx; then
+              sudo systemctl reload nginx
+            else
+              echo "nginx is not active; skipping reload"
+            fi
