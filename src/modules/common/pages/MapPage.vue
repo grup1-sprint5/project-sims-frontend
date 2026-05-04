@@ -167,7 +167,6 @@
           <div class="fixed inset-0 bg-black/60"></div>
           <div
             class="booking-modal-card relative rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[90dvh]"
-            style="background:var(--app-surface);color:var(--app-text);border:1px solid var(--app-border);"
             @click.stop
           >
 
@@ -293,7 +292,6 @@
           <div class="fixed inset-0 bg-black/60"></div>
           <div
             class="booking-modal-card relative w-full max-w-md rounded-2xl p-6 shadow-2xl"
-            style="background:var(--app-surface);color:var(--app-text);border:1px solid var(--app-border);"
             @click.stop
           >
             <h3 class="text-lg font-bold" style="color:var(--app-text)">Confirmar reserva</h3>
@@ -528,7 +526,9 @@ function centerMapOnVehicles() {
   if (points.length === 0) return
 
   if (points.length === 1) {
-    map.value.setView(points[0], 14)
+    const firstPoint = points[0]
+    if (!firstPoint) return
+    map.value.setView(firstPoint, 14)
   } else {
     map.value.fitBounds(points, {
       padding: [40, 40],
@@ -923,6 +923,9 @@ onUnmounted(() => {
 }
 
 .booking-modal-card {
+  background: var(--app-surface);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
   color-scheme: light;
 }
 

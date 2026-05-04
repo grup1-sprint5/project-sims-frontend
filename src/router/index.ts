@@ -10,6 +10,7 @@ import { vehicleRoutes } from '@/modules/admin/modules/vehicles/router'
 import { rolesRoutes } from '@/modules/admin/modules/roles/router'
 import { tenantRoutes } from '@/modules/admin/modules/tenants/router'
 import { superAdminRoutes } from '@/modules/admin/modules/super-admin/router'
+import { geofenceRoutes } from '@/modules/admin/modules/geofencing/router'
 import { clientRoutes } from '@/modules/client/router'
 
 const routes: RouteRecordRaw[] = [
@@ -42,6 +43,7 @@ const routes: RouteRecordRaw[] = [
       ...vehicleRoutes,
       ...userRoutes,
       ...rolesRoutes,
+      ...geofenceRoutes,
       ...tenantRoutes,
       ...superAdminRoutes,
       {
@@ -77,6 +79,8 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   ...authRoutes,
+
+  { path: '/register-company', name: 'RegisterCompany', component: () => import('@/modules/common/pages/RegisterCompanyPage.vue') },
 
   { path: '/landing', name: 'Landing', component: () => import('@/modules/common/pages/LandingPage.vue') },
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFoundPage }

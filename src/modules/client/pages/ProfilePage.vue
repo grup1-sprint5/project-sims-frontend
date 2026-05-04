@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-screen px-4 py-8" style="background:var(--app-bg);color:var(--app-text);">
-    <div class="mx-auto max-w-2xl">
+  <div class="min-h-screen" style="background:var(--app-bg);color:var(--app-text);padding-bottom:1.5rem;">
+    <div class="container mx-auto px-4 py-7 max-w-4xl">
 
-      <div class="mb-8">
-        <h1 class="text-2xl font-bold">{{ m.profile.title }}</h1>
-        <p class="mt-1 text-sm text-gray-400">{{ m.profile.subtitle }}</p>
+      <div class="mb-10">
+        <h1 class="text-2xl font-bold" style="color:var(--app-text)">{{ m.profile.title }}</h1>
+        <p class="mt-1 text-sm" style="color:var(--app-muted-text)">{{ m.profile.subtitle }}</p>
       </div>
 
       <div v-if="loading" class="flex justify-center py-16">
@@ -150,25 +150,57 @@
           <form @submit.prevent="submitPassword" class="space-y-4">
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-1">{{ m.profile.newPassword }}</label>
-              <input
-                v-model="passwordForm.password"
-                type="password"
-                required
-                minlength="8"
-                class="input-field"
-                :placeholder="m.profile.newPasswordPlaceholder"
-              />
+              <div class="password-field-wrap">
+                <input
+                  v-model="passwordForm.password"
+                  :type="showNewPassword ? 'text' : 'password'"
+                  required
+                  minlength="8"
+                  class="input-field password-field"
+                  :placeholder="m.profile.newPasswordPlaceholder"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  :aria-label="showNewPassword ? 'Hide password' : 'Show password'"
+                  @click="showNewPassword = !showNewPassword"
+                >
+                  <svg v-if="!showNewPassword" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  <svg v-else class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.293-3.95m3.122-2.317A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.97 9.97 0 01-4.104 5.063M15 12a3 3 0 00-4.243-2.829M9.88 9.88A3 3 0 0014.12 14.12M3 3l18 18" />
+                  </svg>
+                </button>
+              </div>
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-1">{{ m.profile.confirmPassword }}</label>
-              <input
-                v-model="passwordForm.password_confirmation"
-                type="password"
-                required
-                minlength="8"
-                class="input-field"
-                :placeholder="m.profile.confirmPasswordPlaceholder"
-              />
+              <div class="password-field-wrap">
+                <input
+                  v-model="passwordForm.password_confirmation"
+                  :type="showConfirmPassword ? 'text' : 'password'"
+                  required
+                  minlength="8"
+                  class="input-field password-field"
+                  :placeholder="m.profile.confirmPasswordPlaceholder"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  :aria-label="showConfirmPassword ? 'Hide password' : 'Show password'"
+                  @click="showConfirmPassword = !showConfirmPassword"
+                >
+                  <svg v-if="!showConfirmPassword" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  <svg v-else class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.293-3.95m3.122-2.317A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.97 9.97 0 01-4.104 5.063M15 12a3 3 0 00-4.243-2.829M9.88 9.88A3 3 0 0014.12 14.12M3 3l18 18" />
+                  </svg>
+                </button>
+              </div>
               <p v-if="passwordMismatch" class="mt-1 text-xs text-red-400">{{ m.profile.mismatch }}</p>
             </div>
 
@@ -227,6 +259,8 @@ const savingProfile = ref(false)
 const savingPassword = ref(false)
 const loadingTopup = ref(false)
 const walletTopupAmount = ref<number>(20)
+const showNewPassword = ref(false)
+const showConfirmPassword = ref(false)
 
 const profileForm = reactive({ name: '', username: '', email: '' })
 const passwordForm = reactive({ password: '', password_confirmation: '' })
@@ -373,6 +407,20 @@ const submitPassword = async () => {
 .input-field:focus {
   border-color: var(--fleetly-baltic-blue);
   box-shadow: 0 0 0 2px rgba(38, 97, 156, 0.22);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--fleetly-baltic-blue) 22%, transparent);
+}
+.password-field-wrap {
+  position: relative;
+}
+.password-field {
+  padding-right: 2.5rem;
+}
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.625rem;
+  transform: translateY(-50%);
+  color: var(--app-muted-text);
 }
 .btn-primary {
   display: inline-flex;

@@ -61,7 +61,7 @@
         <div class="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
           <router-link
             to="/admin/bookings"
-            class="flex-1 px-4 py-2 text-center text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+            class="flex-1 px-4 py-2 text-center font-semibold text-gray-700 bg-gray-200 border border-gray-300 rounded-md shadow-sm hover:bg-gray-300 hover:border-gray-400 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600 transition-colors"
           >
             {{ m.commonUi.cancel }}
           </router-link>

@@ -3,6 +3,7 @@ import { ref } from 'vue'
 type ThemeMode = 'light' | 'dark'
 
 const THEME_STORAGE_KEY = 'fleetly-theme'
+const THEME_DEFAULT_MIGRATION_KEY = 'fleetly-theme-default-migrated-v1'
 const isDark = ref(false)
 
 const applyTheme = (mode: ThemeMode) => {
@@ -13,12 +14,19 @@ const applyTheme = (mode: ThemeMode) => {
 }
 
 const getPreferredTheme = (): ThemeMode => {
-  if (typeof window === 'undefined') return 'light'
+  if (typeof window === 'undefined') return 'dark'
+
+  const wasMigrated = window.localStorage.getItem(THEME_DEFAULT_MIGRATION_KEY)
+  if (!wasMigrated) {
+    window.localStorage.setItem(THEME_DEFAULT_MIGRATION_KEY, '1')
+    window.localStorage.setItem(THEME_STORAGE_KEY, 'dark')
+    return 'dark'
+  }
 
   const saved = window.localStorage.getItem(THEME_STORAGE_KEY)
   if (saved === 'light' || saved === 'dark') return saved
 
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  return 'dark'
 }
 
 export const initTheme = () => {
