@@ -17,13 +17,12 @@
               type="text"
               autocomplete="organization"
               required
-              placeholder="fleetly-barcelona / ecomove"
               :disabled="isLoading"
               class="block w-full rounded-md px-3 py-1.5 text-base shadow-sm sm:text-sm/6 focus:ring-2 focus:ring-[var(--fleetly-baltic-blue)]"
               style="background:var(--app-input-bg);color:var(--app-input-text);border:1px solid var(--app-input-border);outline:none"
             />
           </div>
-          <p class="mt-1 text-xs" style="color:var(--app-muted-text)">Tip: you can type “Fleetly Barcelona” and it will normalize to “fleetly-barcelona”.</p>
+          
         </div>
 
         <div>
@@ -90,7 +89,7 @@
 
         <p class="text-center text-sm text-gray-400">
           Don't have an account?
-          <RouterLink to="/register" class="font-semibold leading-6 text-[var(--fleetly-baltic-blue)] hover:opacity-80">Register</RouterLink>
+          <RouterLink to="/register-company" class="font-semibold leading-6 text-[var(--fleetly-baltic-blue)] hover:opacity-80">Register</RouterLink>
         </p>
         </form>
       </div>
