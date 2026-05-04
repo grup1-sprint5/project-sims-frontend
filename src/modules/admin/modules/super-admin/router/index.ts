@@ -13,4 +13,11 @@ export const superAdminRoutes: RouteRecordRaw[] = [
     redirect: '/admin/tenants',
     meta: { requiresAuth: true, requiresAdmin: true, requiresSuperAdmin: true }
   }
+  ,
+  {
+    path: 'tenant-requests',
+    name: 'TenantRequests',
+    component: () => import('../pages/TenantRequestsPage.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true, requiresSuperAdmin: true }
+  }
 ]

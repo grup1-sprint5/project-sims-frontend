@@ -80,6 +80,8 @@ const routes: RouteRecordRaw[] = [
   },
   ...authRoutes,
 
+  { path: '/register-company', name: 'RegisterCompany', component: () => import('@/modules/common/pages/RegisterCompanyPage.vue') },
+
   { path: '/landing', name: 'Landing', component: () => import('@/modules/common/pages/LandingPage.vue') },
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFoundPage }
 ]
