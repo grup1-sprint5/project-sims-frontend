@@ -247,7 +247,7 @@ export function useAuth() {
     try {
       const loginData: LoginRequest = { email, password };
       const response = await apiClient.post<LoginResponse>(
-        "/login",
+        "/tenant/login",
         loginData,
         {
           headers: {
