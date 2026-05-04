@@ -10,18 +10,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Check SSH port reachable
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y netcat-openbsd
-          HOST="${{ secrets.DEPLOY_HOST_IP }}"
-          if [ -z "$HOST" ]; then
-            echo "Missing DEPLOY_HOST_IP secret"
-            exit 1
-          fi
-          # El port és el 1303, assegura't que DEPLOY_HOST_IP existeix a Secrets
-          nc -vz -w 5 "$HOST" 1303
-
       - name: Install and Build
         run: |
           npm ci
