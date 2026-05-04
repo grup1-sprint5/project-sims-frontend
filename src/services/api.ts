@@ -41,9 +41,10 @@ const getTenantFromHost = (): string | undefined => {
     'grup1-sims.com',
     'www.grup1-sims.com',
     'jordiarnau.iemhosting.asix2.iesmontsia.cat',
+    'jordiarnau.ieshosting.asix2.iesmontsia.cat',
   ])
   if (host.endsWith('.ondigitalocean.app') || centralProductionHosts.has(host)) {
-    return undefined
+    return 'central'
   }
 
   const parts = host.split('.')
