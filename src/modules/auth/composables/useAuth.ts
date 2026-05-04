@@ -103,6 +103,13 @@ export function useAuth() {
     )
       return true;
 
+    if (
+      host === "grup1-sims.com" ||
+      host === "www.grup1-sims.com" ||
+      host === "jordiarnau.iemhosting.asix2.iesmontsia.cat"
+    )
+      return true;
+
     // Heuristic: treat the base deployment domain as central.
     // Example central: grup1-sims-c7271.ondigitalocean.app
     // Example tenant:  sims-corp.grup1-sims-c7271.ondigitalocean.app

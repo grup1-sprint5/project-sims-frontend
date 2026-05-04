@@ -37,7 +37,11 @@ const getTenantFromHost = (): string | undefined => {
   }
 
   // Handle central production domains (they are central hosts, not subdomains for tenants)
-  const centralProductionHosts = new Set(['grup1-sims.com', 'www.grup1-sims.com'])
+  const centralProductionHosts = new Set([
+    'grup1-sims.com',
+    'www.grup1-sims.com',
+    'jordiarnau.iemhosting.asix2.iesmontsia.cat',
+  ])
   if (host.endsWith('.ondigitalocean.app') || centralProductionHosts.has(host)) {
     return undefined
   }
