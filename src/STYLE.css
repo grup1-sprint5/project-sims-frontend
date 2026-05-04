@@ -461,7 +461,6 @@ body {
     min-height: auto;
   }
 }
-
 /* LEAFLET DRAW - Hide edit handles that appear as white squares */
 .leaflet-editing-icon,
 .leaflet-div-icon.leaflet-editing-icon,
