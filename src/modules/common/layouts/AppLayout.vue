@@ -203,8 +203,12 @@
           <TicketIcon class="size-6" />
         </RouterLink>
         <RouterLink to="/sensors" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/sensors') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
+          <WifiIcon class="size-6" />
+        </RouterLink>
+        <RouterLink to="/perfil" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/perfil') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
+          <UserIcon class="size-6" />
+        </RouterLink>
+      </div>
     </nav>
 
     <!-- AI Chat floating widget -->
@@ -217,12 +221,8 @@ import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, Mo
 <script setup lang="ts">
 import { computed, nextTick, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-<<<<<<< HEAD
-import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, ArrowRightOnRectangleIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
-=======
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
->>>>>>> 0ba77a7 (implement guided tour feature with driver.js integration and localization support)
+import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, ArrowRightOnRectangleIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
 import ChatWidget from '@/modules/client/components/ChatWidget.vue'
