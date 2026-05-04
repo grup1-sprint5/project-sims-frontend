@@ -8,7 +8,7 @@
 
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form class="space-y-6" @submit.prevent="handleSubmit">
-        <div>
+        <div v-if="!isCentralDomain">
           <label for="tenant" class="block text-sm/6 font-medium" style="color:var(--app-muted-text)">Organization</label>
           <div class="mt-2">
             <input
@@ -22,7 +22,6 @@
               style="background:var(--app-input-bg);color:var(--app-input-text);border:1px solid var(--app-input-border);outline:none"
             />
           </div>
-          
         </div>
 
         <div>
@@ -98,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 import { useTheme } from '@/modules/common/composables/useTheme'
@@ -112,8 +111,23 @@ const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 
+// Detect if we're on the superadmin domain (central domain)
+const isCentralDomain = computed(() => {
+  if (typeof window === 'undefined') return false
+  const host = window.location.hostname.toLowerCase()
+  const centralDomains = [
+    'localhost',
+    '127.0.0.1',
+    'grup1-sims.com',
+    'www.grup1-sims.com',
+    'jordiarnau.iemhosting.asix2.iesmontsia.cat'
+  ]
+  return centralDomains.includes(host)
+})
+
 const handleSubmit = async () => {
-  const success = await login(tenantSlug.value, email.value, password.value)
+  const tenant = isCentralDomain.value ? '' : tenantSlug.value
+  const success = await login(tenant, email.value, password.value)
   
   if (success) {
     router.push('/admin')
