@@ -23,11 +23,9 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 1303
           script: |
-            # Creem la carpeta amb sudo si cal i ens assegurem que el nostre usuari en sigui l'amo
             sudo mkdir -p /var/www/sims-front/dist
-            sudo chown -R ${{ secrets.DEPLOY_USER }}:${{ secrets.DEPLOY_USER }} /var/www/sims-front/dist
-            # Netegem fitxers vells per evitar conflictes
-            find /var/www/sims-front/dist -mindepth 1 -delete || true
+            sudo chown -R ${{ secrets.DEPLOY_USER }}:www-data /var/www/sims-front/dist
+            sudo find /var/www/sims-front/dist -mindepth 1 -delete || true
 
       - name: Upload Files (SCP)
         uses: appleboy/scp-action@v0.1.7
@@ -48,6 +46,6 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 1303
           script: |
-            # Tornem la propietat a www-data perquè Nginx pugui llegir-ho sense problemes
             sudo chown -R www-data:www-data /var/www/sims-front/dist
+            sudo chmod -R 755 /var/www/sims-front/dist
             sudo systemctl reload nginx
