@@ -16,6 +16,13 @@ import { clientRoutes } from '@/modules/client/router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
+    redirect: () => {
+      const { isAuthenticated } = useAuth()
+      return isAuthenticated.value ? '/home' : '/login'
+    }
+  },
+  {
+    path: '/home',
     component: AppLayout,
     meta: { requiresAuth: true },
     children: [
