@@ -16,10 +16,7 @@ import { clientRoutes } from '@/modules/client/router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: () => {
-      const { isAuthenticated } = useAuth()
-      return isAuthenticated.value ? '/home' : '/login'
-    }
+    redirect: '/login'
   },
   {
     path: '/home',
@@ -120,6 +117,9 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth && !isAuthenticated.value) {
     // Protected route and not authenticated -> go to login
     next('/login')
+  } else if (to.path === '/login' && isAuthenticated.value) {
+    // Logged-in users should not stay on the login screen
+    next(isAdmin ? '/admin' : '/home')
   } else if (to.path.startsWith('/admin') && isAuthenticated.value && !isAdmin) {
     // Client trying to access admin area -> redirect to client home
     next('/')

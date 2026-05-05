@@ -23,9 +23,10 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 1303
           script: |
-            # Creem la carpeta si no existeix
-            mkdir -p /var/www/sims-front/dist
-            # Intentem netejar el contingut. Si falla per permisos, no aturarem el procés
+            # Creem la carpeta amb sudo si cal i ens assegurem que el nostre usuari en sigui l'amo
+            sudo mkdir -p /var/www/sims-front/dist
+            sudo chown -R ${{ secrets.DEPLOY_USER }}:${{ secrets.DEPLOY_USER }} /var/www/sims-front/dist
+            # Netegem fitxers vells per evitar conflictes
             find /var/www/sims-front/dist -mindepth 1 -delete || true
 
       - name: Upload Files (SCP)
@@ -39,5 +40,14 @@ jobs:
           target: "/var/www/sims-front/dist"
           strip_components: 1
 
-      - name: Final Touch
-        run: echo "Desplegament finalitzat correctament. Nginx servirà els nous fitxers automàticament."
+      - name: Final Touch & Nginx Refresh
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST_IP }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: 1303
+          script: |
+            # Tornem la propietat a www-data perquè Nginx pugui llegir-ho sense problemes
+            sudo chown -R www-data:www-data /var/www/sims-front/dist
+            sudo systemctl reload nginx
