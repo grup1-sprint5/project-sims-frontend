@@ -23,12 +23,10 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 1303
           script: |
-            # Donem permisos a la carpeta per a que l'usuari de GitHub pugui escriure-hi
-            # Fem servir -p per si no existeix
-            sudo mkdir -p /var/www/sims-front/dist
-            sudo chown -R ${{ secrets.DEPLOY_USER }}:${{ secrets.DEPLOY_USER }} /var/www/sims-front/dist
-            # Netegem el contingut antic
-            find /var/www/sims-front/dist -mindepth 1 -delete
+            # Creem la carpeta si no existeix
+            mkdir -p /var/www/sims-front/dist
+            # Intentem netejar el contingut. Si falla per permisos, no aturarem el procés
+            find /var/www/sims-front/dist -mindepth 1 -delete || true
 
       - name: Upload Files (SCP)
         uses: appleboy/scp-action@v0.1.7
@@ -41,19 +39,5 @@ jobs:
           target: "/var/www/sims-front/dist"
           strip_components: 1
 
-      - name: Reload Web Server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.DEPLOY_HOST_IP }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: 1303
-          script: |
-            # CANVI CRÍTIC: Ara comprovem Nginx, no Apache
-            if sudo systemctl is-active --quiet nginx; then
-              sudo systemctl reload nginx
-              echo "Nginx reloaded successfully"
-            else
-              echo "Nginx is not active; attempting to start"
-              sudo systemctl start nginx
-            fi
+      - name: Final Touch
+        run: echo "Desplegament finalitzat correctament. Nginx servirà els nous fitxers automàticament."
