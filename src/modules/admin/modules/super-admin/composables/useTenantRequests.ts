@@ -12,6 +12,8 @@ export function useTenantRequests() {
     try {
       const res = await api.get('/tenant-requests')
       requests.value = res.data?.data || res.data || []
+      // Filter to only show pending requests
+      requests.value = requests.value.filter((r: any) => r.status === 'pending')
     } catch (e: any) {
       error.value = e?.response?.data?.message || 'Failed to load requests'
     } finally {
@@ -21,8 +23,11 @@ export function useTenantRequests() {
 
   const approve = async (id: number) => {
     try {
-      await api.post(`/tenant-requests/${id}/approve`)
+      const res = await api.post(`/tenant-requests/${id}/approve`)
+      // Reload to get updated list
+      await new Promise(resolve => setTimeout(resolve, 500))
       await load()
+      return res.data
     } catch (e: any) {
       throw e
     }

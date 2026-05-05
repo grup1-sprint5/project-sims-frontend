@@ -49,7 +49,7 @@
         <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-200 dark:border-blue-800">
           <span class="text-xs text-blue-600 dark:text-blue-400 font-semibold uppercase">Subdomain</span>
           <p class="text-sm text-blue-900 dark:text-blue-200 font-mono mt-1 break-all">
-            https://sims-{{ r.slug }}.jordiarnau.iemhosting.asix2.iesmontsia.cat
+            https://{{ r.slug }}.jordiarnau.iemhosting.asix2.iesmontsia.cat
           </p>
         </div>
 
