@@ -10,17 +10,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Check SSH port reachable
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y netcat-openbsd
-          nc -vz -w 5 ${{ secrets.DEPLOY_HOST_IP }} 1303
-
       - name: Install and Build
         run: |
           npm ci
           npm run build
-          ls -la dist
 
       - name: Prepare remote folder
         uses: appleboy/ssh-action@v1.0.3
@@ -30,10 +23,11 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 1303
           script: |
-            # Ens assegurem que la ruta existeix i tenim permisos
+            # Donem permisos a la carpeta per a que l'usuari de GitHub pugui escriure-hi
+            # Fem servir -p per si no existeix
             sudo mkdir -p /var/www/sims-front/dist
-            sudo chown -R ${{ secrets.DEPLOY_USER }}:${{ secrets.DEPLOY_USER }} /var/www/sims-front
-            # Netegem només el contingut per a no esborrar la carpeta que estem usant de target
+            sudo chown -R ${{ secrets.DEPLOY_USER }}:${{ secrets.DEPLOY_USER }} /var/www/sims-front/dist
+            # Netegem el contingut antic
             find /var/www/sims-front/dist -mindepth 1 -delete
 
       - name: Upload Files (SCP)
@@ -55,10 +49,11 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 1303
           script: |
-            if sudo systemctl is-active --quiet apache2; then
-              sudo systemctl reload apache2
-              echo "Apache2 reloaded successfully"
+            # CANVI CRÍTIC: Ara comprovem Nginx, no Apache
+            if sudo systemctl is-active --quiet nginx; then
+              sudo systemctl reload nginx
+              echo "Nginx reloaded successfully"
             else
-              echo "Apache2 is not active; attempting to start"
-              sudo systemctl start apache2
+              echo "Nginx is not active; attempting to start"
+              sudo systemctl start nginx
             fi
