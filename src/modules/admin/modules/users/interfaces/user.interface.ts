@@ -29,6 +29,7 @@ export interface UserForm {
   active: boolean
   role_id?: number | null
   tenant_id?: number | null
+  tenant_id?: number | null
 }
 
 export interface UserFilters {

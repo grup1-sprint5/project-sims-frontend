@@ -150,6 +150,20 @@
             </select>
           </FormField>
 
+          <!-- Empresa/Tenant (solo para Admin) -->
+          <FormField v-if="isCurrentUserAdmin && !isEditMode" label="Company/Organization">
+            <select
+              v-model="formData.tenant_id"
+              required
+              class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
+            >
+              <option :value="null">Select company</option>
+              <option v-for="tenant in tenants" :key="tenant.id" :value="tenant.id">
+                {{ tenant.name || tenant.slug }}
+              </option>
+            </select>
+          </FormField>
+
           <!-- Estado -->
           <FormField label="Status">
             <FormCheckbox
@@ -188,6 +202,7 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUsers } from '../composables/useUsers'
 import { useRoles } from '../../roles/composables/useRoles'
+import { useTenants } from '../../tenants/composables/useTenants'
 import { useToast } from '@/modules/common/composables/useToast'
 import type { UserForm } from '../interfaces/user.interface'
 import FormField from '@/modules/admin/components/FormField.vue'
@@ -198,6 +213,7 @@ const router = useRouter()
 const route = useRoute()
 const { getUser, createUser, updateUser, isCurrentUserAdmin, loading } = useUsers()
 const { roles: availableRoles, getRoles } = useRoles()
+const { tenants, getTenants } = useTenants()
 const toast = useToast()
 
 const userId = computed(() => route.params.id ? Number(route.params.id) : null)
@@ -211,6 +227,7 @@ const formData = reactive({
   password_confirmation: '',
   active: true,
   role_id: null as number | null,
+  tenant_id: null as number | null,
 })
 
 const validationErrors = reactive({
@@ -226,6 +243,7 @@ const showPasswordConfirmation = ref(false)
 
 onMounted(async () => {
   await getRoles(1, {})
+  await getTenants(1, {})
 
   if (isEditMode.value && userId.value) {
     try {
@@ -234,6 +252,7 @@ onMounted(async () => {
       formData.username = user.username
       formData.email = user.email
       formData.active = user.active
+      formData.tenant_id = user.tenant_id
       if (user.roles && user.roles.length > 0) {
         formData.role_id = user.roles[0]?.id ?? null
       }
