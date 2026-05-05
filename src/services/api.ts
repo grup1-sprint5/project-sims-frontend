@@ -8,14 +8,12 @@ import showToast from '@/modules/common/composables/useToast'
 // For now the token is read from cookies and added to request headers.
 // Improve security later as needed.
 
-// Normalize API base URL and ensure it points to the backend API prefix (/api)
-const _rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8001'
-const _windowHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost'
-const _isLocalHost = _windowHost === 'localhost' || _windowHost === '127.0.0.1' || _windowHost.endsWith('.localhost')
-const _useDomainMode = !_isLocalHost
-const _apiBase = _useDomainMode
-  ? '/api'
-  : (_rawApiUrl as string).replace(/\/$/, '') + '/api'
+// Use the same-origin API path by default so local subdomains like *.localhost
+// go through the Vite proxy instead of calling the backend host directly.
+const _configuredApiUrl = import.meta.env.VITE_API_URL?.trim()
+const _apiBase = _configuredApiUrl
+  ? `${_configuredApiUrl.replace(/\/$/, '')}/api`
+  : '/api'
 
 const apiClient = axios.create({
   baseURL: _apiBase,

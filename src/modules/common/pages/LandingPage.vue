@@ -8,7 +8,7 @@
       <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <!-- Logo -->
         <div class="flex items-center gap-2.5">
-          <img class="h-8 w-auto object-contain" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
+          <img class="h-10 w-auto object-contain sm:h-11" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
         </div>
 
         <!-- Nav links -->
@@ -49,7 +49,7 @@
           <!-- Text -->
           <div>
             <span class="inline-flex items-center gap-2 rounded-full border border-[var(--fleetly-baltic-blue)]/30 bg-[var(--fleetly-baltic-blue)]/10 px-3 py-1 text-xs font-semibold text-[var(--fleetly-pale-slate)]">
-              <span class="size-1.5 rounded-full bg-[var(--fleetly-baltic-blue)] animate-pulse"></span>
+              <span class="size-1.5 rounded-full bg-[var(--fleetly-baltic-blue)]"></span>
               Sistema Integral de Mobilitat Sostenible
             </span>
             <h1 class="mt-6 text-5xl font-extrabold leading-tight tracking-tight sm:text-6xl lg:text-7xl">
@@ -109,17 +109,15 @@
                 <span class="size-3 rounded-full bg-[var(--fleetly-pale-slate)]/70"></span>
                 <span class="size-3 rounded-full bg-[var(--fleetly-baltic-blue)]/70"></span>
                 <span class="size-3 rounded-full bg-[var(--fleetly-gunmetal)]/85"></span>
-                <span class="ml-3 text-xs text-gray-500">localhost:5173/vehicles-map</span>
+                <span class="ml-3 text-xs text-gray-500">admin/dashboard</span>
               </div>
-              <div class="flex h-80 items-center justify-center bg-gray-800/40">
-                <!-- SUBSTITUEIX PER: <img src="/screenshots/map.png" alt="Mapa de vehicles" class="w-full h-full object-cover" /> -->
-                <div class="text-center">
-                  <svg class="mx-auto size-16 text-[var(--fleetly-baltic-blue)]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-                  </svg>
-                  <p class="mt-3 text-sm font-medium text-gray-600">Captura de pantalla del mapa</p>
-                  <p class="text-xs text-gray-700">[ Substituir per screenshot ]</p>
-                </div>
+              <div class="relative aspect-[16/9] bg-gray-800/40">
+                <img
+                  :src="shots.adminDashboard"
+                  alt="Fleetly · Panell d'administració"
+                  class="h-full w-full object-cover"
+                  loading="eager"
+                />
               </div>
             </div>
             <!-- Floating badge -->
@@ -130,8 +128,71 @@
                 </svg>
               </span>
               <div>
-                <p class="text-xs font-semibold text-white">Reserva confirmada</p>
-                <p class="text-xs text-gray-500">AMP001 · Toyota Corolla</p>
+                <p class="text-xs font-semibold text-white">Panell sempre a punt</p>
+                <p class="text-xs text-gray-500">Vehicles · Usuaris · Rols · Reserves</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         PRODUCT OVERVIEW (CLIENT / ADMIN)
+    ═══════════════════════════════════════════════════ -->
+    <section id="product" class="py-24">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <span class="text-sm font-semibold uppercase tracking-widest text-[var(--fleetly-baltic-blue)]">Dues experiències</span>
+          <h2 class="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl">Client i administració, en la mateixa plataforma</h2>
+          <p class="mt-4 text-gray-400">Cada rol veu només el que necessita: usuaris per reservar i administradors per governar el tenant.</p>
+        </div>
+
+        <div class="mt-16 grid gap-10 lg:grid-cols-2">
+          <!-- Client -->
+          <div class="overflow-hidden rounded-3xl border border-white/10 bg-gray-900">
+            <div class="flex items-center gap-3 border-b border-white/10 bg-gray-800/70 px-6 py-4">
+              <img class="h-7 w-auto" src="/branding/fleetly_isotip_blanc.svg" alt="Fleetly" />
+              <div>
+                <p class="text-sm font-semibold text-white">Espai Client</p>
+                <p class="text-xs text-gray-500">Mapa, reserves, perfil i tickets</p>
+              </div>
+            </div>
+            <div class="grid gap-4 p-6">
+              <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-800/30">
+                <img :src="shots.clientMap" alt="Client · Mapa interactiu" class="h-full w-full object-cover" loading="lazy" />
+              </div>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-800/30">
+                  <img :src="shots.clientBookings" alt="Client · Reserves" class="h-full w-full object-cover" loading="lazy" />
+                </div>
+                <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-800/30">
+                  <img :src="shots.clientProfile" alt="Client · Perfil" class="h-full w-full object-cover" loading="lazy" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin -->
+          <div class="overflow-hidden rounded-3xl border border-white/10 bg-gray-900">
+            <div class="flex items-center gap-3 border-b border-white/10 bg-gray-800/70 px-6 py-4">
+              <img class="h-7 w-auto" src="/branding/fleetly_isotip_blanc.svg" alt="Fleetly" />
+              <div>
+                <p class="text-sm font-semibold text-white">Espai Admin</p>
+                <p class="text-xs text-gray-500">Dashboard, vehicles, usuaris, rols i geofencing</p>
+              </div>
+            </div>
+            <div class="grid gap-4 p-6">
+              <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-800/30">
+                <img :src="shots.adminDashboard" alt="Admin · Dashboard" class="h-full w-full object-cover" loading="lazy" />
+              </div>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-800/30">
+                  <img :src="shots.adminGeofences" alt="Admin · Geofencing" class="h-full w-full object-cover" loading="lazy" />
+                </div>
+                <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-800/30">
+                  <img :src="shots.adminUsers" alt="Admin · Usuaris" class="h-full w-full object-cover" loading="lazy" />
+                </div>
               </div>
             </div>
           </div>
@@ -144,15 +205,15 @@
     ═══════════════════════════════════════════════════ -->
     <section class="border-y border-white/5 bg-gray-900/50 py-12">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <p class="text-center text-xs font-semibold uppercase tracking-widest text-gray-600">Dissenyat per a</p>
-        <div class="mt-8 flex flex-wrap items-center justify-center gap-8 opacity-40 grayscale">
-          <div class="flex items-center gap-2 text-lg font-bold text-gray-400">🏢 Empreses</div>
+        <p class="text-center text-xs font-semibold uppercase tracking-widest text-[var(--fleetly-pale-slate)]/70">Dissenyat per a</p>
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-8">
+          <div class="flex items-center gap-2 text-lg font-bold text-white/70 transition hover:text-white">🏢 Empreses</div>
           <div class="h-4 w-px bg-white/10"></div>
-          <div class="flex items-center gap-2 text-lg font-bold text-gray-400">🏛️ Ajuntaments</div>
+          <div class="flex items-center gap-2 text-lg font-bold text-white/70 transition hover:text-white">🏛️ Ajuntaments</div>
           <div class="h-4 w-px bg-white/10"></div>
-          <div class="flex items-center gap-2 text-lg font-bold text-gray-400">🎓 Universitats</div>
+          <div class="flex items-center gap-2 text-lg font-bold text-white/70 transition hover:text-white">🎓 Universitats</div>
           <div class="h-4 w-px bg-white/10"></div>
-          <div class="flex items-center gap-2 text-lg font-bold text-gray-400">🏥 Hospitals</div>
+          <div class="flex items-center gap-2 text-lg font-bold text-white/70 transition hover:text-white">🏥 Hospitals</div>
         </div>
       </div>
     </section>
@@ -249,13 +310,7 @@
               <p class="mt-2 text-sm leading-relaxed text-gray-400">Accedeix al mapa interactiu i veu tots els vehicles disponibles (en verd) propers a la teva ubicació.</p>
               <!-- Screenshot placeholder -->
               <div class="mt-6 w-full overflow-hidden rounded-2xl border border-white/10 bg-gray-800">
-                <div class="flex h-48 items-center justify-center">
-                  <!-- SUBSTITUEIX PER: <img src="/screenshots/step1-map.png" alt="Pas 1 - Mapa" class="w-full h-full object-cover" /> -->
-                  <div class="text-center">
-                    <svg class="mx-auto size-10 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-                    <p class="mt-2 text-xs text-gray-600">[ Screenshot mapa ]</p>
-                  </div>
-                </div>
+                <img :src="shots.clientWelcome" alt="Pas 1 · Vista mapa" class="h-48 w-full object-cover" loading="lazy" />
               </div>
             </div>
 
@@ -267,13 +322,7 @@
               <p class="mt-2 text-sm leading-relaxed text-gray-400">Clica el vehicle que vulguis, tria l'hora d'inici i fi. Veuràs el preu estimat abans de confirmar.</p>
               <!-- Screenshot placeholder -->
               <div class="mt-6 w-full overflow-hidden rounded-2xl border border-white/10 bg-gray-800">
-                <div class="flex h-48 items-center justify-center">
-                  <!-- SUBSTITUEIX PER: <img src="/screenshots/step2-booking.png" alt="Pas 2 - Reserva" class="w-full h-full object-cover" /> -->
-                  <div class="text-center">
-                    <svg class="mx-auto size-10 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    <p class="mt-2 text-xs text-gray-600">[ Screenshot formulari reserva ]</p>
-                  </div>
-                </div>
+                <img :src="shots.clientMap" alt="Pas 2 · Selecciona i reserva" class="h-48 w-full object-cover" loading="lazy" />
               </div>
             </div>
 
@@ -285,13 +334,7 @@
               <p class="mt-2 text-sm leading-relaxed text-gray-400">Des de la secció Reserves veus l'historial, l'estat actual i pots cancel·lar si cal. Tot en un lloc.</p>
               <!-- Screenshot placeholder -->
               <div class="mt-6 w-full overflow-hidden rounded-2xl border border-white/10 bg-gray-800">
-                <div class="flex h-48 items-center justify-center">
-                  <!-- SUBSTITUEIX PER: <img src="/screenshots/step3-mybookings.png" alt="Pas 3 - Les meves reserves" class="w-full h-full object-cover" /> -->
-                  <div class="text-center">
-                    <svg class="mx-auto size-10 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                    <p class="mt-2 text-xs text-gray-600">[ Screenshot llistat reserves ]</p>
-                  </div>
-                </div>
+                <img :src="shots.clientBookings" alt="Pas 3 · Les meves reserves" class="h-48 w-full object-cover" loading="lazy" />
               </div>
             </div>
 
@@ -313,94 +356,54 @@
 
         <div class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
-          <!-- Screenshot 1 - Mapa principal -->
           <div class="group col-span-full overflow-hidden rounded-2xl border border-white/10 bg-gray-900 lg:col-span-2">
             <div class="flex h-8 items-center gap-1.5 border-b border-white/10 bg-gray-800 px-3">
               <span class="size-2.5 rounded-full bg-[var(--fleetly-pale-slate)]/70"></span>
               <span class="size-2.5 rounded-full bg-[var(--fleetly-baltic-blue)]/70"></span>
               <span class="size-2.5 rounded-full bg-[var(--fleetly-gunmetal)]/85"></span>
-              <span class="ml-2 text-xs text-gray-600">Mapa de vehicles en temps real</span>
+              <span class="ml-2 text-xs text-gray-600">Admin · Dashboard</span>
             </div>
-            <div class="flex h-72 items-center justify-center bg-gray-800/30">
-              <!-- SUBSTITUEIX PER: <img src="/screenshots/map-full.png" alt="Mapa de vehicles" class="w-full h-full object-cover" /> -->
-              <div class="text-center">
-                <svg class="mx-auto size-14 text-[var(--fleetly-baltic-blue)]/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-                <p class="mt-3 text-sm font-semibold text-gray-600">Mapa de vehicles (captura gran)</p>
-                <p class="text-xs text-gray-700">[ /screenshots/map-full.png ]</p>
-              </div>
-            </div>
+            <img :src="shots.adminDashboard" alt="Admin · Dashboard" class="h-72 w-full object-cover" loading="lazy" />
           </div>
 
-          <!-- Screenshot 2 - Perfil -->
           <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-900">
             <div class="flex h-8 items-center gap-1.5 border-b border-white/10 bg-gray-800 px-3">
               <span class="size-2.5 rounded-full bg-[var(--fleetly-pale-slate)]/70"></span>
               <span class="size-2.5 rounded-full bg-[var(--fleetly-baltic-blue)]/70"></span>
               <span class="size-2.5 rounded-full bg-[var(--fleetly-gunmetal)]/85"></span>
-              <span class="ml-2 text-xs text-gray-600">Perfil d'usuari</span>
+              <span class="ml-2 text-xs text-gray-600">Admin · Geofences</span>
             </div>
-            <div class="flex h-72 items-center justify-center bg-gray-800/30">
-              <!-- SUBSTITUEIX PER: <img src="/screenshots/profile.png" alt="Perfil" class="w-full h-full object-cover" /> -->
-              <div class="text-center">
-                <svg class="mx-auto size-14 text-[var(--fleetly-pale-slate)]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                <p class="mt-3 text-sm font-semibold text-gray-600">Perfil d'usuari</p>
-                <p class="text-xs text-gray-700">[ /screenshots/profile.png ]</p>
-              </div>
-            </div>
+            <img :src="shots.adminGeofences" alt="Admin · Geofences" class="h-72 w-full object-cover" loading="lazy" />
           </div>
 
-          <!-- Screenshot 3 - Reserves -->
           <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-900">
             <div class="flex h-8 items-center gap-1.5 border-b border-white/10 bg-gray-800 px-3">
               <span class="size-2.5 rounded-full bg-[var(--fleetly-pale-slate)]/70"></span>
               <span class="size-2.5 rounded-full bg-[var(--fleetly-baltic-blue)]/70"></span>
               <span class="size-2.5 rounded-full bg-[var(--fleetly-gunmetal)]/85"></span>
-              <span class="ml-2 text-xs text-gray-600">Les meves reserves</span>
+              <span class="ml-2 text-xs text-gray-600">Client · Mapa</span>
             </div>
-            <div class="flex h-64 items-center justify-center bg-gray-800/30">
-              <!-- SUBSTITUEIX PER: <img src="/screenshots/bookings.png" alt="Reserves" class="w-full h-full object-cover" /> -->
-              <div class="text-center">
-                <svg class="mx-auto size-14 text-[var(--fleetly-baltic-blue)]/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                <p class="mt-3 text-sm font-semibold text-gray-600">Les meves reserves</p>
-                <p class="text-xs text-gray-700">[ /screenshots/bookings.png ]</p>
-              </div>
-            </div>
+            <img :src="shots.clientMap" alt="Client · Mapa" class="h-64 w-full object-cover" loading="lazy" />
           </div>
 
-          <!-- Screenshot 4 - Admin dashboard -->
           <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-900">
             <div class="flex h-8 items-center gap-1.5 border-b border-white/10 bg-gray-800 px-3">
               <span class="size-2.5 rounded-full bg-[var(--fleetly-pale-slate)]/70"></span>
               <span class="size-2.5 rounded-full bg-[var(--fleetly-baltic-blue)]/70"></span>
               <span class="size-2.5 rounded-full bg-[var(--fleetly-gunmetal)]/85"></span>
-              <span class="ml-2 text-xs text-gray-600">Panel d'administració</span>
+              <span class="ml-2 text-xs text-gray-600">Client · Reserves</span>
             </div>
-            <div class="flex h-64 items-center justify-center bg-gray-800/30">
-              <!-- SUBSTITUEIX PER: <img src="/screenshots/admin.png" alt="Admin" class="w-full h-full object-cover" /> -->
-              <div class="text-center">
-                <svg class="mx-auto size-14 text-[var(--fleetly-pale-slate)]/35" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                <p class="mt-3 text-sm font-semibold text-gray-600">Panel d'administració</p>
-                <p class="text-xs text-gray-700">[ /screenshots/admin.png ]</p>
-              </div>
-            </div>
+            <img :src="shots.clientBookings" alt="Client · Reserves" class="h-64 w-full object-cover" loading="lazy" />
           </div>
 
-          <!-- Screenshot 5 - Tickets -->
-          <div class="col-span-full overflow-hidden rounded-2xl border border-white/10 bg-gray-900 lg:col-span-1">
+          <div class="overflow-hidden rounded-2xl border border-white/10 bg-gray-900">
             <div class="flex h-8 items-center gap-1.5 border-b border-white/10 bg-gray-800 px-3">
               <span class="size-2.5 rounded-full bg-[var(--fleetly-pale-slate)]/70"></span>
               <span class="size-2.5 rounded-full bg-[var(--fleetly-baltic-blue)]/70"></span>
               <span class="size-2.5 rounded-full bg-[var(--fleetly-gunmetal)]/85"></span>
-              <span class="ml-2 text-xs text-gray-600">Sistema de tickets</span>
+              <span class="ml-2 text-xs text-gray-600">Tickets · Conversa</span>
             </div>
-            <div class="flex h-64 items-center justify-center bg-gray-800/30">
-              <!-- SUBSTITUEIX PER: <img src="/screenshots/tickets.png" alt="Tickets" class="w-full h-full object-cover" /> -->
-              <div class="text-center">
-                <svg class="mx-auto size-14 text-[var(--fleetly-baltic-blue)]/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/></svg>
-                <p class="mt-3 text-sm font-semibold text-gray-600">Sistema de tickets de suport</p>
-                <p class="text-xs text-gray-700">[ /screenshots/tickets.png ]</p>
-              </div>
-            </div>
+            <img :src="shots.adminChat" alt="Tickets · Conversa" class="h-64 w-full object-cover" loading="lazy" />
           </div>
 
         </div>
@@ -453,7 +456,7 @@
           <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
             <RouterLink
               to="/register"
-              class="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-sm font-bold text-[var(--fleetly-gunmetal)] shadow-lg transition hover:bg-[var(--fleetly-pale-slate)] hover:text-[var(--fleetly-black)] hover:scale-105"
+              class="inline-flex items-center gap-2 rounded-xl bg-[var(--fleetly-baltic-blue)] px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-black/30 transition hover:opacity-90 hover:scale-105"
             >
               Crea el teu compte gratis
               <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -491,6 +494,23 @@
 </template>
 
 <script setup lang="ts">
+const shots = {
+  adminDashboard: new URL('../../../../captures de pantalla/Admin-Dashboard.png', import.meta.url).href,
+  adminMap: new URL('../../../../captures de pantalla/Admin - Mapa.png', import.meta.url).href,
+  adminUsers: new URL('../../../../captures de pantalla/Admin - Users.png', import.meta.url).href,
+  adminRoles: new URL('../../../../captures de pantalla/Admin - Rols.png', import.meta.url).href,
+  adminBookings: new URL('../../../../captures de pantalla/Admin - Bookings.png', import.meta.url).href,
+  adminAddVehicle: new URL('../../../../captures de pantalla/Admin - Afegir Vehicle.png', import.meta.url).href,
+  adminGeofences: new URL('../../../../captures de pantalla/Admin - Geofences.png', import.meta.url).href,
+  adminChat: new URL('../../../../captures de pantalla/Admin - Chat.png', import.meta.url).href,
+  clientWelcome: new URL('../../../../captures de pantalla/Client - Welcome.png', import.meta.url).href,
+  clientMap: new URL('../../../../captures de pantalla/Client - Mapa.png', import.meta.url).href,
+  clientBookings: new URL('../../../../captures de pantalla/Client - Reserves.png', import.meta.url).href,
+  clientProfile: new URL('../../../../captures de pantalla/Client - Perfil.png', import.meta.url).href,
+  clientChat: new URL('../../../../captures de pantalla/Client - Chat.png', import.meta.url).href,
+  palette: new URL('../../../../captures de pantalla/Paleta de colors.png', import.meta.url).href,
+}
+
 const faqs = [
   {
     q: 'Com puc reservar un vehicle?',
