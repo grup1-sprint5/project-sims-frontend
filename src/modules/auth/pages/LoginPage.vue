@@ -3,17 +3,17 @@
 
     <div class="w-full max-w-sm">
 
-      <RouterLink to="/landing" class="flex justify-center mb-8">
-        <img class="h-20 w-auto" :src="isDark ? '/branding/fleetly_logotip_blanc.svg' : '/branding/fleetly_logotip_negre.svg'" alt="Fleetly" />
-      </RouterLink>
+      <div class="rounded-xl border border-white/10 bg-gray-900 px-6 pt-8 pb-8">
 
-      <div v-if="!isCentralDomain && tenantName" class="mb-4 text-center">
-        <span class="inline-block rounded-full px-3 py-1 text-sm font-semibold bg-[var(--fleetly-baltic-blue)] text-white">
-          {{ tenantName }}
-        </span>
-      </div>
+        <RouterLink to="/landing" class="flex justify-center mb-6">
+          <img class="h-20 w-auto" :src="isDark ? '/branding/fleetly_logotip_blanc.svg' : '/branding/fleetly_logotip_negre.svg'" alt="Fleetly" />
+        </RouterLink>
 
-      <div class="rounded-xl border border-white/10 bg-gray-900 px-6 py-8">
+        <div v-if="!isCentralDomain && tenantName" class="mb-5 flex justify-center">
+          <span class="rounded-full border border-[var(--fleetly-baltic-blue)]/40 bg-[var(--fleetly-baltic-blue)]/20 px-4 py-1 text-sm font-medium text-[var(--fleetly-pale-slate)]">
+            {{ tenantName }}
+          </span>
+        </div>
 
         <div class="flex items-center justify-between mb-6">
           <h1 class="text-lg font-semibold text-white">{{ m.login.title }}</h1>
@@ -31,7 +31,7 @@
               autocomplete="organization"
               required
               :disabled="isLoading"
-              class="block w-full rounded-lg bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-600 border border-white/10 focus:border-[var(--fleetly-baltic-blue)] focus:outline-none transition disabled:opacity-50"
+              class="block w-full rounded-lg bg-white/5 px-3.5 py-3 text-base text-white placeholder:text-gray-600 border border-white/10 focus:border-[var(--fleetly-baltic-blue)] focus:outline-none transition disabled:opacity-50"
             />
           </div>
 
@@ -45,7 +45,7 @@
               required
               placeholder="tu@empresa.com"
               :disabled="isLoading"
-              class="block w-full rounded-lg bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-600 border border-white/10 focus:border-[var(--fleetly-baltic-blue)] focus:outline-none transition disabled:opacity-50"
+              class="block w-full rounded-lg bg-white/5 px-3.5 py-3 text-base text-white placeholder:text-gray-600 border border-white/10 focus:border-[var(--fleetly-baltic-blue)] focus:outline-none transition disabled:opacity-50"
             />
           </div>
 
@@ -59,7 +59,7 @@
                 autocomplete="current-password"
                 required
                 :disabled="isLoading"
-                class="block w-full rounded-lg bg-white/5 px-3 pr-10 py-2.5 text-sm text-white border border-white/10 focus:border-[var(--fleetly-baltic-blue)] focus:outline-none transition disabled:opacity-50"
+                class="block w-full rounded-lg bg-white/5 px-3.5 pr-11 py-3 text-base text-white border border-white/10 focus:border-[var(--fleetly-baltic-blue)] focus:outline-none transition disabled:opacity-50"
               />
               <button
                 type="button"
@@ -86,7 +86,7 @@
           <button
             type="submit"
             :disabled="isLoading"
-            class="w-full rounded-lg bg-[var(--fleetly-baltic-blue)] px-4 py-2.5 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full rounded-lg bg-[var(--fleetly-baltic-blue)] px-4 py-3 text-base font-medium text-white transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg v-if="isLoading" class="inline-block size-4 animate-spin mr-2 -mt-0.5" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -95,15 +95,15 @@
             {{ isLoading ? m.login.submitting : m.login.submit }}
           </button>
 
+          <p class="text-center text-sm text-gray-500 pt-1">
+            {{ m.login.noAccount }}
+            <RouterLink :to="registerRoute" class="text-gray-300 hover:text-white transition">{{ m.login.register }}</RouterLink>
+          </p>
+
         </form>
       </div>
 
-      <p class="mt-5 text-center text-sm text-gray-500">
-        {{ m.login.noAccount }}
-        <RouterLink :to="registerRoute" class="text-gray-300 hover:text-white transition">{{ m.login.register }}</RouterLink>
-      </p>
-
-      <RouterLink to="/landing" class="mt-3 flex justify-center items-center gap-1 text-xs text-gray-600 hover:text-gray-400 transition">
+      <RouterLink to="/landing" class="mt-4 flex justify-center items-center gap-1 text-xs text-gray-600 hover:text-gray-400 transition">
         <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
         </svg>
