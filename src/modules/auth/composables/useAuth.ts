@@ -437,7 +437,6 @@ export function useAuth() {
         username,
         email,
         password,
-        role_id: 2,
       };
       const response = await apiClient.post<RegisterResponse>("/users", registerData, {
         headers: {
