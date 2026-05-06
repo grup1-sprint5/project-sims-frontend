@@ -19,9 +19,9 @@
               v-model="tenantSlug"
               type="text"
               required
-              :disabled="isLoading"
+              :disabled="isLoading || isOrgLocked"
               placeholder="e.g. fleetly-barcelona"
-              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6"
+              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6 disabled:opacity-70 disabled:cursor-default"
             />
           </div>
         </div>
@@ -125,11 +125,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter, RouterLink } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute, RouterLink } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 
 const router = useRouter()
+const route = useRoute()
 const { register, isLoading, error } = useAuth()
 
 const tenantSlug = ref('')
@@ -138,6 +139,30 @@ const username = ref('')
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
+
+// When org is pre-filled from query param or subdomain, lock the field
+const isOrgLocked = computed(() => tenantSlug.value !== '' && !isFromCentralDomain.value)
+
+const isFromCentralDomain = computed(() => {
+  if (typeof window === 'undefined') return true
+  const host = window.location.hostname.toLowerCase()
+  return ['localhost', '127.0.0.1', 'jordiarnau.iemhosting.asix2.iesmontsia.cat'].includes(host)
+})
+
+onMounted(() => {
+  // Pre-fill from ?org= query param
+  const orgParam = route.query.org as string | undefined
+  if (orgParam) {
+    tenantSlug.value = orgParam
+    return
+  }
+  // Auto-detect from subdomain (e.g. empresa1.jordiarnau...)
+  if (!isFromCentralDomain.value) {
+    const host = window.location.hostname.toLowerCase()
+    const parts = host.split('.')
+    if (parts.length >= 3) tenantSlug.value = parts[0]
+  }
+})
 
 const handleSubmit = async () => {
   await register(
