@@ -122,6 +122,16 @@
         <RouterLink to="/login" class="text-gray-300 hover:text-white transition">{{ m.register.signIn }}</RouterLink>
       </p>
 
+      <div class="mt-4 rounded-xl border border-[var(--fleetly-baltic-blue)]/30 bg-[var(--fleetly-baltic-blue)]/10 px-4 py-4 text-center">
+        <p class="text-sm font-semibold text-white">Vols registrar-te com a empresa?</p>
+        <RouterLink
+          to="/register-company"
+          class="mt-1 inline-flex text-sm font-medium text-[var(--fleetly-pale-slate)] underline underline-offset-4 hover:text-white"
+        >
+          Clica aquí i tria el teu subdomini
+        </RouterLink>
+      </div>
+
       <RouterLink to="/landing" class="mt-3 flex justify-center items-center gap-1 text-xs text-gray-600 hover:text-gray-400 transition">
         <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>

@@ -100,6 +100,16 @@
             <RouterLink :to="registerRoute" class="text-gray-300 hover:text-white transition">{{ m.login.register }}</RouterLink>
           </p>
 
+          <div class="rounded-lg border border-[var(--fleetly-baltic-blue)]/30 bg-[var(--fleetly-baltic-blue)]/10 px-3 py-3 text-center">
+            <p class="text-sm font-medium text-white">Vols registrar la teva empresa?</p>
+            <RouterLink
+              to="/register-company"
+              class="mt-1 inline-flex text-sm font-semibold text-[var(--fleetly-pale-slate)] underline underline-offset-4 hover:text-white"
+            >
+              Clica aquí per demanar el teu subdomini
+            </RouterLink>
+          </div>
+
         </form>
       </div>
 
