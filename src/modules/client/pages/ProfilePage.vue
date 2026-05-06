@@ -295,7 +295,7 @@ const startWalletTopup = async () => {
 
   loadingTopup.value = true
   try {
-    const successUrl = `${window.location.origin}/#/home/perfil?wallet=success`
+    const successUrl = `${window.location.origin}/#/home/perfil`
     const cancelUrl = `${window.location.origin}/#/home/perfil?wallet=cancel`
 
     const response = await apiClient.post('/wallet/checkout-session', {
@@ -331,9 +331,12 @@ onMounted(async () => {
     profileForm.email = user.value.email
   }
 
-  const walletStatus = route.query.wallet as string | undefined
+  // Stripe appends params before the # (?wallet=success&session_id=...) so they
+  // land in window.location.search, not route.query. Cancel stays in the hash fragment.
+  const searchParams = new URLSearchParams(window.location.search)
+  const walletStatus = searchParams.get('wallet') || (route.query.wallet as string | undefined)
   if (walletStatus === 'success') {
-    const sessionId = route.query.session_id as string | undefined
+    const sessionId = searchParams.get('session_id') || (route.query.session_id as string | undefined)
     if (sessionId) {
       try {
         await apiClient.post('/wallet/confirm-session', { session_id: sessionId })
