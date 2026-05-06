@@ -1,57 +1,57 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center px-6 py-12 lg:px-8" style="background:var(--app-bg);color:var(--app-text);">
-    <div class="w-full max-w-md rounded-2xl border p-6 shadow-2xl sm:p-8" style="background:var(--app-surface);border-color:var(--app-border);color:var(--app-text);">
-      <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-14 w-auto object-contain sm:h-16" :src="isDark ? '/branding/fleetly_logotip_blanc.svg' : '/branding/fleetly_logotip_negre.svg'" alt="Fleetly" />
+  <div class="min-h-screen bg-gray-950 flex flex-col items-center justify-center px-4">
 
-        <!-- Tenant company name badge -->
-        <div v-if="!isCentralDomain && tenantName" class="mt-4 text-center">
-          <span class="inline-block rounded-full px-3 py-1 text-sm font-semibold" style="background:var(--fleetly-baltic-blue);color:#fff;">
-            {{ tenantName }}
-          </span>
-        </div>
+    <div class="w-full max-w-sm">
 
-        <h2 class="mt-6 text-center text-2xl/9 font-bold tracking-tight" style="color:var(--app-text)">Sign in to your account</h2>
+      <RouterLink to="/landing" class="flex justify-center mb-8">
+        <img class="h-20 w-auto" :src="isDark ? '/branding/fleetly_logotip_blanc.svg' : '/branding/fleetly_logotip_negre.svg'" alt="Fleetly" />
+      </RouterLink>
+
+      <div v-if="!isCentralDomain && tenantName" class="mb-4 text-center">
+        <span class="inline-block rounded-full px-3 py-1 text-sm font-semibold bg-[var(--fleetly-baltic-blue)] text-white">
+          {{ tenantName }}
+        </span>
       </div>
 
-      <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" @submit.prevent="handleSubmit">
-          <!-- Organization field: only shown on central domain -->
+      <div class="rounded-xl border border-white/10 bg-gray-900 px-6 py-8">
+
+        <div class="flex items-center justify-between mb-6">
+          <h1 class="text-lg font-semibold text-white">{{ m.login.title }}</h1>
+          <LanguageSwitcher />
+        </div>
+
+        <form class="space-y-4" @submit.prevent="handleSubmit">
+
           <div v-if="isCentralDomain">
-            <label for="tenant" class="block text-sm/6 font-medium" style="color:var(--app-muted-text)">Organization</label>
-            <div class="mt-2">
-              <input
-                id="tenant"
-                v-model="tenantSlug"
-                type="text"
-                autocomplete="organization"
-                required
-                :disabled="isLoading"
-                class="block w-full rounded-md px-3 py-1.5 text-base shadow-sm sm:text-sm/6 focus:ring-2 focus:ring-[var(--fleetly-baltic-blue)]"
-                style="background:var(--app-input-bg);color:var(--app-input-text);border:1px solid var(--app-input-border);outline:none"
-              />
-            </div>
+            <label for="tenant" class="block text-sm text-gray-400 mb-1.5">{{ m.login.orgLabel }}</label>
+            <input
+              id="tenant"
+              v-model="tenantSlug"
+              type="text"
+              autocomplete="organization"
+              required
+              :disabled="isLoading"
+              class="block w-full rounded-lg bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-600 border border-white/10 focus:border-[var(--fleetly-baltic-blue)] focus:outline-none transition disabled:opacity-50"
+            />
           </div>
 
           <div>
-            <label for="email" class="block text-sm/6 font-medium" style="color:var(--app-muted-text)">Email address</label>
-            <div class="mt-2">
-              <input
-                id="email"
-                v-model="email"
-                type="email"
-                autocomplete="email"
-                required
-                :disabled="isLoading"
-                class="block w-full rounded-md px-3 py-1.5 text-base shadow-sm sm:text-sm/6 focus:ring-2 focus:ring-[var(--fleetly-baltic-blue)]"
-                style="background:var(--app-input-bg);color:var(--app-input-text);border:1px solid var(--app-input-border);outline:none"
-              />
-            </div>
+            <label for="email" class="block text-sm text-gray-400 mb-1.5">{{ m.login.emailLabel }}</label>
+            <input
+              id="email"
+              v-model="email"
+              type="email"
+              autocomplete="email"
+              required
+              placeholder="tu@empresa.com"
+              :disabled="isLoading"
+              class="block w-full rounded-lg bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-600 border border-white/10 focus:border-[var(--fleetly-baltic-blue)] focus:outline-none transition disabled:opacity-50"
+            />
           </div>
 
           <div>
-            <label for="password" class="block text-sm/6 font-medium" style="color:var(--app-muted-text)">Password</label>
-            <div class="mt-2 relative">
+            <label for="password" class="block text-sm text-gray-400 mb-1.5">{{ m.login.passwordLabel }}</label>
+            <div class="relative">
               <input
                 id="password"
                 v-model="password"
@@ -59,16 +59,14 @@
                 autocomplete="current-password"
                 required
                 :disabled="isLoading"
-                class="block w-full rounded-md px-3 py-1.5 pr-10 text-base shadow-sm sm:text-sm/6 focus:ring-2 focus:ring-[var(--fleetly-baltic-blue)]"
-                style="background:var(--app-input-bg);color:var(--app-input-text);border:1px solid var(--app-input-border);outline:none"
+                class="block w-full rounded-lg bg-white/5 px-3 pr-10 py-2.5 text-sm text-white border border-white/10 focus:border-[var(--fleetly-baltic-blue)] focus:outline-none transition disabled:opacity-50"
               />
               <button
                 type="button"
                 :disabled="isLoading"
                 @click="showPassword = !showPassword"
-                class="absolute inset-y-0 right-0 px-3 flex items-center"
-                style="color:var(--app-muted-text)"
-                :aria-label="showPassword ? 'Hide password' : 'Show password'"
+                class="absolute inset-y-0 right-0 px-3 text-gray-500 hover:text-gray-300 transition"
+                :aria-label="showPassword ? m.login.hidePassword : m.login.showPassword"
               >
                 <svg v-if="!showPassword" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -81,29 +79,37 @@
             </div>
           </div>
 
-          <div v-if="error" class="text-sm text-red-400">Error: {{ error }}</div>
-
-          <div>
-            <button
-              type="submit"
-              :disabled="isLoading"
-              class="flex w-full justify-center rounded-md bg-[var(--fleetly-baltic-blue)] px-3 py-1.5 text-sm/6 font-semibold text-white hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]"
-            >
-              {{ isLoading ? 'Signing in...' : 'Sign in' }}
-            </button>
+          <div v-if="error" class="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2.5 text-sm text-red-400">
+            {{ error }}
           </div>
 
-          <!-- Register link: on tenant domains show client self-registration; on central show company registration -->
-          <p v-if="!isCentralDomain" class="text-center text-sm text-gray-400">
-            Don't have an account?
-            <RouterLink :to="registerRoute" class="font-semibold leading-6 text-[var(--fleetly-baltic-blue)] hover:opacity-80">Register</RouterLink>
-          </p>
-          <p v-else class="text-center text-sm text-gray-400">
-            Don't have an account?
-            <RouterLink to="/register-company" class="font-semibold leading-6 text-[var(--fleetly-baltic-blue)] hover:opacity-80">Register</RouterLink>
-          </p>
+          <button
+            type="submit"
+            :disabled="isLoading"
+            class="w-full rounded-lg bg-[var(--fleetly-baltic-blue)] px-4 py-2.5 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <svg v-if="isLoading" class="inline-block size-4 animate-spin mr-2 -mt-0.5" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            {{ isLoading ? m.login.submitting : m.login.submit }}
+          </button>
+
         </form>
       </div>
+
+      <p class="mt-5 text-center text-sm text-gray-500">
+        {{ m.login.noAccount }}
+        <RouterLink :to="registerRoute" class="text-gray-300 hover:text-white transition">{{ m.login.register }}</RouterLink>
+      </p>
+
+      <RouterLink to="/landing" class="mt-3 flex justify-center items-center gap-1 text-xs text-gray-600 hover:text-gray-400 transition">
+        <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        {{ m.login.backToHome }}
+      </RouterLink>
+
     </div>
   </div>
 </template>
@@ -113,11 +119,14 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 import { useTheme } from '@/modules/common/composables/useTheme'
+import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
+import { useI18n } from '@/i18n'
 import apiClient from '@/services/api'
 
 const router = useRouter()
 const { login, isLoading, error } = useAuth()
 const { isDark } = useTheme()
+const { m } = useI18n()
 
 const tenantSlug = ref('')
 const tenantName = ref('')
@@ -138,7 +147,6 @@ const isCentralDomain = computed(() => {
   return centralDomains.includes(host)
 })
 
-// Build register route including tenant slug so RegisterPage pre-fills the org field
 const registerRoute = computed(() => {
   const slug = tenantSlug.value
   return slug ? `/register?org=${encodeURIComponent(slug)}` : '/register'
@@ -148,8 +156,8 @@ const getTenantSlugFromHost = (): string => {
   if (typeof window === 'undefined') return ''
   const host = window.location.hostname.toLowerCase()
   const parts = host.split('.')
-  if (parts.length >= 3) return parts[0]
-  if (host.endsWith('.localhost')) return host.split('.')[0]
+  if (parts.length >= 3) return parts[0]!
+  if (host.endsWith('.localhost')) return host.split('.')[0]!
   return ''
 }
 
