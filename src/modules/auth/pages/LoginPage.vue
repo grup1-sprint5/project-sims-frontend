@@ -95,22 +95,17 @@
             {{ isLoading ? m.login.submitting : m.login.submit }}
           </button>
 
-          <p class="text-center text-sm text-gray-500 pt-1">
-            {{ m.login.noAccount }}
-            <RouterLink :to="registerRoute" class="text-gray-300 hover:text-white transition">{{ m.login.register }}</RouterLink>
-          </p>
-
-          <div class="rounded-lg border border-[var(--fleetly-baltic-blue)]/30 bg-[var(--fleetly-baltic-blue)]/10 px-3 py-3 text-center">
-            <p class="text-sm font-medium text-white">Vols registrar la teva empresa?</p>
-            <RouterLink
-              to="/register-company"
-              class="mt-1 inline-flex text-sm font-semibold text-[var(--fleetly-pale-slate)] underline underline-offset-4 hover:text-white"
-            >
-              Clica aquí per demanar el teu subdomini
-            </RouterLink>
-          </div>
-
         </form>
+
+        <div class="mt-5 rounded-lg border border-[var(--fleetly-baltic-blue)]/30 bg-[var(--fleetly-baltic-blue)]/10 px-3 py-3 text-center">
+          <p class="text-sm font-medium text-white">Vols registrar la teva empresa?</p>
+          <RouterLink
+            to="/register-company"
+            class="mt-1 inline-flex text-sm font-semibold text-[var(--fleetly-pale-slate)] underline underline-offset-4 hover:text-white"
+          >
+            Clica aquí per demanar el teu subdomini
+          </RouterLink>
+        </div>
       </div>
 
       <RouterLink to="/landing" class="mt-4 flex justify-center items-center gap-1 text-xs text-gray-600 hover:text-gray-400 transition">
@@ -155,11 +150,6 @@ const isCentralDomain = computed(() => {
     'jordiarnau.iemhosting.asix2.iesmontsia.cat'
   ]
   return centralDomains.includes(host)
-})
-
-const registerRoute = computed(() => {
-  const slug = tenantSlug.value
-  return slug ? `/register?org=${encodeURIComponent(slug)}` : '/register'
 })
 
 const getTenantSlugFromHost = (): string => {
