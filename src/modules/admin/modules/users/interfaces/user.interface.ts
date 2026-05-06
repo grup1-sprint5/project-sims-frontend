@@ -28,8 +28,7 @@ export interface UserForm {
   password_confirmation?: string
   active: boolean
   role_id?: number | null
-  tenant_id?: number | null
-  tenant_id?: number | null
+  tenant_id?: string | null
 }
 
 export interface UserFilters {

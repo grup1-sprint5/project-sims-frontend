@@ -227,7 +227,7 @@ const formData = reactive({
   password_confirmation: '',
   active: true,
   role_id: null as number | null,
-  tenant_id: null as number | null,
+  tenant_id: null as string | null,
 })
 
 const validationErrors = reactive({
@@ -272,7 +272,8 @@ const handleSubmit = async () => {
       username: formData.username,
       email: formData.email,
       active: formData.active,
-      role_id: formData.role_id
+      role_id: formData.role_id,
+      tenant_id: formData.tenant_id || undefined,
     }
 
     // Only include password if provided
