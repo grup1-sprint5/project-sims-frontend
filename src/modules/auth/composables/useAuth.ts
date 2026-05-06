@@ -11,6 +11,7 @@ import type {
   UserResponse,
 } from "../interfaces/auth.interface";
 import showToast from "@/modules/common/composables/useToast";
+import { useI18n } from "@/i18n";
 
 const TOKEN_COOKIE_NAME = "token";
 const TENANT_COOKIE_NAME = "tenant";
@@ -60,8 +61,32 @@ const formatApiError = (err: any, fallbackMsg: string): string => {
   const status = err?.response?.status;
   const data = err?.response?.data;
   const message = data?.message || err?.message || fallbackMsg;
-  if (status) return `${message} (HTTP ${status})`;
   return message;
+};
+
+const formatLoginError = (err: any, messages: ReturnType<typeof useI18n>["m"]["value"]["login"]["errors"]): string => {
+  const status = err?.response?.status;
+  const data = err?.response?.data;
+  const rawMessage = String(data?.message || err?.message || "").toLowerCase();
+  const fieldMessages = Object.values(data?.errors || {})
+    .flat()
+    .map((value) => String(value).toLowerCase())
+    .join(" ");
+  const combined = `${rawMessage} ${fieldMessages}`;
+
+  if (!err?.response) return messages.network;
+  if (combined.includes("incorrect credentials") || combined.includes("invalid credentials") || status === 422) {
+    if (combined.includes("organization")) return messages.organizationNotFound;
+    return messages.invalidCredentials;
+  }
+  if (combined.includes("inactive")) return messages.inactive;
+  if (combined.includes("organization not found")) return messages.organizationNotFound;
+  if (combined.includes("organization") && combined.includes("required")) return messages.organizationRequired;
+  if (combined.includes("tenant") || combined.includes("workspace")) return messages.tenantUnavailable;
+  if (status === 401 || status === 403) return messages.invalidCredentials;
+  if (status && status >= 500) return messages.server;
+
+  return messages.server;
 };
 
 const looksLikeTenancyHeaderError = (err: any): boolean => {
@@ -76,6 +101,7 @@ const looksLikeTenancyHeaderError = (err: any): boolean => {
 
 export function useAuth() {
   const router = useRouter();
+  const { m } = useI18n();
 
   const isCentralHost = (): boolean => {
     if (typeof window === "undefined") return false;
@@ -193,11 +219,11 @@ export function useAuth() {
           }
           return userFetched;
         } else {
-          error.value = "No token received from server";
+          error.value = m.value.login.errors.missingToken;
           return false;
         }
       } catch (err: any) {
-        error.value = formatApiError(err, "Error logging in");
+        error.value = formatLoginError(err, m.value.login.errors);
         deleteCookie(TOKEN_COOKIE_NAME);
         return false;
       } finally {
@@ -207,7 +233,7 @@ export function useAuth() {
 
     // Tenant is required for tenant login
     if (!normalizedTenant) {
-      error.value = "Organization is required";
+      error.value = m.value.login.errors.organizationRequired;
       isLoading.value = false;
       return false;
     }
@@ -234,7 +260,7 @@ export function useAuth() {
       try {
         return await tryCentralLogin();
       } catch (err: any) {
-        error.value = formatApiError(err, "Error logging in");
+        error.value = formatLoginError(err, m.value.login.errors);
         return false;
       } finally {
         isLoading.value = false;
@@ -296,7 +322,7 @@ export function useAuth() {
         try {
           return await tryCentralLogin();
         } catch (err2: any) {
-          error.value = formatApiError(err2, "Error logging in");
+          error.value = formatLoginError(err2, m.value.login.errors);
           deleteCookie(TENANT_COOKIE_NAME);
           return false;
         } finally {
@@ -304,7 +330,7 @@ export function useAuth() {
         }
       }
 
-      error.value = formatApiError(err, "Error logging in");
+      error.value = formatLoginError(err, m.value.login.errors);
       deleteCookie(TENANT_COOKIE_NAME);
       return false;
     } finally {
@@ -338,7 +364,7 @@ export function useAuth() {
 
       const token = response.data.token;
       if (!token) {
-        error.value = "No token received from exchange endpoint";
+        error.value = m.value.login.errors.missingToken;
         deleteCookie(TOKEN_COOKIE_NAME);
         deleteCookie(TENANT_COOKIE_NAME);
         return false;
@@ -364,8 +390,7 @@ export function useAuth() {
 
       return userFetched;
     } catch (err: any) {
-      const msg = err.response?.data?.message || "Error completing login";
-      error.value = msg;
+      error.value = formatLoginError(err, m.value.login.errors);
       deleteCookie(TOKEN_COOKIE_NAME);
       deleteCookie(TENANT_COOKIE_NAME);
       return false;
