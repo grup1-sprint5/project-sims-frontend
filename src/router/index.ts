@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import { authRoutes } from '@/modules/auth/router'
@@ -16,6 +16,10 @@ import { clientRoutes } from '@/modules/client/router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
+    redirect: '/login'
+  },
+  {
+    path: '/home',
     component: AppLayout,
     meta: { requiresAuth: true },
     children: [
@@ -80,12 +84,14 @@ const routes: RouteRecordRaw[] = [
   },
   ...authRoutes,
 
+  { path: '/register-company', name: 'RegisterCompany', component: () => import('@/modules/common/pages/RegisterCompanyPage.vue') },
+
   { path: '/landing', name: 'Landing', component: () => import('@/modules/common/pages/LandingPage.vue') },
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFoundPage }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 })
 
@@ -111,6 +117,9 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth && !isAuthenticated.value) {
     // Protected route and not authenticated -> go to login
     next('/login')
+  } else if (to.path === '/login' && isAuthenticated.value) {
+    // Logged-in users should not stay on the login screen
+    next(isAdmin ? '/admin' : '/home')
   } else if (to.path.startsWith('/admin') && isAuthenticated.value && !isAdmin) {
     // Client trying to access admin area -> redirect to client home
     next('/')

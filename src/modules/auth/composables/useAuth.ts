@@ -103,6 +103,13 @@ export function useAuth() {
     )
       return true;
 
+    if (
+      host === "grup1-sims.com" ||
+      host === "www.grup1-sims.com" ||
+      host === "jordiarnau.iemhosting.asix2.iesmontsia.cat"
+    )
+      return true;
+
     // Heuristic: treat the base deployment domain as central.
     // Example central: grup1-sims-c7271.ondigitalocean.app
     // Example tenant:  sims-corp.grup1-sims-c7271.ondigitalocean.app
@@ -158,6 +165,47 @@ export function useAuth() {
     error.value = null;
 
     const normalizedTenant = normalizeTenantSlug(tenantSlug);
+    const isCentral = isCentralHost();
+
+    // Central domain without tenant = superadmin login
+    if (isCentral && !normalizedTenant) {
+      try {
+        const loginData: LoginRequest = { email, password };
+        const response = await apiClient.post<LoginResponse>(
+          "/login",
+          loginData,
+          {
+            // No X-Tenant header — central/superadmin context
+          },
+        );
+
+        const token = response.data.token;
+        if (token) {
+          setCookie(TOKEN_COOKIE_NAME, token);
+          apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
+          const userFetched = await fetchUser();
+          // Don't set tenant cookie for superadmin login
+          if (userFetched) {
+            deleteCookie(TENANT_COOKIE_NAME);
+            try {
+              localStorage.removeItem("active_admin_tenant");
+            } catch {}
+          }
+          return userFetched;
+        } else {
+          error.value = "No token received from server";
+          return false;
+        }
+      } catch (err: any) {
+        error.value = formatApiError(err, "Error logging in");
+        deleteCookie(TOKEN_COOKIE_NAME);
+        return false;
+      } finally {
+        isLoading.value = false;
+      }
+    }
+
+    // Tenant is required for tenant login
     if (!normalizedTenant) {
       error.value = "Organization is required";
       isLoading.value = false;
@@ -199,7 +247,7 @@ export function useAuth() {
     try {
       const loginData: LoginRequest = { email, password };
       const response = await apiClient.post<LoginResponse>(
-        "/login",
+        "/tenant/login",
         loginData,
         {
           headers: {

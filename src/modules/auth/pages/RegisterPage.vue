@@ -23,8 +23,8 @@
               v-model="tenantSlug"
               type="text"
               required
-              :disabled="isLoading"
-              class="block w-full rounded-lg bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-600 border border-white/10 focus:border-[var(--fleetly-baltic-blue)] focus:outline-none transition disabled:opacity-50"
+              :disabled="isLoading || isOrgLocked"
+              class="block w-full rounded-lg bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-600 border border-white/10 focus:border-[var(--fleetly-baltic-blue)] focus:outline-none transition disabled:opacity-50 disabled:cursor-default"
             />
           </div>
 
@@ -134,13 +134,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter, RouterLink } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute, RouterLink } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
 import { useI18n } from '@/i18n'
 
 const router = useRouter()
+const route = useRoute()
 const { register, isLoading, error } = useAuth()
 const { m } = useI18n()
 
@@ -150,6 +151,30 @@ const username = ref('')
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
+
+// When org is pre-filled from query param or subdomain, lock the field
+const isOrgLocked = computed(() => tenantSlug.value !== '' && !isFromCentralDomain.value)
+
+const isFromCentralDomain = computed(() => {
+  if (typeof window === 'undefined') return true
+  const host = window.location.hostname.toLowerCase()
+  return ['localhost', '127.0.0.1', 'jordiarnau.iemhosting.asix2.iesmontsia.cat'].includes(host)
+})
+
+onMounted(() => {
+  // Pre-fill from ?org= query param
+  const orgParam = route.query.org as string | undefined
+  if (orgParam) {
+    tenantSlug.value = orgParam
+    return
+  }
+  // Auto-detect from subdomain (e.g. empresa1.jordiarnau...)
+  if (!isFromCentralDomain.value) {
+    const host = window.location.hostname.toLowerCase()
+    const parts = host.split('.')
+    if (parts.length >= 3) tenantSlug.value = parts[0]
+  }
+})
 
 const handleSubmit = async () => {
   await register(

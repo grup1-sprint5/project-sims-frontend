@@ -7,6 +7,12 @@
         <img class="h-20 w-auto" :src="isDark ? '/branding/fleetly_logotip_blanc.svg' : '/branding/fleetly_logotip_negre.svg'" alt="Fleetly" />
       </RouterLink>
 
+      <div v-if="!isCentralDomain && tenantName" class="mb-4 text-center">
+        <span class="inline-block rounded-full px-3 py-1 text-sm font-semibold bg-[var(--fleetly-baltic-blue)] text-white">
+          {{ tenantName }}
+        </span>
+      </div>
+
       <div class="rounded-xl border border-white/10 bg-gray-900 px-6 py-8">
 
         <div class="flex items-center justify-between mb-6">
@@ -16,7 +22,7 @@
 
         <form class="space-y-4" @submit.prevent="handleSubmit">
 
-          <div v-if="!isCentralDomain">
+          <div v-if="isCentralDomain">
             <label for="tenant" class="block text-sm text-gray-400 mb-1.5">{{ m.login.orgLabel }}</label>
             <input
               id="tenant"
@@ -94,7 +100,7 @@
 
       <p class="mt-5 text-center text-sm text-gray-500">
         {{ m.login.noAccount }}
-        <RouterLink to="/register" class="text-gray-300 hover:text-white transition">{{ m.login.register }}</RouterLink>
+        <RouterLink :to="registerRoute" class="text-gray-300 hover:text-white transition">{{ m.login.register }}</RouterLink>
       </p>
 
       <RouterLink to="/landing" class="mt-3 flex justify-center items-center gap-1 text-xs text-gray-600 hover:text-gray-400 transition">
@@ -115,6 +121,7 @@ import { useAuth } from '../composables/useAuth'
 import { useTheme } from '@/modules/common/composables/useTheme'
 import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
 import { useI18n } from '@/i18n'
+import apiClient from '@/services/api'
 
 const router = useRouter()
 const { login, isLoading, error } = useAuth()
@@ -122,6 +129,7 @@ const { isDark } = useTheme()
 const { m } = useI18n()
 
 const tenantSlug = ref('')
+const tenantName = ref('')
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
@@ -139,6 +147,11 @@ const isCentralDomain = computed(() => {
   return centralDomains.includes(host)
 })
 
+const registerRoute = computed(() => {
+  const slug = tenantSlug.value
+  return slug ? `/register?org=${encodeURIComponent(slug)}` : '/register'
+})
+
 const getTenantSlugFromHost = (): string => {
   if (typeof window === 'undefined') return ''
   const host = window.location.hostname.toLowerCase()
@@ -153,6 +166,12 @@ onMounted(async () => {
     const slug = getTenantSlugFromHost()
     if (slug) {
       tenantSlug.value = slug
+      try {
+        const res = await apiClient.get('/tenant/info', { headers: { 'X-Tenant': slug } })
+        tenantName.value = res.data?.name || slug
+      } catch {
+        tenantName.value = slug
+      }
     }
   }
 })

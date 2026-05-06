@@ -22,7 +22,6 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import 'leaflet-draw/dist/leaflet.draw.css'
 import { useI18n } from '@/i18n'
 import type { GeofencePoint, GeofenceType } from '../interfaces/geofencing.interface'
 

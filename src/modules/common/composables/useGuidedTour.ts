@@ -1,4 +1,5 @@
 import { driver, type DriveStep } from 'driver.js'
+import 'driver.js/dist/driver.css'
 import { useI18n } from '@/i18n'
 
 const TOUR_VERSION = 'v1'
@@ -31,7 +32,7 @@ const buildStep = (element: string | null, title: string, description: string): 
 
 const doneKey = (scope: string) => `fleetly-tour-${scope}-${TOUR_VERSION}`
 
-const createDriver = (labels: { next: string; previous: string; done: string; close: string }) => {
+const createDriver = (labels: { next: string; previous: string; done: string }) => {
   return driver({
     allowClose: true,
     showProgress: true,
@@ -41,7 +42,6 @@ const createDriver = (labels: { next: string; previous: string; done: string; cl
     nextBtnText: labels.next,
     prevBtnText: labels.previous,
     doneBtnText: labels.done,
-    closeBtnText: labels.close,
   })
 }
 

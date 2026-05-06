@@ -69,16 +69,45 @@
               <ArrowRightOnRectangleIcon class="size-6" aria-hidden="true" />
             </button>
 
-            <RouterLink
-              to="/perfil"
-              class="relative ml-1 flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]"
-            >
-              <span class="absolute -inset-1.5"></span>
-              <span class="sr-only">{{ m.userMenu.yourProfile }}</span>
-              <span class="size-8 rounded-full outline -outline-offset-1 outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
-                {{ userInitials }}
-              </span>
-            </RouterLink>
+            <!-- Profile dropdown -->
+            <Menu as="div" class="relative ml-3" data-tour-id="user-menu">
+              <MenuButton class="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]">
+                <span class="absolute -inset-1.5"></span>
+                <span class="sr-only">Open user menu</span>
+                <span class="size-8 rounded-full outline -outline-offset-1 outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
+                  {{ userInitials }}
+                </span>
+              </MenuButton>
+
+              <transition
+                enter-active-class="transition ease-out duration-200"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform scale-100"
+                leave-active-class="transition ease-in duration-75"
+                leave-from-class="transform scale-100"
+                leave-to-class="transform opacity-0 scale-95"
+              >
+                <MenuItems class="absolute right-0 z-40 mt-2 w-48 origin-top-right rounded-md bg-[var(--app-surface)] py-1 outline -outline-offset-1 outline-[var(--app-border)] text-[var(--app-text)]">
+                  <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
+                    <button
+                      v-if="item.type === 'logout'"
+                      type="button"
+                      @click="handleLogout"
+                      :class="[active ? 'bg-[var(--app-surface-alt)] outline-none' : '', 'block w-full text-left px-4 py-2 text-sm text-[var(--app-text)]']"
+                    >
+                      {{ item.name }}
+                    </button>
+                    <RouterLink
+                      v-else
+                      :to="item.to"
+                      :class="[active ? 'bg-[var(--app-surface-alt)] outline-none' : '', 'block px-4 py-2 text-sm text-[var(--app-text)]']"
+                    >
+                      {{ item.name }}
+                    </RouterLink>
+                  </MenuItem>
+                </MenuItems>
+              </transition>
+            </Menu>
           </div>
 
           <!-- Mobile: top actions -->
@@ -103,15 +132,44 @@
             <div data-tour-id="language-switcher">
               <LanguageSwitcher />
             </div>
-            <button
-              type="button"
-              class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
-              :title="m.userMenu.signOut"
-              @click="handleLogout"
-            >
-              <span class="sr-only">{{ m.userMenu.signOut }}</span>
-              <ArrowRightOnRectangleIcon class="size-5" aria-hidden="true" />
-            </button>
+            
+            <!-- Mobile User Menu -->
+            <Menu as="div" class="relative" data-tour-id="user-menu-mobile">
+              <MenuButton class="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]">
+                <span class="size-8 rounded-full outline -outline-offset-1 outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
+                  {{ userInitials }}
+                </span>
+              </MenuButton>
+
+              <transition
+                enter-active-class="transition ease-out duration-200"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform scale-100"
+                leave-active-class="transition ease-in duration-75"
+                leave-from-class="transform scale-100"
+                leave-to-class="transform opacity-0 scale-95"
+              >
+                <MenuItems class="absolute right-0 z-40 mt-2 w-48 origin-top-right rounded-md bg-[var(--app-surface)] py-1 outline -outline-offset-1 outline-[var(--app-border)] text-[var(--app-text)]">
+                  <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
+                    <button
+                      v-if="item.type === 'logout'"
+                      type="button"
+                      @click="handleLogout"
+                      :class="[active ? 'bg-[var(--app-surface-alt)] outline-none' : '', 'block w-full text-left px-4 py-2 text-sm text-[var(--app-text)]']"
+                    >
+                      {{ item.name }}
+                    </button>
+                    <RouterLink
+                      v-else
+                      :to="item.to"
+                      :class="[active ? 'bg-[var(--app-surface-alt)] outline-none' : '', 'block px-4 py-2 text-sm text-[var(--app-text)]']"
+                    >
+                      {{ item.name }}
+                    </RouterLink>
+                  </MenuItem>
+                </MenuItems>
+              </transition>
+            </Menu>
 
             <RouterLink
               to="/perfil"
@@ -163,6 +221,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, ArrowRightOnRectangleIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import showToast from '@/modules/common/composables/useToast'
