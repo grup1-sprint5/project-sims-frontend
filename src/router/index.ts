@@ -122,7 +122,7 @@ router.beforeEach(async (to, from, next) => {
     next(isAdmin ? '/admin' : '/home')
   } else if (to.path.startsWith('/admin') && isAuthenticated.value && !isAdmin) {
     // Client trying to access admin area -> redirect to client home
-    next('/')
+    next('/home')
   } else if (to.meta.requiresSuperAdmin && isAuthenticated.value && !isSuperAdmin) {
     // Admin without super-admin role cannot access global multi-tenant views
     next('/admin')

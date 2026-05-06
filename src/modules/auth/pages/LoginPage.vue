@@ -124,7 +124,7 @@ import { useI18n } from '@/i18n'
 import apiClient from '@/services/api'
 
 const router = useRouter()
-const { login, isLoading, error } = useAuth()
+const { login, isLoading, error, user } = useAuth()
 const { isDark } = useTheme()
 const { m } = useI18n()
 
@@ -180,7 +180,11 @@ const handleSubmit = async () => {
   const tenant = isCentralDomain.value ? '' : tenantSlug.value
   const success = await login(tenant, email.value, password.value)
   if (success) {
-    router.push('/admin')
+    const isAdmin = user.value?.roles?.some((role: any) => {
+      return typeof role.name === 'string' && role.name.toLowerCase().includes('admin')
+    }) ?? false
+
+    await router.replace(isAdmin ? '/admin' : '/home')
   }
 }
 </script>

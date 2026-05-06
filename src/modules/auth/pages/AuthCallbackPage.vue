@@ -14,7 +14,7 @@ import { useAuth } from '../composables/useAuth'
 
 const route = useRoute()
 const router = useRouter()
-const { completeTenantRedirectLogin } = useAuth()
+const { completeTenantRedirectLogin, user } = useAuth()
 const errorMessage = ref('')
 
 onMounted(async () => {
@@ -29,7 +29,11 @@ onMounted(async () => {
 
   const ok = await completeTenantRedirectLogin(exchangeToken, tenant)
   if (ok) {
-    await router.replace('/admin')
+    const isAdmin = user.value?.roles?.some((role: any) => {
+      return typeof role.name === 'string' && role.name.toLowerCase().includes('admin')
+    }) ?? false
+
+    await router.replace(isAdmin ? '/admin' : '/home')
     return
   }
 
