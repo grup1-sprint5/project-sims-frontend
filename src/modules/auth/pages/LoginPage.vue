@@ -29,8 +29,9 @@
               v-model="tenantSlug"
               type="text"
               autocomplete="organization"
+              readonly
               :disabled="isLoading"
-              class="block w-full rounded-lg bg-white/5 px-3.5 py-3 text-base text-white placeholder:text-gray-600 border border-white/10 focus:border-[var(--fleetly-baltic-blue)] focus:outline-none transition disabled:opacity-50"
+              class="block w-full rounded-lg bg-white/5 px-3.5 py-3 text-base text-white/60 placeholder:text-gray-600 border border-white/10 cursor-not-allowed transition disabled:opacity-50"
             />
           </div>
 
