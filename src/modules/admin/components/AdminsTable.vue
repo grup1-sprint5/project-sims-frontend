@@ -2,7 +2,14 @@
   <div class="mt-8 flow-root rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-2 sm:px-3">
     <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-        <table class="relative min-w-full divide-y divide-[var(--app-border)]">
+        <table class="relative min-w-full table-fixed divide-y divide-[var(--app-border)]">
+          <colgroup>
+            <col
+              v-for="col in columns"
+              :key="`${col.key}-width`"
+              :style="col.width ? { width: col.width } : undefined"
+            />
+          </colgroup>
           <thead>
             <tr>
               <th
@@ -44,6 +51,7 @@ type Column = {
   key: string
   label: string
   srOnly?: boolean
+  width?: string
 }
 
 const props = defineProps<{

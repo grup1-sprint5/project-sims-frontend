@@ -118,7 +118,7 @@ const locateMe = () => {
     setUserLocation(lat, lng)
     if (map.value) {
       map.value.setView([lat, lng], 13)
-      if ((window as any).L?.marker) (window as any).L.marker([lat, lng]).addTo(map.value).bindPopup('<b>You are here</b>').openPopup()
+      if ((window as any).L?.marker) (window as any).L.marker([lat, lng]).addTo(map.value).bindPopup(`<b>${m.value.adminMapUi.youAreHere}</b>`).openPopup()
     }
   }, err => console.warn('Geolocation failed', err))
 }

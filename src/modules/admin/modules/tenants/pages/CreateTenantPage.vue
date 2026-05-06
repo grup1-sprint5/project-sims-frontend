@@ -1,8 +1,8 @@
 <template>
   <div class="px-4 sm:px-6 lg:px-8">
     <PageHeading
-      title="Crear tenant"
-      description="Añade una nueva organización al sistema"
+      :title="m.adminTenantsUi.createTitle"
+      :description="m.adminTenantsUi.createDescription"
     >
       <template #actions>
         <router-link
@@ -10,7 +10,7 @@
           class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50
                  dark:bg-white/10 dark:text-white dark:ring-white/5 dark:hover:bg-white/20"
         >
-          Volver
+          {{ m.adminTenantDetailUi.back }}
         </router-link>
       </template>
     </PageHeading>
@@ -18,50 +18,50 @@
     <form @submit.prevent="handleSubmit" class="mt-8 max-w-lg space-y-1">
       <FormInput
         v-model="form.name"
-        label="Nombre"
-        placeholder="Ej: SIMS Corp"
+        :label="m.adminTenantsUi.name"
+        :placeholder="m.adminTenantsUi.namePlaceholder"
         :error="errors.name"
       />
 
       <FormInput
         v-model="form.slug"
-        label="Slug"
-        placeholder="ej: sims-corp (solo letras, números y guiones)"
+        :label="m.commonUi.slug"
+        :placeholder="m.adminTenantsUi.slugPlaceholder"
         :error="errors.slug"
       />
 
       <FormInput
         v-model="form.tax_id"
-        label="CIF/NIF (opcional)"
-        placeholder="Ej: B12345678"
+        :label="m.adminTenantsUi.taxIdOptional"
+        :placeholder="m.adminTenantsUi.taxIdPlaceholder"
         :error="errors.tax_id"
       />
 
       <FormInput
         v-model="form.email"
-        label="Email de contacto (opcional)"
-        placeholder="Ej: info@empresa.com"
+        :label="m.adminTenantsUi.contactEmailOptional"
+        :placeholder="m.adminTenantsUi.emailPlaceholder"
         type="email"
         :error="errors.email"
       />
 
       <FormInput
         v-model="form.phone"
-        label="Teléfono (opcional)"
-        placeholder="Ej: +34 600 000 000"
+        :label="m.adminTenantsUi.phoneOptional"
+        :placeholder="m.adminTenantsUi.phonePlaceholder"
         :error="errors.phone"
       />
 
       <FormInput
         v-model="form.address"
-        label="Dirección (opcional)"
-        placeholder="Ej: Calle Principal 1, Barcelona"
+        :label="m.adminTenantsUi.addressOptional"
+        :placeholder="m.adminTenantsUi.addressPlaceholder"
         :error="errors.address"
       />
 
       <FormCheckbox
         v-model="form.active"
-        label="Activo"
+        :label="m.commonUi.active"
       />
 
       <div class="flex gap-3 pt-4">
@@ -71,14 +71,14 @@
           class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500
                  disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {{ loading ? 'Guardando...' : 'Crear tenant' }}
+          {{ loading ? m.adminTenantsUi.saving : m.adminTenantsUi.createAction }}
         </button>
         <router-link
           to="/admin/tenants"
           class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50
                  dark:bg-white/10 dark:text-white dark:ring-white/5 dark:hover:bg-white/20"
         >
-          Cancelar
+          {{ m.commonUi.cancel }}
         </router-link>
       </div>
 
@@ -95,9 +95,11 @@ import type { TenantForm } from '../interfaces/tenant.interface'
 import PageHeading from '@/modules/admin/components/PageHeading.vue'
 import FormInput from '@/modules/admin/components/FormInput.vue'
 import FormCheckbox from '@/modules/admin/components/FormCheckbox.vue'
+import { useI18n } from '@/i18n'
 
 const router = useRouter()
 const { createTenant, loading, error } = useTenants()
+const { m } = useI18n()
 
 const form = reactive<TenantForm>({
   name: '',
@@ -124,20 +126,20 @@ function validate(): boolean {
   Object.keys(errors).forEach(k => errors[k] = null)
 
   if (!form.name.trim()) {
-    errors.name = 'El nombre es obligatorio'
+    errors.name = m.value.adminTenantsUi.nameRequired
     valid = false
   }
 
   if (!form.slug.trim()) {
-    errors.slug = 'El slug es obligatorio'
+    errors.slug = m.value.adminTenantsUi.slugRequired
     valid = false
   } else if (!/^[a-z0-9_-]+$/i.test(form.slug.trim())) {
-    errors.slug = 'Solo letras, números, guiones y guiones bajos'
+    errors.slug = m.value.adminTenantsUi.slugInvalid
     valid = false
   }
 
   if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    errors.email = 'Email no válido'
+    errors.email = m.value.adminTenantsUi.invalidEmail
     valid = false
   }
 

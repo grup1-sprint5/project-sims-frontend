@@ -56,7 +56,7 @@
             </div>
             <button type="button" class="relative rounded-full p-1 text-[var(--fleetly-pale-slate)] hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)]">
               <span class="absolute -inset-1.5"></span>
-              <span class="sr-only">View notifications</span>
+              <span class="sr-only">{{ m.userMenu.viewNotifications }}</span>
               <BellIcon class="size-6" aria-hidden="true" />
             </button>
             <button
@@ -73,7 +73,7 @@
             <Menu as="div" class="relative ml-3" data-tour-id="user-menu">
               <MenuButton class="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]">
                 <span class="absolute -inset-1.5"></span>
-                <span class="sr-only">Open user menu</span>
+                <span class="sr-only">{{ m.adminLayoutUi.openUserMenu }}</span>
                 <span class="size-8 rounded-full outline -outline-offset-1 outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
                   {{ userInitials }}
                 </span>
@@ -248,8 +248,13 @@ const navigation = computed(() => [
   { name: m.value.nav.map, to: '/home/vehicles-map', icon: MapIcon },
   { name: m.value.nav.bookings, to: '/home/bookings', icon: CalendarDaysIcon },
   { name: m.value.nav.tickets, to: '/home/tickets', icon: TicketIcon },
-  { name: 'Sensors', to: '/home/sensors', icon: WifiIcon },
+  { name: m.value.sensorsUi.title, to: '/home/sensors', icon: WifiIcon },
   { name: m.value.nav.profile, to: '/home/perfil', icon: UserIcon },
+])
+
+const userNavigation = computed(() => [
+  { name: m.value.userMenu.yourProfile, to: '/home/perfil', type: 'link' },
+  { name: m.value.userMenu.signOut, to: '#', type: 'logout' },
 ])
 
 const handleLogout = async () => {

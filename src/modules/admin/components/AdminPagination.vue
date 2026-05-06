@@ -1,7 +1,7 @@
 <template>
   <nav
     class="flex items-center justify-between border-t border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 sm:px-6"
-    aria-label="Pagination"
+    :aria-label="m.commonUi.pagination"
   >
     <!-- Info -->
     <div class="hidden sm:block">
