@@ -241,7 +241,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from '@/i18n'
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import { useUsers } from '@/modules/admin/modules/users/composables/useUsers'
@@ -250,6 +250,7 @@ import apiClient from '@/services/api'
 
 const { m, locale } = useI18n()
 const router = useRouter()
+const route = useRoute()
 const { user, fetchUser, logout } = useAuth()
 const { updateUser } = useUsers()
 const toast = useToast()
@@ -294,8 +295,8 @@ const startWalletTopup = async () => {
 
   loadingTopup.value = true
   try {
-    const successUrl = `${window.location.origin}/perfil?wallet=success`
-    const cancelUrl = `${window.location.origin}/perfil?wallet=cancel`
+    const successUrl = `${window.location.origin}/#/home/perfil?wallet=success`
+    const cancelUrl = `${window.location.origin}/#/home/perfil?wallet=cancel`
 
     const response = await apiClient.post('/wallet/checkout-session', {
       amount: walletTopupAmount.value,
@@ -330,9 +331,9 @@ onMounted(async () => {
     profileForm.email = user.value.email
   }
 
-  const walletStatus = new URLSearchParams(window.location.search).get('wallet')
+  const walletStatus = route.query.wallet as string | undefined
   if (walletStatus === 'success') {
-    const sessionId = new URLSearchParams(window.location.search).get('session_id')
+    const sessionId = route.query.session_id as string | undefined
     if (sessionId) {
       try {
         await apiClient.post('/wallet/confirm-session', { session_id: sessionId })
@@ -342,11 +343,11 @@ onMounted(async () => {
     }
     await fetchUser()
     toast.success(m.value.profile.walletUpdated)
-    router.replace('/perfil')
+    router.replace('/home/perfil')
   }
   if (walletStatus === 'cancel') {
     toast.error(m.value.profile.walletCancelled)
-    router.replace('/perfil')
+    router.replace('/home/perfil')
   }
 
   loading.value = false
