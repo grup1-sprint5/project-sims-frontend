@@ -167,8 +167,7 @@ export function useAuth() {
     error.value = null;
     try {
       const response = await apiClient.get<UserResponse>("/user");
-      // Merge instead of overwrite to avoid losing existing reactive refs or fields
-      user.value = Object.assign({}, user.value || {}, response.data.user);
+      user.value = response.data.user;
       return true;
     } catch (err: any) {
       if (err.response?.status === 401) {

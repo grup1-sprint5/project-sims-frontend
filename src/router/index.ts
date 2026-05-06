@@ -114,17 +114,14 @@ router.beforeEach(async (to, from, next) => {
     return typeof r.name === 'string' && r.name.toLowerCase().includes('superadmin')
   }) ?? false
 
-  if (requiresAuth && !isAuthenticated.value) {
-    // Protected route and not authenticated -> go to login
+  if (to.path.startsWith('/admin') && !isAdmin) {
+    // Non-admin accessing admin area: redirect regardless of auth state
+    next(isAuthenticated.value ? '/home' : '/login')
+  } else if (requiresAuth && !isAuthenticated.value) {
     next('/login')
   } else if (to.path === '/login' && isAuthenticated.value) {
-    // Logged-in users should not stay on the login screen
     next(isAdmin ? '/admin' : '/home')
-  } else if (to.path.startsWith('/admin') && isAuthenticated.value && !isAdmin) {
-    // Client trying to access admin area -> redirect to client home
-    next('/home')
   } else if (to.meta.requiresSuperAdmin && isAuthenticated.value && !isSuperAdmin) {
-    // Admin without super-admin role cannot access global multi-tenant views
     next('/admin')
   } else {
     next()
