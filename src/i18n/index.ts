@@ -609,6 +609,8 @@ const messages = {
     },
     adminNav: { dashboard: 'Tauler', map: 'Mapa', users: 'Usuaris', roles: 'Rols', bookings: 'Reserves', vehicles: 'Vehicles', geofences: 'Geofencing', geofenceEvents: 'Events geofencing', tenants: 'Empreses', superAdmin: 'Vista global', tenantWorkspace: 'Espai tenant', tickets: 'Tiquets' },
     admin: { notAuthorizedTitle: 'No autoritzat', notAuthorizedMsg: "El teu compte no té permís per accedir a l'àrea d'administració." },
+    login: { title: 'Iniciar sessió', subtitle: 'Accedeix al teu compte de Fleetly', orgLabel: 'Organització', orgHint: "Pots escriure \"Fleetly Barcelona\" i es normalitzarà automàticament.", emailLabel: 'Correu electrònic', passwordLabel: 'Contrasenya', showPassword: 'Mostra la contrasenya', hidePassword: 'Amaga la contrasenya', submit: 'Iniciar sessió', submitting: 'Iniciant sessió...', noAccount: 'Encara no tens compte?', register: "Registra't gratis", backToHome: "Torna a l'inici" },
+    register: { title: 'Crear compte', subtitle: 'Registra\'t a Fleetly', orgLabel: 'Organització', orgHint: "Pots escriure \"Fleetly Barcelona\" i es normalitzarà automàticament.", nameLabel: 'Nom complet', usernameLabel: "Nom d'usuari", emailLabel: 'Correu electrònic', passwordLabel: 'Contrasenya', showPassword: 'Mostra la contrasenya', hidePassword: 'Amaga la contrasenya', submit: 'Crear compte', submitting: 'Creant compte...', hasAccount: 'Ja tens compte?', signIn: 'Inicia sessió', backToHome: "Torna a l'inici" },
   },
   es: {
     nav: { map: 'Mapa', bookings: 'Reservas', tickets: 'Tickets', favorites: 'Favoritos', profile: 'Perfil' },
@@ -1216,6 +1218,8 @@ const messages = {
     },
     adminNav: { dashboard: 'Panel', map: 'Mapa', users: 'Usuarios', roles: 'Roles', bookings: 'Reservas', vehicles: 'Vehículos', geofences: 'Geofencing', geofenceEvents: 'Eventos geofencing', tenants: 'Empresas', superAdmin: 'Vista global', tenantWorkspace: 'Espacio tenant', tickets: 'Tickets' },
     admin: { notAuthorizedTitle: 'No autorizado', notAuthorizedMsg: 'Tu cuenta no tiene permiso para acceder al área de administración.' },
+    login: { title: 'Iniciar sesión', subtitle: 'Accede a tu cuenta de Fleetly', orgLabel: 'Organización', orgHint: 'Puedes escribir "Fleetly Barcelona" y se normalizará automáticamente.', emailLabel: 'Correo electrónico', passwordLabel: 'Contraseña', showPassword: 'Mostrar contraseña', hidePassword: 'Ocultar contraseña', submit: 'Iniciar sesión', submitting: 'Iniciando sesión...', noAccount: '¿Todavía no tienes cuenta?', register: 'Regístrate gratis', backToHome: 'Volver al inicio' },
+    register: { title: 'Crear cuenta', subtitle: 'Regístrate en Fleetly', orgLabel: 'Organización', orgHint: 'Puedes escribir "Fleetly Barcelona" y se normalizará automáticamente.', nameLabel: 'Nombre completo', usernameLabel: 'Nombre de usuario', emailLabel: 'Correo electrónico', passwordLabel: 'Contraseña', showPassword: 'Mostrar contraseña', hidePassword: 'Ocultar contraseña', submit: 'Crear cuenta', submitting: 'Creando cuenta...', hasAccount: '¿Ya tienes cuenta?', signIn: 'Inicia sesión', backToHome: 'Volver al inicio' },
   },
   en: {
     nav: { map: 'Map', bookings: 'Bookings', tickets: 'Tickets', favorites: 'Favorites', profile: 'Profile' },
@@ -1823,6 +1827,8 @@ const messages = {
     },
     adminNav: { dashboard: 'Dashboard', map: 'Map', users: 'Users', roles: 'Roles', bookings: 'Bookings', vehicles: 'Vehicles', geofences: 'Geofences', geofenceEvents: 'Geofence events', tenants: 'Tenants', superAdmin: 'Global view', tenantWorkspace: 'Tenant workspace', tickets: 'Tickets' },
     admin: { notAuthorizedTitle: 'Not authorized', notAuthorizedMsg: 'Your account does not have permission to access the admin area.' },
+    login: { title: 'Sign in', subtitle: 'Access your Fleetly account', orgLabel: 'Organization', orgHint: 'You can type "Fleetly Barcelona" and it will be normalized automatically.', emailLabel: 'Email address', passwordLabel: 'Password', showPassword: 'Show password', hidePassword: 'Hide password', submit: 'Sign in', submitting: 'Signing in...', noAccount: "Don't have an account yet?", register: 'Register for free', backToHome: 'Back to home' },
+    register: { title: 'Create account', subtitle: 'Sign up for Fleetly', orgLabel: 'Organization', orgHint: 'You can type "Fleetly Barcelona" and it will be normalized automatically.', nameLabel: 'Full name', usernameLabel: 'Username', emailLabel: 'Email address', passwordLabel: 'Password', showPassword: 'Show password', hidePassword: 'Hide password', submit: 'Create account', submitting: 'Creating account...', hasAccount: 'Already have an account?', signIn: 'Sign in', backToHome: 'Back to home' },
   },
 }
 

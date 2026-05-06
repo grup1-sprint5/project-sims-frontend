@@ -1,125 +1,227 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center px-6 py-12 lg:px-8" style="background:var(--app-bg);color:var(--app-text);">
-    <div class="w-full max-w-md rounded-2xl border border-[var(--fleetly-gunmetal)] bg-[var(--fleetly-gunmetal)]/35 p-6 shadow-2xl shadow-black/40 sm:p-8">
-      <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <img class="mx-auto h-12 w-auto object-contain" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
-      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">Create your account</h2>
-      </div>
+  <div class="min-h-screen bg-gray-950 text-white flex flex-col items-center justify-center relative overflow-hidden px-4 py-12 sm:px-6">
 
-      <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" @submit.prevent="handleSubmit">
-        <div>
-          <label for="tenantSlug" class="block text-sm/6 font-medium text-gray-100">Organization</label>
-          <div class="mt-2 text-xs text-gray-400 mb-1">
-            Tip: you can use "Fleetly Barcelona" and it will normalize to "fleetly-barcelona".
-          </div>
-          <div class="mt-2">
-            <input
-              id="tenantSlug"
-              v-model="tenantSlug"
-              type="text"
-              required
-              :disabled="isLoading"
-              placeholder="e.g. fleetly-barcelona"
-              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6"
-            />
-          </div>
-        </div>
+    <!-- ═══════════════════════════════════════════
+         FONS ATMOSFÈRIC
+    ═══════════════════════════════════════════ -->
+    <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      <div class="absolute -top-40 -left-24 h-[600px] w-[700px] rounded-full bg-[var(--fleetly-baltic-blue)]/20 blur-[100px]"></div>
+      <div class="absolute -bottom-24 left-1/2 -translate-x-1/2 h-[400px] w-[600px] rounded-full bg-[var(--fleetly-pale-slate)]/10 blur-3xl"></div>
+    </div>
 
-        <div>
-          <label for="name" class="block text-sm/6 font-medium text-gray-100">Full Name</label>
-          <div class="mt-2">
-            <input
-              id="name"
-              v-model="name"
-              type="text"
-              required
-              :disabled="isLoading"
-              placeholder="e.g. John Doe"
-              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6"
-            />
-          </div>
-        </div>
+    <!-- Icona vehicle — esquerra (desktop) -->
+    <div class="pointer-events-none absolute -left-12 top-1/2 -translate-y-1/2 hidden lg:block select-none" aria-hidden="true">
+      <img src="/branding/fleetly_isotip_blanc.svg" class="h-[400px] w-[400px] object-contain opacity-[0.06]" alt="" />
+    </div>
 
-        <div>
-          <label for="username" class="block text-sm/6 font-medium text-gray-100">Username</label>
-          <div class="mt-2">
-            <input
-              id="username"
-              v-model="username"
-              type="text"
-              required
-              :disabled="isLoading"
-              placeholder="e.g. johndoe"
-              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6"
-            />
-          </div>
-        </div>
+    <!-- ═══════════════════════════════════════════
+         CONTINGUT CENTRAT
+    ═══════════════════════════════════════════ -->
+    <div class="relative z-10 flex flex-col items-center w-full">
 
-        <div>
-          <label for="email" class="block text-sm/6 font-medium text-gray-100">Email address</label>
-          <div class="mt-2">
-            <input
-              id="email"
-              v-model="email"
-              type="email"
-              autocomplete="email"
-              required
-              :disabled="isLoading"
-              placeholder="e.g. john@example.com"
-              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6"
-            />
-          </div>
-        </div>
+      <!-- Logo -->
+      <RouterLink to="/landing" class="mb-10">
+        <img class="h-20 w-auto object-contain" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
+      </RouterLink>
 
-        <div>
-          <label for="password" class="block text-sm/6 font-medium text-gray-100">Password</label>
-          <div class="mt-2 relative">
-            <input
-              id="password"
-              v-model="password"
-              :type="showPassword ? 'text' : 'password'"
-              autocomplete="new-password"
-              required
-              :disabled="isLoading"
-              class="block w-full rounded-md bg-white/5 px-3 py-1.5 pr-10 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--fleetly-baltic-blue)] sm:text-sm/6"
-            />
+      <!-- Card del formulari -->
+      <div class="w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-gray-900/80 shadow-2xl shadow-black/60 backdrop-blur-md">
+
+        <!-- Barra de gradient superior -->
+        <div class="h-[3px] w-full bg-gradient-to-r from-[var(--fleetly-baltic-blue)] via-[var(--fleetly-pale-slate)]/60 to-transparent"></div>
+
+        <div class="px-7 py-8 sm:px-8">
+
+          <!-- Capçalera de la card -->
+          <div class="mb-7 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <img class="h-9 w-auto shrink-0" src="/branding/fleetly_isotip_blanc.svg" alt="" />
+              <div>
+                <h1 class="text-xl font-extrabold tracking-tight text-white">{{ m.register.title }}</h1>
+                <p class="mt-0.5 text-xs text-gray-500">{{ m.register.subtitle }}</p>
+              </div>
+            </div>
+            <LanguageSwitcher />
+          </div>
+
+          <form class="space-y-5" @submit.prevent="handleSubmit">
+
+            <!-- Organització -->
+            <div>
+              <label for="tenantSlug" class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">
+                {{ m.register.orgLabel }}
+              </label>
+              <div class="relative">
+                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600">
+                  <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                  </svg>
+                </span>
+                <input
+                  id="tenantSlug"
+                  v-model="tenantSlug"
+                  type="text"
+                  required
+                  placeholder="fleetly-barcelona"
+                  :disabled="isLoading"
+                  class="block w-full rounded-xl bg-white/5 pl-9 pr-3 py-2.5 text-sm text-white placeholder:text-gray-700 border border-white/10 focus:border-[var(--fleetly-baltic-blue)]/70 focus:ring-1 focus:ring-[var(--fleetly-baltic-blue)]/50 transition outline-none disabled:opacity-50"
+                />
+              </div>
+              <p class="mt-1.5 text-xs text-gray-600">{{ m.register.orgHint }}</p>
+            </div>
+
+            <!-- Nom complet -->
+            <div>
+              <label for="name" class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">
+                {{ m.register.nameLabel }}
+              </label>
+              <div class="relative">
+                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600">
+                  <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                  </svg>
+                </span>
+                <input
+                  id="name"
+                  v-model="name"
+                  type="text"
+                  required
+                  placeholder="Joan Pérez"
+                  :disabled="isLoading"
+                  class="block w-full rounded-xl bg-white/5 pl-9 pr-3 py-2.5 text-sm text-white placeholder:text-gray-700 border border-white/10 focus:border-[var(--fleetly-baltic-blue)]/70 focus:ring-1 focus:ring-[var(--fleetly-baltic-blue)]/50 transition outline-none disabled:opacity-50"
+                />
+              </div>
+            </div>
+
+            <!-- Nom d'usuari -->
+            <div>
+              <label for="username" class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">
+                {{ m.register.usernameLabel }}
+              </label>
+              <div class="relative">
+                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600">
+                  <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zM19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/>
+                  </svg>
+                </span>
+                <input
+                  id="username"
+                  v-model="username"
+                  type="text"
+                  required
+                  placeholder="joanperez"
+                  :disabled="isLoading"
+                  class="block w-full rounded-xl bg-white/5 pl-9 pr-3 py-2.5 text-sm text-white placeholder:text-gray-700 border border-white/10 focus:border-[var(--fleetly-baltic-blue)]/70 focus:ring-1 focus:ring-[var(--fleetly-baltic-blue)]/50 transition outline-none disabled:opacity-50"
+                />
+              </div>
+            </div>
+
+            <!-- Correu -->
+            <div>
+              <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">
+                {{ m.register.emailLabel }}
+              </label>
+              <div class="relative">
+                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600">
+                  <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                </span>
+                <input
+                  id="email"
+                  v-model="email"
+                  type="email"
+                  autocomplete="email"
+                  required
+                  placeholder="tu@empresa.com"
+                  :disabled="isLoading"
+                  class="block w-full rounded-xl bg-white/5 pl-9 pr-3 py-2.5 text-sm text-white placeholder:text-gray-700 border border-white/10 focus:border-[var(--fleetly-baltic-blue)]/70 focus:ring-1 focus:ring-[var(--fleetly-baltic-blue)]/50 transition outline-none disabled:opacity-50"
+                />
+              </div>
+            </div>
+
+            <!-- Contrasenya -->
+            <div>
+              <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">
+                {{ m.register.passwordLabel }}
+              </label>
+              <div class="relative">
+                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600">
+                  <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>
+                </span>
+                <input
+                  id="password"
+                  v-model="password"
+                  :type="showPassword ? 'text' : 'password'"
+                  autocomplete="new-password"
+                  required
+                  :disabled="isLoading"
+                  class="block w-full rounded-xl bg-white/5 pl-9 pr-10 py-2.5 text-sm text-white placeholder:text-gray-700 border border-white/10 focus:border-[var(--fleetly-baltic-blue)]/70 focus:ring-1 focus:ring-[var(--fleetly-baltic-blue)]/50 transition outline-none disabled:opacity-50"
+                />
+                <button
+                  type="button"
+                  :disabled="isLoading"
+                  @click="showPassword = !showPassword"
+                  class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600 hover:text-gray-300 transition"
+                  :aria-label="showPassword ? m.register.hidePassword : m.register.showPassword"
+                >
+                  <svg v-if="!showPassword" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  <svg v-else class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.293-3.95m3.122-2.317A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.97 9.97 0 01-4.104 5.063M15 12a3 3 0 00-4.243-2.829M9.88 9.88A3 3 0 0014.12 14.12M3 3l18 18" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Error -->
+            <div v-if="error" class="flex items-start gap-2.5 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+              <svg class="size-4 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              {{ error }}
+            </div>
+
+            <!-- Botó d'enviament -->
             <button
-              type="button"
+              type="submit"
               :disabled="isLoading"
-              @click="showPassword = !showPassword"
-              class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-gray-200"
-              :aria-label="showPassword ? 'Hide password' : 'Show password'"
+              class="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--fleetly-baltic-blue)] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[var(--fleetly-baltic-blue)]/25 transition hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100"
             >
-              <svg v-if="!showPassword" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              <svg v-if="isLoading" class="size-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
               </svg>
-              <svg v-else class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.293-3.95m3.122-2.317A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.97 9.97 0 01-4.104 5.063M15 12a3 3 0 00-4.243-2.829M9.88 9.88A3 3 0 0014.12 14.12M3 3l18 18" />
+              <svg v-else class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
               </svg>
+              {{ isLoading ? m.register.submitting : m.register.submit }}
             </button>
-          </div>
+
+          </form>
         </div>
-
-        <div v-if="error" class="text-sm text-red-400">Error: {{ error }}</div>
-
-        <div>
-          <button
-            type="submit"
-            :disabled="isLoading"
-            class="flex w-full justify-center rounded-md bg-[var(--fleetly-baltic-blue)] px-3 py-1.5 text-sm/6 font-semibold text-white hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {{ isLoading ? 'Creating account...' : 'Register' }}
-          </button>
-        </div>
-
-        <p class="text-center text-sm text-gray-400">
-          Already have an account?
-          <RouterLink to="/login" class="font-semibold leading-6 text-[var(--fleetly-baltic-blue)] hover:opacity-80">Sign in</RouterLink>
-        </p>
-        </form>
       </div>
+
+      <!-- Ja tens compte? -->
+      <p class="mt-6 text-center text-sm text-gray-600">
+        {{ m.register.hasAccount }}
+        <RouterLink to="/login" class="font-semibold text-[var(--fleetly-pale-slate)] hover:text-white transition">
+          {{ m.register.signIn }}
+        </RouterLink>
+      </p>
+
+      <!-- Tornar a l'inici -->
+      <RouterLink to="/landing" class="mt-3 inline-flex items-center gap-1.5 text-xs text-gray-700 hover:text-gray-400 transition">
+        <svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        {{ m.register.backToHome }}
+      </RouterLink>
+
     </div>
   </div>
 </template>
@@ -128,9 +230,12 @@
 import { ref } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
+import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
+import { useI18n } from '@/i18n'
 
 const router = useRouter()
 const { register, isLoading, error } = useAuth()
+const { m } = useI18n()
 
 const tenantSlug = ref('')
 const name = ref('')
