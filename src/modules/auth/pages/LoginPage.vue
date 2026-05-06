@@ -4,7 +4,7 @@
     <div class="w-full max-w-sm">
 
       <RouterLink to="/landing" class="flex justify-center mb-8">
-        <img class="h-20 w-auto" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
+        <img class="h-20 w-auto" :src="isDark ? '/branding/fleetly_logotip_blanc.svg' : '/branding/fleetly_logotip_negre.svg'" alt="Fleetly" />
       </RouterLink>
 
       <div class="rounded-xl border border-white/10 bg-gray-900 px-6 py-8">
@@ -16,7 +16,7 @@
 
         <form class="space-y-4" @submit.prevent="handleSubmit">
 
-          <div>
+          <div v-if="!isCentralDomain">
             <label for="tenant" class="block text-sm text-gray-400 mb-1.5">{{ m.login.orgLabel }}</label>
             <input
               id="tenant"
@@ -109,14 +109,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
+import { useTheme } from '@/modules/common/composables/useTheme'
 import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
 import { useI18n } from '@/i18n'
 
 const router = useRouter()
 const { login, isLoading, error } = useAuth()
+const { isDark } = useTheme()
 const { m } = useI18n()
 
 const tenantSlug = ref('')
@@ -124,8 +126,40 @@ const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 
+const isCentralDomain = computed(() => {
+  if (typeof window === 'undefined') return false
+  const host = window.location.hostname.toLowerCase()
+  const centralDomains = [
+    'localhost',
+    '127.0.0.1',
+    'grup1-sims.com',
+    'www.grup1-sims.com',
+    'jordiarnau.iemhosting.asix2.iesmontsia.cat'
+  ]
+  return centralDomains.includes(host)
+})
+
+const getTenantSlugFromHost = (): string => {
+  if (typeof window === 'undefined') return ''
+  const host = window.location.hostname.toLowerCase()
+  const parts = host.split('.')
+  if (parts.length >= 3) return parts[0]!
+  if (host.endsWith('.localhost')) return host.split('.')[0]!
+  return ''
+}
+
+onMounted(async () => {
+  if (!isCentralDomain.value) {
+    const slug = getTenantSlugFromHost()
+    if (slug) {
+      tenantSlug.value = slug
+    }
+  }
+})
+
 const handleSubmit = async () => {
-  const success = await login(tenantSlug.value, email.value, password.value)
+  const tenant = isCentralDomain.value ? '' : tenantSlug.value
+  const success = await login(tenant, email.value, password.value)
   if (success) {
     router.push('/admin')
   }
