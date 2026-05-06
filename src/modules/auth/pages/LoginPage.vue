@@ -98,12 +98,14 @@
         </form>
 
         <div class="mt-5 rounded-lg border border-[var(--fleetly-baltic-blue)]/30 bg-[var(--fleetly-baltic-blue)]/10 px-3 py-3 text-center">
-          <p class="text-sm font-medium text-white">{{ m.login.companyPrompt }}</p>
+          <p class="text-sm font-medium text-white">
+            {{ isCentralDomain ? m.login.companyPrompt : m.login.clientPrompt }}
+          </p>
           <RouterLink
-            to="/register-company"
+            :to="isCentralDomain ? '/register-company' : registerRoute"
             class="mt-1 inline-flex text-sm font-semibold text-[var(--fleetly-pale-slate)] underline underline-offset-4 hover:text-white"
           >
-            {{ m.login.companyCta }}
+            {{ isCentralDomain ? m.login.companyCta : m.login.clientCta }}
           </RouterLink>
         </div>
       </div>
@@ -150,6 +152,11 @@ const isCentralDomain = computed(() => {
     'jordiarnau.iemhosting.asix2.iesmontsia.cat'
   ]
   return centralDomains.includes(host)
+})
+
+const registerRoute = computed(() => {
+  const slug = tenantSlug.value
+  return slug ? `/register?org=${encodeURIComponent(slug)}` : '/register'
 })
 
 const getTenantSlugFromHost = (): string => {
