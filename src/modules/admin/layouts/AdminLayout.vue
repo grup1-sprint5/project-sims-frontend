@@ -231,7 +231,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick, onMounted } from 'vue'
+import { ref, computed, nextTick, onMounted, watch } from 'vue'
 import ChatWidget from '@/modules/client/components/ChatWidget.vue'
 import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -321,8 +321,11 @@ const handleLogout = async () => {
 }
 
 const startGuide = (force = false) => {
+  const userId = user.value?.id
+  if (!userId && !force) return
+
   startAdminTour({
-    userScope: String(user.value?.id ?? 'guest'),
+    userScope: String(userId ?? 'guest'),
     force,
   })
 }
@@ -331,6 +334,15 @@ onMounted(async () => {
   await nextTick()
   startGuide(false)
 })
+
+watch(
+  () => user.value?.id,
+  async (userId) => {
+    if (!userId) return
+    await nextTick()
+    startGuide(false)
+  },
+)
 
 </script>
 

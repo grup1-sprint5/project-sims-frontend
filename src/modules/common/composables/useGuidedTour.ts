@@ -30,9 +30,14 @@ const buildStep = (element: string | null, title: string, description: string): 
   }
 }
 
-const doneKey = (scope: string) => `fleetly-tour-${scope}-${TOUR_VERSION}`
+const currentHostScope = () => {
+  if (typeof window === 'undefined') return 'unknown-host'
+  return window.location.hostname.toLowerCase()
+}
 
-const createDriver = (labels: { next: string; previous: string; done: string }) => {
+const doneKey = (scope: string) => `fleetly-tour-${currentHostScope()}-${scope}-${TOUR_VERSION}`
+
+const createDriver = (labels: { next: string; previous: string; done: string }, onFinished: () => void) => {
   return driver({
     allowClose: true,
     showProgress: true,
@@ -42,6 +47,7 @@ const createDriver = (labels: { next: string; previous: string; done: string }) 
     nextBtnText: labels.next,
     prevBtnText: labels.previous,
     doneBtnText: labels.done,
+    onDestroyed: onFinished,
   })
 }
 
@@ -58,6 +64,7 @@ export function useGuidedTour() {
     const texts = m.value.guidedTour.client
     const scope = `client-${userScope}`
 
+    if (!userScope) return
     if (!force && localStorage.getItem(doneKey(scope))) return
 
     const steps: DriveStep[] = []
@@ -93,10 +100,11 @@ export function useGuidedTour() {
       ].filter((step): step is DriveStep => step !== null),
     )
 
-    const tour = createDriver(labels)
+    const tour = createDriver(labels, () => {
+      localStorage.setItem(doneKey(scope), '1')
+    })
     tour.setSteps(steps)
     tour.drive()
-    localStorage.setItem(doneKey(scope), '1')
   }
 
   const startAdminTour = ({ userScope, force = false }: StartOptions) => {
@@ -104,6 +112,7 @@ export function useGuidedTour() {
     const texts = m.value.guidedTour.admin
     const scope = `admin-${userScope}`
 
+    if (!userScope) return
     if (!force && localStorage.getItem(doneKey(scope))) return
 
     const steps: DriveStep[] = []
@@ -139,10 +148,11 @@ export function useGuidedTour() {
       ].filter((step): step is DriveStep => step !== null),
     )
 
-    const tour = createDriver(labels)
+    const tour = createDriver(labels, () => {
+      localStorage.setItem(doneKey(scope), '1')
+    })
     tour.setSteps(steps)
     tour.drive()
-    localStorage.setItem(doneKey(scope), '1')
   }
 
   return {

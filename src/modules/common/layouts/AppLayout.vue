@@ -219,7 +219,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted } from 'vue'
+import { computed, nextTick, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { BellIcon, MapIcon, CalendarDaysIcon, TicketIcon, UserIcon, WifiIcon, MoonIcon, SunIcon, ArrowRightOnRectangleIcon, QuestionMarkCircleIcon } from '@heroicons/vue/24/outline'
@@ -264,8 +264,11 @@ const handleLogout = async () => {
 }
 
 const startGuide = (force = false) => {
+  const userId = authUser.value?.id
+  if (!userId && !force) return
+
   startClientTour({
-    userScope: String(authUser.value?.id ?? 'guest'),
+    userScope: String(userId ?? 'guest'),
     force,
   })
 }
@@ -274,4 +277,13 @@ onMounted(async () => {
   await nextTick()
   startGuide(false)
 })
+
+watch(
+  () => authUser.value?.id,
+  async (userId) => {
+    if (!userId) return
+    await nextTick()
+    startGuide(false)
+  },
+)
 </script>
