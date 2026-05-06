@@ -98,12 +98,12 @@
         </form>
 
         <div class="mt-5 rounded-lg border border-[var(--fleetly-baltic-blue)]/30 bg-[var(--fleetly-baltic-blue)]/10 px-3 py-3 text-center">
-          <p class="text-sm font-medium text-white">Vols registrar la teva empresa?</p>
+          <p class="text-sm font-medium text-white">{{ m.login.companyPrompt }}</p>
           <RouterLink
             to="/register-company"
             class="mt-1 inline-flex text-sm font-semibold text-[var(--fleetly-pale-slate)] underline underline-offset-4 hover:text-white"
           >
-            Clica aquí per demanar el teu subdomini
+            {{ m.login.companyCta }}
           </RouterLink>
         </div>
       </div>
