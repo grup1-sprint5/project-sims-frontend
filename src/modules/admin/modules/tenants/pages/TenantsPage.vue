@@ -63,6 +63,16 @@
           {{ tenant.tax_id || '-' }}
         </AdminTd>
         <AdminTd variant="muted">
+          <a
+            v-if="tenant.primary_domain"
+            :href="`https://${tenant.primary_domain}`"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-indigo-500 hover:underline font-mono text-xs"
+          >{{ tenant.primary_domain }}</a>
+          <span v-else class="text-gray-400">-</span>
+        </AdminTd>
+        <AdminTd variant="muted">
           <button
             @click="handleToggleActive(tenant)"
             :title="tenant.active ? m.adminTenantsUi.deactivate : m.adminTenantsUi.activate"
@@ -176,11 +186,10 @@ async function handleDelete() {
 async function handleToggleActive(tenant: Tenant) {
   try {
     const updated = await toggleActive(tenant.id)
-    // Update in-place
     const idx = tenants.value.findIndex(t => t.id === tenant.id)
     if (idx !== -1) tenants.value[idx] = updated
   } catch {
-    // error is already set in composable
+    loadTenants()
   }
 }
 
@@ -190,6 +199,7 @@ const columns = [
   { key: 'slug', label: m.value.commonUi.slug },
   { key: 'email', label: m.value.commonUi.email },
   { key: 'tax_id', label: m.value.adminTenantsUi.taxId },
+  { key: 'primary_domain', label: 'Domini' },
   { key: 'active', label: m.value.commonUi.status },
   { key: 'users_count', label: m.value.adminTenantsUi.users },
   { key: 'vehicles_count', label: m.value.adminTenantsUi.vehicles },

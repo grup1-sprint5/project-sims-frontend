@@ -7,6 +7,8 @@ export interface Tenant {
   phone: string | null
   address: string | null
   active: boolean
+  primary_domain?: string | null
+  domains?: string[]
   users_count?: number
   vehicles_count?: number
   created_at: string

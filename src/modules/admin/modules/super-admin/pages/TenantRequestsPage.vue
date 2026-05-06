@@ -81,10 +81,11 @@ import { onMounted, ref } from 'vue'
 import PageHeading from '@/modules/admin/components/PageHeading.vue'
 import { useTenantRequests } from '../composables/useTenantRequests'
 import { BuildingOfficeIcon, CheckCircleIcon } from '@heroicons/vue/24/outline'
-import showToast from '@/modules/common/composables/useToast'
+import { useToast } from '@/modules/common/composables/useToast'
 
 const { loading, error, requests, load, approve } = useTenantRequests()
 const approving = ref<number | null>(null)
+const toast = useToast()
 
 const formatDate = (dateStr: string) => {
   try {
@@ -104,7 +105,7 @@ const approveReq = async (id: number) => {
   approving.value = id
   try {
     await approve(id)
-    showToast(`Company approved successfully`, 'success')
+    toast.success('Company approved successfully')
   } catch (e: any) {
     const message = e?.response?.data?.message || 'Failed to approve company'
     showToast(message, 'error')

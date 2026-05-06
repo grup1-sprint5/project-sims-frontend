@@ -172,7 +172,7 @@
             </Menu>
 
             <RouterLink
-              to="/perfil"
+              to="/home/perfil"
               class="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]"
             >
               <span class="sr-only">{{ m.userMenu.yourProfile }}</span>
@@ -193,19 +193,19 @@
     <!-- Bottom nav (mobile-first) -->
     <nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-[var(--app-border)] bg-[var(--app-surface)]/95 backdrop-blur sm:hidden" data-tour-id="client-mobile-nav">
       <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-5 text-center text-xs text-[var(--app-muted-text)]">
-        <RouterLink to="/" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
+        <RouterLink to="/home/vehicles-map" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/vehicles-map') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
           <MapIcon class="size-6" />
         </RouterLink>
-        <RouterLink to="/bookings" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/bookings') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
+        <RouterLink to="/home/bookings" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/bookings') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
           <CalendarDaysIcon class="size-6" />
         </RouterLink>
-        <RouterLink to="/tickets" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/tickets') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
+        <RouterLink to="/home/tickets" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/tickets') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
           <TicketIcon class="size-6" />
         </RouterLink>
-        <RouterLink to="/sensors" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/sensors') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
+        <RouterLink to="/home/sensors" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/sensors') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
           <WifiIcon class="size-6" />
         </RouterLink>
-        <RouterLink to="/perfil" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/perfil') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
+        <RouterLink to="/home/perfil" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/perfil') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
           <UserIcon class="size-6" />
         </RouterLink>
       </div>
@@ -237,7 +237,7 @@ const router = useRouter()
 const { logout, user: authUser } = useAuth()
 const { isDark, toggleTheme } = useTheme()
 const { startClientTour } = useGuidedTour()
-const isActive = (path: string) => route.path === path
+const isActive = (path: string) => route.path === path || route.path.startsWith(path + '/')
 
 const userInitials = computed(() => {
   const name = authUser.value?.name || ''
@@ -245,11 +245,11 @@ const userInitials = computed(() => {
 })
 
 const navigation = computed(() => [
-  { name: m.value.nav.map, to: '/vehicles-map', icon: MapIcon },
-  { name: m.value.nav.bookings, to: '/bookings', icon: CalendarDaysIcon },
-  { name: m.value.nav.tickets, to: '/tickets', icon: TicketIcon },
-  { name: 'Sensors', to: '/sensors', icon: WifiIcon },
-  { name: m.value.nav.profile, to: '/perfil', icon: UserIcon },
+  { name: m.value.nav.map, to: '/home/vehicles-map', icon: MapIcon },
+  { name: m.value.nav.bookings, to: '/home/bookings', icon: CalendarDaysIcon },
+  { name: m.value.nav.tickets, to: '/home/tickets', icon: TicketIcon },
+  { name: 'Sensors', to: '/home/sensors', icon: WifiIcon },
+  { name: m.value.nav.profile, to: '/home/perfil', icon: UserIcon },
 ])
 
 const handleLogout = async () => {

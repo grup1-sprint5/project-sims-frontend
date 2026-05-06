@@ -25,7 +25,6 @@
                 v-model="tenantSlug"
                 type="text"
                 autocomplete="organization"
-                required
                 :disabled="isLoading"
                 class="block w-full rounded-md px-3 py-1.5 text-base shadow-sm sm:text-sm/6 focus:ring-2 focus:ring-[var(--fleetly-baltic-blue)]"
                 style="background:var(--app-input-bg);color:var(--app-input-text);border:1px solid var(--app-input-border);outline:none"
