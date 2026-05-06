@@ -22,7 +22,7 @@
 
         <form class="space-y-4" @submit.prevent="handleSubmit">
 
-          <div v-if="isCentralDomain">
+          <div v-if="!isCentralDomain">
             <label for="tenant" class="block text-sm text-gray-400 mb-1.5">{{ m.login.orgLabel }}</label>
             <input
               id="tenant"
