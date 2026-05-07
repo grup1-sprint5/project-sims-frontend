@@ -34,6 +34,10 @@ export const initTheme = () => {
   applyTheme(mode)
 }
 
+export const forceDark = () => applyTheme('dark')
+
+export const restoreTheme = () => applyTheme(getPreferredTheme())
+
 export const useTheme = () => {
   const toggleTheme = () => {
     const nextMode: ThemeMode = isDark.value ? 'light' : 'dark'

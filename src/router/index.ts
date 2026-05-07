@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { useAuth } from '@/modules/auth/composables/useAuth'
+import { forceDark, restoreTheme } from '@/modules/common/composables/useTheme'
 import { authRoutes } from '@/modules/auth/router'
 import AppLayout from '@/modules/common/layouts/AppLayout.vue'
 import AdminLayout from '@/modules/admin/layouts/AdminLayout.vue'
@@ -95,8 +96,18 @@ const router = createRouter({
   routes
 })
 
+const DARK_ONLY_PATHS = ['/login', '/landing', '/register', '/register-company']
+
 // Navigation guard global
 router.beforeEach(async (to, from, next) => {
+  const toDarkOnly = DARK_ONLY_PATHS.some(p => to.path.startsWith(p))
+  const fromDarkOnly = DARK_ONLY_PATHS.some(p => from.path.startsWith(p))
+  if (toDarkOnly) {
+    forceDark()
+  } else if (fromDarkOnly) {
+    restoreTheme()
+  }
+
   const { isAuthenticated, fetchUser, getToken, user } = useAuth()
   const requiresAuth = to.meta.requiresAuth
 
