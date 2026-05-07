@@ -9,7 +9,7 @@
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
-        Back to roles
+        {{ m.adminRolesUi.backToRoles }}
       </router-link>
     </div>
 
@@ -19,7 +19,7 @@
         <svg class="animate-spin h-8 w-8 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
         </svg>
-        Loading role...
+        {{ m.adminRolesUi.loadingForm }}
       </div>
     </div>
 
@@ -42,19 +42,19 @@
           {{ currentRole.name }}
         </h3>
         <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
-          Full role information
+          {{ m.adminRolesUi.fullRoleInformation }}
         </p>
       </div>
 
       <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
         <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Name</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.adminRolesUi.name }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ currentRole.name }}</dd>
           </div>
 
           <div class="sm:col-span-1">
-            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Permissions</dt>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ m.adminRolesUi.permissions }}</dt>
             <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ currentRole.permissions?.length || 0 }}</dd>
           </div>
         </dl>
@@ -62,15 +62,15 @@
 
       <!-- Permissions Table -->
       <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
-        <h4 class="text-base font-semibold text-gray-900 dark:text-white mb-4">Permissions</h4>
+        <h4 class="text-base font-semibold text-gray-900 dark:text-white mb-4">{{ m.adminRolesUi.permissions }}</h4>
         <div class="overflow-x-auto">
           <table class="w-full">
             <thead class="bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700">
               <tr>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Module</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">View</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Manage</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Delete</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ m.adminRolesUi.module }}</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ m.commonUi.view }}</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ m.adminRolesUi.manage }}</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{{ m.commonUi.delete }}</th>
               </tr>
             </thead>
             <tbody>
@@ -123,7 +123,7 @@
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
           </svg>
-          Edit
+          {{ m.commonUi.edit }}
         </router-link>
         <button
           v-if="currentRole.name.toLowerCase() !== 'admin'"
@@ -133,9 +133,9 @@
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
           </svg>
-          Delete
+          {{ m.commonUi.delete }}
         </button>
-        <span v-else class="text-gray-500 text-sm">This role is protected</span>
+        <span v-else class="text-gray-500 text-sm">{{ m.adminRolesUi.protectedRole }}</span>
       </div>
     </div>
 
@@ -156,21 +156,19 @@ import AdminTd from '@/modules/admin/components/AdminTd.vue'
 import RoleDeleteModal from '../components/RoleDeleteModal.vue'
 import { useRoles } from '../composables/useRoles'
 import { usePermissions } from '../composables/usePermissions'
+import { useI18n } from '@/i18n'
 
 const router = useRouter()
 const route = useRoute()
 const { currentRole, loading, error, getRole } = useRoles()
 const { permissionModules, getPermissions } = usePermissions()
+const { m } = useI18n()
 
 const showDeleteModal = ref(false)
 const rolePermissionIds = computed(() => currentRole.value?.permissions?.map((p) => p.id) || [])
 
 const hasPermission = (permissionId: number) => {
   return rolePermissionIds.value.includes(permissionId)
-}
-
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString('es-ES')
 }
 
 const openDeleteModal = () => {

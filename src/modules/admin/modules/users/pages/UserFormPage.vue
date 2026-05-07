@@ -9,7 +9,7 @@
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
-        Back to users
+        {{ m.adminUserFormUi.backToUsers }}
       </router-link>
     </div>
 
@@ -19,7 +19,7 @@
         <svg class="animate-spin h-8 w-8 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
         </svg>
-        Loading...
+        {{ m.adminUserFormUi.loading }}
       </div>
     </div>
 
@@ -27,20 +27,20 @@
     <div v-else class="bg-white dark:bg-gray-900 shadow rounded-lg">
       <div class="px-4 py-5 sm:px-6">
         <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
-          {{ isEditMode ? 'Edit user' : 'Create new user' }}
+          {{ isEditMode ? m.adminUserFormUi.editTitle : m.adminUserFormUi.createTitle }}
         </h3>
       </div>
 
       <form @submit.prevent="handleSubmit" class="px-4 py-5 sm:px-6 space-y-6 border-t border-gray-200 dark:border-gray-700">
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <!-- Nombre -->
-          <FormField label="Full name">
+          <FormField :label="m.adminUserFormUi.fullNameLabel">
             <FormInput
               v-model="formData.name"
               type="text"
-              placeholder="Full name"
+              :placeholder="m.adminUserFormUi.fullNamePlaceholder"
               required
-              @invalid="validationErrors.name = 'This field is required'"
+              @invalid="validationErrors.name = m.adminUserFormUi.requiredField"
               @input="validationErrors.name = ''"
             />
             <p v-if="validationErrors.name" class="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -49,13 +49,13 @@
           </FormField>
 
           <!-- Username -->
-          <FormField label="Username">
+          <FormField :label="m.adminUserFormUi.usernameLabel">
             <FormInput
               v-model="formData.username"
               type="text"
-              placeholder="Username"
+              :placeholder="m.adminUserFormUi.usernamePlaceholder"
               required
-              @invalid="validationErrors.username = 'This field is required'"
+              @invalid="validationErrors.username = m.adminUserFormUi.requiredField"
               @input="validationErrors.username = ''"
             />
             <p v-if="validationErrors.username" class="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -64,13 +64,13 @@
           </FormField>
 
           <!-- Email -->
-          <FormField label="Email">
+          <FormField :label="m.adminUserFormUi.emailLabel">
             <FormInput
               v-model="formData.email"
               type="email"
-              placeholder="email@example.com"
+              :placeholder="m.adminUserFormUi.emailPlaceholder"
               required
-              @invalid="validationErrors.email = 'Invalid email'"
+              @invalid="validationErrors.email = m.adminUserFormUi.invalidEmail"
               @input="validationErrors.email = ''"
             />
             <p v-if="validationErrors.email" class="mt-1 text-sm text-red-600 dark:text-red-400">
@@ -79,21 +79,21 @@
           </FormField>
 
           <!-- Password -->
-          <FormField :label="isEditMode ? 'Password (leave blank to keep)' : 'Password'">
+          <FormField :label="isEditMode ? m.adminUserFormUi.passwordLabelEdit : m.adminUserFormUi.passwordLabel">
             <div class="relative">
               <input
                 v-model="formData.password"
                 :type="showPassword ? 'text' : 'password'"
-                :placeholder="isEditMode ? 'New password (optional)' : 'Password'"
+                :placeholder="isEditMode ? m.adminUserFormUi.passwordPlaceholderEdit : m.adminUserFormUi.passwordPlaceholder"
                 :required="!isEditMode"
-                @invalid="validationErrors.password = isEditMode ? '' : 'Password is required'"
+                @invalid="validationErrors.password = isEditMode ? '' : m.adminUserFormUi.passwordRequired"
                 @input="validationErrors.password = ''"
                 class="block w-full rounded-md border-0 px-3 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
               />
               <button
                 type="button"
                 class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 dark:text-gray-300"
-                :aria-label="showPassword ? 'Hide password' : 'Show password'"
+                :aria-label="showPassword ? m.adminUserFormUi.hidePassword : m.adminUserFormUi.showPassword"
                 @click="showPassword = !showPassword"
               >
                 <svg v-if="!showPassword" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -111,19 +111,19 @@
           </FormField>
 
           <!-- Password confirmation -->
-          <FormField v-if="formData.password" :label="isEditMode ? 'Confirm new password' : 'Confirm password'">
+          <FormField v-if="formData.password" :label="isEditMode ? m.adminUserFormUi.confirmPasswordLabelEdit : m.adminUserFormUi.confirmPasswordLabel">
             <div class="relative">
               <input
                 v-model="formData.password_confirmation"
                 :type="showPasswordConfirmation ? 'text' : 'password'"
-                :placeholder="isEditMode ? 'Confirm new password' : 'Confirm password'"
+                :placeholder="isEditMode ? m.adminUserFormUi.confirmPasswordPlaceholderEdit : m.adminUserFormUi.confirmPasswordPlaceholder"
                 :required="!!formData.password"
                 class="block w-full rounded-md border-0 px-3 py-1.5 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
               />
               <button
                 type="button"
                 class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 dark:text-gray-300"
-                :aria-label="showPasswordConfirmation ? 'Hide password' : 'Show password'"
+                :aria-label="showPasswordConfirmation ? m.adminUserFormUi.hidePassword : m.adminUserFormUi.showPassword"
                 @click="showPasswordConfirmation = !showPasswordConfirmation"
               >
                 <svg v-if="!showPasswordConfirmation" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -138,12 +138,12 @@
           </FormField>
 
           <!-- Rol (solo para Admin) -->
-          <FormField v-if="isCurrentUserAdmin" label="Role">
+          <FormField v-if="isCurrentUserAdmin" :label="m.adminUserFormUi.roleLabel">
             <select
               v-model="formData.role_id"
               class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
             >
-              <option :value="null">Select role</option>
+              <option :value="null">{{ m.adminUserFormUi.rolePlaceholder }}</option>
               <option v-for="role in availableRoles" :key="role.id" :value="role.id">
                 {{ role.name }}
               </option>
@@ -151,13 +151,13 @@
           </FormField>
 
           <!-- Empresa/Tenant (solo para Admin) -->
-          <FormField v-if="isCurrentUserAdmin && !isEditMode" label="Company/Organization">
+          <FormField v-if="isCurrentUserAdmin && !isEditMode" :label="m.adminUserFormUi.companyLabel">
             <select
               v-model="formData.tenant_id"
               required
               class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
             >
-              <option :value="null">Select company</option>
+              <option :value="null">{{ m.adminUserFormUi.companyPlaceholder }}</option>
               <option v-for="tenant in tenants" :key="tenant.id" :value="tenant.id">
                 {{ tenant.name || tenant.slug }}
               </option>
@@ -165,10 +165,10 @@
           </FormField>
 
           <!-- Estado -->
-          <FormField label="Status">
+          <FormField :label="m.commonUi.status">
             <FormCheckbox
               v-model="formData.active"
-              label="Active"
+              :label="m.commonUi.active"
             />
           </FormField>
         </div>
@@ -179,7 +179,7 @@
             to="/admin/users"
             class="flex-1 px-4 py-2 text-center text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
           >
-            Cancel
+            {{ m.commonUi.cancel }}
           </router-link>
           <button
             type="submit"
@@ -189,7 +189,7 @@
             <svg v-if="isSaving" class="animate-spin h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
             </svg>
-            {{ isSaving ? 'Saving...' : (isEditMode ? 'Save changes' : 'Create user') }}
+            {{ isSaving ? m.adminUserFormUi.saving : (isEditMode ? m.adminUserFormUi.saveChanges : m.adminUserFormUi.createUser) }}
           </button>
         </div>
       </form>
@@ -208,6 +208,7 @@ import type { UserForm } from '../interfaces/user.interface'
 import FormField from '@/modules/admin/components/FormField.vue'
 import FormInput from '@/modules/admin/components/FormInput.vue'
 import FormCheckbox from '@/modules/admin/components/FormCheckbox.vue'
+import { useI18n } from '@/i18n'
 
 const router = useRouter()
 const route = useRoute()
@@ -215,6 +216,7 @@ const { getUser, createUser, updateUser, isCurrentUserAdmin, loading } = useUser
 const { roles: availableRoles, getRoles } = useRoles()
 const { tenants, getTenants } = useTenants()
 const toast = useToast()
+const { m } = useI18n()
 
 const userId = computed(() => route.params.id ? Number(route.params.id) : null)
 const isEditMode = computed(() => !!userId.value)
@@ -252,12 +254,12 @@ onMounted(async () => {
       formData.username = user.username
       formData.email = user.email
       formData.active = user.active
-      formData.tenant_id = user.tenant_id
+      formData.tenant_id = user.tenant?.id != null ? String(user.tenant.id) : null
       if (user.roles && user.roles.length > 0) {
         formData.role_id = user.roles[0]?.id ?? null
       }
     } catch (err) {
-      toast.error('Error loading user')
+      toast.error(m.value.adminUserFormUi.loadError)
       router.push('/admin/users')
     }
   }
@@ -284,17 +286,17 @@ const handleSubmit = async () => {
 
     if (isEditMode.value && userId.value) {
       await updateUser(userId.value, submitData)
-      toast.success('User updated successfully')
+      toast.success(m.value.adminUserFormUi.updatedSuccess)
     } else {
       await createUser(submitData as UserForm)
-      toast.success('User created successfully')
+      toast.success(m.value.adminUserFormUi.createdSuccess)
     }
 
     // Small delay to ensure the toast is visible before navigating away
     await new Promise(resolve => setTimeout(resolve, 1000))
     router.push('/admin/users')
   } catch (err: any) {
-    const errorMessage = err.response?.data?.message || 'Error saving user'
+    const errorMessage = err.response?.data?.message || m.value.adminUserFormUi.saveError
     toast.error(errorMessage)
   } finally {
     isSaving.value = false

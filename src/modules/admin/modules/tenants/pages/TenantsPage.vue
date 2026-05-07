@@ -199,7 +199,7 @@ const columns = [
   { key: 'slug', label: m.value.commonUi.slug },
   { key: 'email', label: m.value.commonUi.email },
   { key: 'tax_id', label: m.value.adminTenantsUi.taxId },
-  { key: 'primary_domain', label: 'Domini' },
+  { key: 'primary_domain', label: m.value.adminTenantsUi.domain },
   { key: 'active', label: m.value.commonUi.status },
   { key: 'users_count', label: m.value.adminTenantsUi.users },
   { key: 'vehicles_count', label: m.value.adminTenantsUi.vehicles },

@@ -164,14 +164,14 @@ const assignTypeOptions = [
 ]
 
 const assignmentColumns = [
-  { key: 'id', label: 'ID' },
+  { key: 'id', label: m.value.commonUi.id },
   { key: 'type', label: m.value.adminGeofencesUi.colType },
   { key: 'assign_id', label: m.value.adminGeofencesUi.assignId },
   { key: 'actions', label: m.value.commonUi.actions, srOnly: true },
 ]
 
 const eventColumns = [
-  { key: 'id', label: 'ID' },
+  { key: 'id', label: m.value.commonUi.id },
   { key: 'vehicle_id', label: m.value.adminGeofenceDetailUi.vehicle },
   { key: 'event_type', label: m.value.adminGeofenceEventsUi.colEventType },
   { key: 'position', label: m.value.adminGeofenceEventsUi.colPosition },

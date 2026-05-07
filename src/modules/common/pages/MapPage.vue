@@ -26,41 +26,41 @@
         <div class="flex-1 overflow-y-auto px-4 py-4 space-y-4">
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Estat</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ m.mapUi.status }}</p>
               <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold"
                 :class="{
                   'bg-green-100 text-green-800': selectedVehicle?.status === 'available',
                   'bg-orange-100 text-orange-800': selectedVehicle?.status === 'occupied',
                   'bg-red-100 text-red-800': selectedVehicle?.status === 'running'
                 }">
-                {{ selectedVehicle?.status === 'available' ? 'Disponible' : selectedVehicle?.status === 'occupied' ? 'Ocupat' : 'En Marxa' }}
+                {{ vehicleStatusLabel(selectedVehicle?.status) }}
               </span>
             </div>
             <div>
-              <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Actiu</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ m.mapUi.active }}</p>
               <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold"
                 :class="selectedVehicle?.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
-                {{ selectedVehicle?.active ? 'Sí' : 'No' }}
+                {{ selectedVehicle?.active ? m.mapUi.yes : m.mapUi.no }}
               </span>
             </div>
           </div>
           <div>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Ubicació</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ m.mapUi.location }}</p>
             <p class="text-xs font-mono text-gray-900 dark:text-white">{{ selectedVehicle?.latitude?.toFixed(6) }}, {{ selectedVehicle?.longitude?.toFixed(6) }}</p>
           </div>
           <div v-if="selectedVehicle?.created_at">
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Data de creació</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ m.mapUi.createdAt }}</p>
             <p class="text-sm text-gray-900 dark:text-white">{{ formatDate(selectedVehicle.created_at) }}</p>
           </div>
           <div v-if="selectedVehicle?.updated_at">
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Última actualització</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ m.mapUi.updatedAt }}</p>
             <p class="text-sm text-gray-900 dark:text-white">{{ formatDate(selectedVehicle.updated_at) }}</p>
           </div>
         </div>
         <!-- Avís vehicle ocupat (desktop) -->
         <div v-if="selectedVehicleHasActiveBooking" class="mx-4 mb-2 flex items-start gap-2 bg-yellow-900/30 border border-yellow-700/50 rounded-xl px-3 py-2.5">
           <svg class="h-4 w-4 text-yellow-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <p class="text-xs text-yellow-300">Aquest vehicle té una reserva {{ selectedVehicleBookingStatus === 'active' ? 'en curs' : 'pendent' }}. No es pot reservar fins que estigui lliure.</p>
+          <p class="text-xs text-yellow-300">{{ m.mapUi.occupiedWarning.replace('{status}', bookingOccupancyLabel) }}</p>
         </div>
         <!-- Botó -->
         <div class="shrink-0 p-4 border-t border-gray-100 dark:border-gray-800">
@@ -73,10 +73,10 @@
               : 'bg-indigo-600 hover:bg-indigo-700 text-white'"
           >
             <span v-if="selectedVehicleHasActiveBooking">
-              🟡 {{ selectedVehicleBookingStatus === 'active' ? 'En curs' : 'Reservat' }}
+              {{ selectedVehicleBookingStatus === 'active' ? m.mapUi.inProgress : m.mapUi.booked }}
             </span>
-            <span v-else-if="selectedVehicle?.status !== 'available'">No disponible</span>
-            <span v-else>Reserva ara!</span>
+            <span v-else-if="selectedVehicle?.status !== 'available'">{{ m.mapUi.unavailable }}</span>
+            <span v-else>{{ m.mapUi.reserveNow }}</span>
           </button>
         </div>
       </div>
@@ -107,37 +107,37 @@
           <div class="flex-1 overflow-y-auto px-5 py-4 space-y-3">
             <div class="flex gap-3">
               <div class="flex-1 bg-gray-50 dark:bg-gray-800 rounded-xl p-3">
-                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Estat</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ m.mapUi.status }}</p>
                 <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold"
                   :class="{
                     'bg-green-100 text-green-800': selectedVehicle?.status === 'available',
                     'bg-orange-100 text-orange-800': selectedVehicle?.status === 'occupied',
                     'bg-red-100 text-red-800': selectedVehicle?.status === 'running'
                   }">
-                  {{ selectedVehicle?.status === 'available' ? 'Disponible' : selectedVehicle?.status === 'occupied' ? 'Ocupat' : 'En Marxa' }}
+                  {{ vehicleStatusLabel(selectedVehicle?.status) }}
                 </span>
               </div>
               <div class="flex-1 bg-gray-50 dark:bg-gray-800 rounded-xl p-3">
-                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Actiu</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ m.mapUi.active }}</p>
                 <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold"
                   :class="selectedVehicle?.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
-                  {{ selectedVehicle?.active ? 'Sí' : 'No' }}
+                  {{ selectedVehicle?.active ? m.mapUi.yes : m.mapUi.no }}
                 </span>
               </div>
             </div>
             <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-3">
-              <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Ubicació</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ m.mapUi.location }}</p>
               <p class="text-xs font-mono text-gray-900 dark:text-white">{{ selectedVehicle?.latitude?.toFixed(6) }}, {{ selectedVehicle?.longitude?.toFixed(6) }}</p>
             </div>
             <div v-if="selectedVehicle?.created_at" class="bg-gray-50 dark:bg-gray-800 rounded-xl p-3">
-              <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Data de creació</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ m.mapUi.createdAt }}</p>
               <p class="text-sm text-gray-900 dark:text-white">{{ formatDate(selectedVehicle.created_at) }}</p>
             </div>
           </div>
           <!-- Avís vehicle ocupat (mòbil) -->
           <div v-if="selectedVehicleHasActiveBooking" class="mx-5 mb-2 flex items-start gap-2 bg-yellow-900/30 border border-yellow-700/50 rounded-xl px-3 py-2.5">
             <svg class="h-4 w-4 text-yellow-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <p class="text-xs text-yellow-300">Vehicle {{ selectedVehicleBookingStatus === 'active' ? 'en curs' : 'reservat' }}. No disponible fins que estigui lliure.</p>
+            <p class="text-xs text-yellow-300">{{ m.mapUi.occupiedWarningMobile.replace('{status}', bookingOccupancyLabel) }}</p>
           </div>
           <!-- Botó -->
           <div class="shrink-0 px-5 py-4 border-t border-gray-100 dark:border-gray-800">
@@ -150,10 +150,10 @@
                 : 'bg-indigo-600 hover:bg-indigo-700 text-white'"
             >
               <span v-if="selectedVehicleHasActiveBooking">
-                🟡 {{ selectedVehicleBookingStatus === 'active' ? 'En curs' : 'Reservat' }}
+                {{ selectedVehicleBookingStatus === 'active' ? m.mapUi.inProgress : m.mapUi.booked }}
               </span>
-              <span v-else-if="selectedVehicle?.status !== 'available'">No disponible</span>
-              <span v-else>Reserva ara!</span>
+              <span v-else-if="selectedVehicle?.status !== 'available'">{{ m.mapUi.unavailable }}</span>
+              <span v-else>{{ m.mapUi.reserveNow }}</span>
             </button>
           </div>
         </div>
@@ -173,7 +173,7 @@
             <!-- Header modal -->
             <div class="flex items-center justify-between px-6 py-4 shrink-0" style="border-bottom:1px solid var(--app-border);">
               <div>
-                <h3 class="text-xl font-bold" style="color:var(--app-text)">Reservar Vehicle</h3>
+                <h3 class="text-xl font-bold" style="color:var(--app-text)">{{ m.mapUi.bookingTitle }}</h3>
                 <p v-if="vehicleForBooking" class="text-sm" style="color:var(--app-muted-text)">{{ vehicleForBooking.brand }} {{ vehicleForBooking.model }} · {{ vehicleForBooking.plate }}</p>
               </div>
               <button @click="closeBookingModal" class="p-2 rounded-full transition-colors hover:opacity-80" style="color:var(--app-muted-text);background:var(--app-surface-alt);">
@@ -190,7 +190,7 @@
               <div v-if="vehicleBookings.length > 0" class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl p-3">
                 <p class="text-xs font-semibold text-amber-700 dark:text-amber-400 mb-2 flex items-center gap-1">
                   <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                  Franges ja reservades
+                  {{ m.mapUi.bookedSlots }}
                 </p>
                 <ul class="space-y-1">
                   <li v-for="b in vehicleBookings" :key="b.id" class="text-xs text-amber-800 dark:text-amber-300 flex items-center gap-2">
@@ -210,7 +210,7 @@
               <!-- Camps del formulari -->
               <div class="grid grid-cols-1 gap-3">
                 <div>
-                  <label class="block text-sm font-medium mb-1" style="color:var(--app-muted-text)">Inici</label>
+                  <label class="block text-sm font-medium mb-1" style="color:var(--app-muted-text)">{{ m.mapUi.start }}</label>
                   <input
                     type="datetime-local"
                     v-model="bookingForm.scheduled_start"
@@ -220,7 +220,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium mb-1" style="color:var(--app-muted-text)">Fi</label>
+                  <label class="block text-sm font-medium mb-1" style="color:var(--app-muted-text)">{{ m.mapUi.end }}</label>
                   <input
                     type="datetime-local"
                     v-model="bookingForm.scheduled_end"
@@ -234,26 +234,26 @@
               <!-- Resum de preu -->
               <div v-if="priceInfo && !overlapError" class="rounded-xl p-4 space-y-2 border border-[var(--app-border)]" style="background:var(--app-surface-alt);">
                 <div class="flex justify-between text-sm">
-                  <span style="color:var(--app-muted-text)">Durada</span>
+                  <span style="color:var(--app-muted-text)">{{ m.mapUi.duration }}</span>
                   <span class="font-medium" style="color:var(--app-text)">{{ formatDuration(priceInfo.total_minutes) }}</span>
                 </div>
                 <div class="flex justify-between text-sm">
-                  <span style="color:var(--app-muted-text)">Tarifa</span>
-                  <span class="font-medium" style="color:var(--app-text)">{{ priceInfo.price_per_minute }}€/min · màx {{ priceInfo.max_per_hour }}€/h</span>
+                  <span style="color:var(--app-muted-text)">{{ m.mapUi.rate }}</span>
+                  <span class="font-medium" style="color:var(--app-text)">{{ priceInfo.price_per_minute }}€/min · {{ m.mapUi.maxPerHour }} {{ priceInfo.max_per_hour }}€/h</span>
                 </div>
                 <div v-if="priceInfo.base_price !== priceInfo.final_price" class="flex justify-between text-sm">
-                  <span style="color:var(--app-muted-text)">Preu base</span>
+                  <span style="color:var(--app-muted-text)">{{ m.mapUi.basePrice }}</span>
                   <span class="line-through" style="color:var(--app-muted-text)">{{ priceInfo.base_price }}€</span>
                 </div>
                 <div class="flex justify-between items-center pt-2 border-t border-[var(--app-border)]">
-                  <span class="font-bold" style="color:var(--app-text)">Total</span>
+                  <span class="font-bold" style="color:var(--app-text)">{{ m.mapUi.total }}</span>
                   <span class="text-2xl font-bold text-[var(--fleetly-baltic-blue)]">{{ priceInfo.final_price }}€</span>
                 </div>
               </div>
 
               <!-- Càlcul en curs -->
               <div v-if="bookingForm.scheduled_start && bookingForm.scheduled_end && !priceInfo && !overlapError" class="text-center py-2">
-                <span class="text-sm animate-pulse" style="color:var(--app-muted-text)">Calculant preu...</span>
+                <span class="text-sm animate-pulse" style="color:var(--app-muted-text)">{{ m.mapUi.calculatingPrice }}</span>
               </div>
             </div>
 
@@ -265,7 +265,7 @@
                 class="flex-1 font-semibold py-3 rounded-xl transition-colors"
                 style="background:var(--app-surface-alt);color:var(--app-text);border:1px solid var(--app-border);"
               >
-                Cancel·lar
+                {{ m.commonUi.cancel }}
               </button>
               <button
                 type="button"
@@ -273,7 +273,7 @@
                 :disabled="bookingStore.loading || !priceInfo || !!overlapError"
                 class="flex-1 bg-[var(--fleetly-baltic-blue)] hover:opacity-90 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors"
               >
-                {{ bookingStore.loading ? 'Creant...' : 'Confirmar reserva' }}
+                {{ bookingStore.loading ? m.mapUi.creating : m.mapUi.confirmBooking }}
               </button>
             </div>
           </div>
@@ -294,24 +294,24 @@
             class="booking-modal-card relative w-full max-w-md rounded-2xl p-6 shadow-2xl"
             @click.stop
           >
-            <h3 class="text-lg font-bold" style="color:var(--app-text)">Confirmar reserva</h3>
-            <p class="mt-1 text-sm" style="color:var(--app-muted-text)">Revisa les dades abans de crear-la.</p>
+            <h3 class="text-lg font-bold" style="color:var(--app-text)">{{ m.mapUi.confirmBooking }}</h3>
+            <p class="mt-1 text-sm" style="color:var(--app-muted-text)">{{ m.mapUi.reviewBooking }}</p>
 
             <div class="mt-4 space-y-2 rounded-xl p-4" style="background:var(--app-surface-alt);border:1px solid var(--app-border);">
               <div class="flex items-center justify-between text-sm">
-                <span class="text-gray-500 dark:text-gray-400">Vehicle</span>
+                <span class="text-gray-500 dark:text-gray-400">{{ m.adminVehiclesUi.title }}</span>
                 <span class="font-semibold text-gray-900 dark:text-white">{{ vehicleForBooking?.plate || '-' }}</span>
               </div>
               <div class="flex items-center justify-between text-sm">
-                <span class="text-gray-500 dark:text-gray-400">Total reserva</span>
+                <span class="text-gray-500 dark:text-gray-400">{{ m.mapUi.bookingTotal }}</span>
                 <span class="font-semibold text-[var(--fleetly-baltic-blue)]">{{ bookingTotalLabel }}</span>
               </div>
               <div class="flex items-center justify-between text-sm">
-                <span class="text-gray-500 dark:text-gray-400">Saldo actual</span>
+                <span class="text-gray-500 dark:text-gray-400">{{ m.mapUi.currentBalance }}</span>
                 <span class="font-semibold text-gray-900 dark:text-white">{{ walletBalanceLabel }}</span>
               </div>
               <div class="flex items-center justify-between border-t pt-2 text-sm" style="border-color:var(--app-border);">
-                <span class="text-gray-600 dark:text-gray-300">Saldo despres de reservar</span>
+                <span class="text-gray-600 dark:text-gray-300">{{ m.mapUi.balanceAfterBooking }}</span>
                 <span class="font-bold" :class="walletRemainingAfterBooking >= 0 ? 'text-emerald-600 dark:text-emerald-300' : 'text-amber-600 dark:text-amber-300'">
                   {{ walletAfterBookingLabel }}
                 </span>
@@ -319,7 +319,7 @@
             </div>
 
             <p v-if="walletRemainingAfterBooking < 0" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
-              El saldo no cobreix tot l'import. La reserva es creara pendent de pagament amb Stripe.
+              {{ m.mapUi.insufficientBalance }}
             </p>
 
             <div class="mt-5 flex gap-3">
@@ -329,7 +329,7 @@
                 class="flex-1 rounded-xl py-3 font-semibold transition-colors"
                 style="background:var(--app-surface-alt);color:var(--app-text);border:1px solid var(--app-border);"
               >
-                Tornar
+                {{ m.mapUi.back }}
               </button>
               <button
                 type="button"
@@ -337,7 +337,7 @@
                 :disabled="bookingStore.loading"
                 class="flex-1 rounded-xl bg-[var(--fleetly-baltic-blue)] py-3 font-semibold text-white transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:bg-gray-400 dark:disabled:bg-gray-600"
               >
-                {{ bookingStore.loading ? 'Creant...' : 'Si, reservar' }}
+                {{ bookingStore.loading ? m.mapUi.creating : m.mapUi.yesBook }}
               </button>
             </div>
           </div>
@@ -405,7 +405,7 @@ import { toast } from 'vue3-toastify'
 import { useI18n } from '@/i18n'
 
 const route = useRoute()
-const { m } = useI18n()
+const { m, locale } = useI18n()
 const { mapContainer, map, vehicles, markers, initMap, fetchVehicles, startPolling, setUserLocation, destroyMap, rawVehicles, userLocation, _internal, centerOnVehicle, setOnVehicleClick, setSelectedVehicle, createVehicleIcon, markVehicleAsBooked } = useMap()
 const bookingStore = useBookingStore()
 const { user, fetchUser } = useAuth()
@@ -428,6 +428,9 @@ const selectedVehicleBookingStatus = computed(() => {
   if (pending) return 'pending'
   return null
 })
+const bookingOccupancyLabel = computed(() =>
+  selectedVehicleBookingStatus.value === 'active' ? m.value.mapUi.inProgress.toLowerCase() : m.value.mapUi.booked.toLowerCase()
+)
 const isVehicleUnavailableForBooking = computed(() =>
   selectedVehicleHasActiveBooking.value || selectedVehicle.value?.status !== 'available'
 )
@@ -626,7 +629,7 @@ function closeSelectedPanel() {
 
 function formatDate(dateString: string) {
   const date = new Date(dateString)
-  return date.toLocaleString('ca-ES', {
+  return date.toLocaleString(locale.value === 'en' ? 'en-US' : `${locale.value}-ES`, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -637,7 +640,7 @@ function formatDate(dateString: string) {
 
 function formatDateShort(dateString: string) {
   const date = new Date(dateString)
-  return date.toLocaleString('ca-ES', {
+  return date.toLocaleString(locale.value === 'en' ? 'en-US' : `${locale.value}-ES`, {
     day: '2-digit',
     month: '2-digit',
     hour: '2-digit',
@@ -654,13 +657,22 @@ function formatDuration(minutes: number) {
 
 function statusLabel(status: string) {
   const labels: Record<string, string> = {
-    pending: 'Pendent',
-    active: 'Activa',
-    confirmed: 'Confirmada',
-    completed: 'Completada',
-    cancelled: 'Cancel·lada'
+    pending: m.value.bookingsUi.pending,
+    active: m.value.bookingsUi.active,
+    confirmed: m.value.bookingsUi.confirmed,
+    completed: m.value.bookingsUi.completedStatus,
+    cancelled: m.value.bookingsUi.cancelledStatus
   }
   return labels[status] ?? status
+}
+
+function vehicleStatusLabel(status?: string) {
+  const labels: Record<string, string> = {
+    available: m.value.mapUi.available,
+    occupied: m.value.mapUi.occupied,
+    running: m.value.mapUi.running,
+  }
+  return status ? labels[status] ?? status : ''
 }
 
 function checkOverlap(start: string, end: string): string | null {
@@ -671,7 +683,9 @@ function checkOverlap(start: string, end: string): string | null {
     const bs = new Date(b.scheduled_start).getTime()
     const be = new Date(b.scheduled_end).getTime()
     if (s < be && e > bs) {
-      return `Conflicte amb una reserva existent: ${formatDateShort(b.scheduled_start)} → ${formatDateShort(b.scheduled_end)}`
+      return m.value.mapUi.overlapError
+        .replace('{start}', formatDateShort(b.scheduled_start))
+        .replace('{end}', formatDateShort(b.scheduled_end))
     }
   }
   return null
@@ -730,14 +744,14 @@ async function submitBooking() {
       scheduled_end: bookingForm.value.scheduled_end + ':00'
     }
     await bookingStore.createBooking(bookingData)
-    toast.success('Reserva creada correctament!')
+    toast.success(m.value.mapUi.bookingCreated)
     showBookingConfirmModal.value = false
     closeBookingModal()
     closeSelectedPanel()
     await fetchUser()
     await fetchVehicles('/vehicles')
   } catch (error: any) {
-    const msg = error.response?.data?.message || 'Error creant la reserva'
+    const msg = error.response?.data?.message || m.value.mapUi.bookingCreateError
     toast.error(msg)
     overlapError.value = msg
   }

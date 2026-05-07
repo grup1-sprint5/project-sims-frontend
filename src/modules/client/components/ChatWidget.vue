@@ -23,14 +23,14 @@
             <SparklesIcon class="size-4 text-white" />
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-semibold leading-none" style="color:var(--chat-header-text)">Assistent Fleetly</p>
-            <p class="text-xs mt-0.5" style="color:var(--chat-muted-text)">Ajuda sobre l'aplicació</p>
+            <p class="text-sm font-semibold leading-none" style="color:var(--chat-header-text)">{{ m.chatWidgetUi.title }}</p>
+            <p class="text-xs mt-0.5" style="color:var(--chat-muted-text)">{{ m.chatWidgetUi.subtitle }}</p>
           </div>
           <div class="flex items-center gap-1">
             <button
               v-if="messages.length > 0"
               type="button"
-              title="Esborra la conversa"
+              :title="m.chatWidgetUi.clearConversation"
               @click="clearConversation"
               class="chat-icon-btn rounded-lg p-1.5 transition"
             >
@@ -58,7 +58,7 @@
           >
             <SparklesIcon class="size-8 text-[var(--fleetly-baltic-blue)]/50" />
             <p class="text-xs leading-relaxed" style="color:var(--chat-muted-text)">
-              Pregunta'm qualsevol cosa<br />sobre l'ús de l'aplicació!
+              {{ m.chatWidgetUi.emptyPromptLine1 }}<br />{{ m.chatWidgetUi.emptyPromptLine2 }}
             </p>
             <!-- Suggestion chips -->
             <div class="flex flex-wrap justify-center gap-1.5">
@@ -129,7 +129,7 @@
             <input
               v-model="inputText"
               type="text"
-              placeholder="Escriu un missatge…"
+              :placeholder="m.chatWidgetUi.inputPlaceholder"
               maxlength="2000"
               :disabled="loading"
               class="chat-input flex-1 rounded-xl px-3 py-2 text-xs outline-none transition focus:border-[var(--fleetly-baltic-blue)] focus:ring-1 focus:ring-[var(--fleetly-baltic-blue)] disabled:opacity-50"
@@ -153,7 +153,7 @@
       data-tour-id="chat-widget-trigger"
       @click="isOpen = !isOpen"
       class="relative flex size-14 items-center justify-center rounded-full bg-[var(--fleetly-baltic-blue)] shadow-lg shadow-black/50 transition hover:opacity-90 hover:scale-105 active:scale-95"
-      :title="isOpen ? 'Tanca l\'assistent' : 'Obre l\'assistent IA'"
+      :title="isOpen ? m.chatWidgetUi.closeTitle : m.chatWidgetUi.openTitle"
     >
       <Transition
         enter-active-class="transition duration-150"
@@ -190,10 +190,12 @@ import {
 import { useAuth } from '@/modules/auth/composables/useAuth'
 import apiClient from '@/services/api'
 import showToast from '@/modules/common/composables/useToast'
+import { useI18n } from '@/i18n'
 
 // ── Auth ───────────────────────────────────────────────────────────────────
 
 const { user: authUser } = useAuth()
+const { m } = useI18n()
 
 const userInitials = computed(() => {
   const name = authUser.value?.name ?? ''
@@ -229,12 +231,7 @@ watch(isOpen, (open) => {
 
 // ── Suggestions ────────────────────────────────────────────────────────────
 
-const suggestions = [
-  'Com faig una reserva?',
-  'Com cancel·lo una reserva?',
-  'Com canvio la contrasenya?',
-  'Com obro un ticket?',
-]
+const suggestions = computed(() => m.value.chatWidgetUi.suggestions)
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -286,9 +283,9 @@ async function sendMessage() {
   } catch (err: any) {
     const errorMsg =
       err?.response?.data?.error ??
-      "No s'ha pogut connectar amb l'assistent. Torna-ho a intentar."
+      m.value.chatWidgetUi.errorMessage
     messages.value.push({ role: 'assistant', content: errorMsg })
-    showToast("Error al connectar amb l'assistent IA")
+    showToast(m.value.chatWidgetUi.errorToast)
   } finally {
     loading.value = false
     await scrollToBottom()

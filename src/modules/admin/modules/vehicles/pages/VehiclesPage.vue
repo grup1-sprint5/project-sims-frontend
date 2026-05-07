@@ -114,7 +114,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useVehicles } from '../composables/useVehicles'
 import { useI18n } from '@/i18n'
 import type { Vehicle, VehicleFilters } from '../interfaces/vehicle.interface'
@@ -149,14 +149,14 @@ async function handleDelete() {
   }
 }
 
-const columns = [
-  { key: 'id', label: m.value.commonUi.id },
-  { key: 'license_plate', label: m.value.adminVehiclesUi.plate },
-  { key: 'brand', label: m.value.adminVehiclesUi.brand },
-  { key: 'model', label: m.value.adminVehiclesUi.model },
-  { key: 'active', label: m.value.commonUi.status },
-  { key: 'actions', label: m.value.commonUi.actions, srOnly: true }
-]
+const columns = computed(() => [
+  { key: 'id', label: m.value.commonUi.id, width: '9%' },
+  { key: 'license_plate', label: m.value.adminVehiclesUi.plate, width: '27%' },
+  { key: 'brand', label: m.value.adminVehiclesUi.brand, width: '21%' },
+  { key: 'model', label: m.value.adminVehiclesUi.model, width: '21%' },
+  { key: 'active', label: m.value.commonUi.status, width: '14%' },
+  { key: 'actions', label: m.value.commonUi.actions, srOnly: true, width: '8%' }
+])
 
 const filters = ref<VehicleFilters>({
   search: ''

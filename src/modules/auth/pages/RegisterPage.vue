@@ -182,7 +182,7 @@ onMounted(() => {
   if (!isFromCentralDomain.value) {
     const host = window.location.hostname.toLowerCase()
     const parts = host.split('.')
-    if (parts.length >= 3) tenantSlug.value = parts[0]
+    if (parts.length >= 3 && parts[0]) tenantSlug.value = parts[0]
   }
 })
 

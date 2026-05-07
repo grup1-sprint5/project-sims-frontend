@@ -78,7 +78,7 @@ const filters = reactive({
 })
 
 const columns = [
-  { key: 'id', label: 'ID' },
+  { key: 'id', label: m.value.commonUi.id },
   { key: 'vehicle_id', label: m.value.adminGeofenceEventsUi.colVehicle },
   { key: 'geofence_id', label: m.value.adminGeofenceEventsUi.colGeofence },
   { key: 'event_type', label: m.value.adminGeofenceEventsUi.colEventType },

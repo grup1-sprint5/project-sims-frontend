@@ -45,8 +45,8 @@
               @change="toggleStatus($event)"
               class="rounded-md border-0 px-2 py-1 text-sm shadow-sm ring-1 ring-inset ring-gray-300 dark:bg-gray-800 dark:text-white dark:ring-gray-700"
             >
-              <option :value="true">Active</option>
-              <option :value="false">Closed</option>
+              <option :value="true">{{ m.adminTicketDetailUi.active }}</option>
+              <option :value="false">{{ m.adminTicketDetailUi.closed }}</option>
             </select>
 
             <button
@@ -54,7 +54,7 @@
               class="inline-flex items-center gap-1 rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-500"
             >
               <span class="material-icons text-base">delete</span>
-              Delete
+              {{ m.adminTicketDetailUi.delete }}
             </button>
           </div>
         </div>
@@ -92,7 +92,7 @@
             <div :class="msg.user_id === currentUserId ? 'items-end' : 'items-start'" class="flex flex-col max-w-[82%]">
               <div class="flex items-center gap-2 mb-1" :class="msg.user_id === currentUserId ? 'flex-row-reverse' : 'flex-row'">
                 <span class="ticket-name text-xs font-semibold" :class="isClientMessage(msg) ? 'ticket-name--client' : (msg.user_id === currentUserId ? 'ticket-name--self' : 'ticket-name--admin')">
-                  {{ msg.user?.name || 'Unknown' }}
+                  {{ msg.user?.name || m.adminTicketDetailUi.unknown }}
                 </span>
                 <span class="ticket-role text-[11px] px-2 py-0.5 rounded-full border"
                   :class="isClientMessage(msg) ? 'ticket-role--client' : 'ticket-role--admin'"

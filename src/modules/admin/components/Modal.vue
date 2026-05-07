@@ -14,7 +14,7 @@
       >
         <slot name="header" />
         <button
-          aria-label="Close"
+          :aria-label="m.commonUi.close"
           class="ml-4 text-gray-400 hover:text-gray-600 focus:outline-none
                  dark:text-gray-500 dark:hover:text-gray-300"
           @click="$emit('close')"
@@ -38,6 +38,10 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from '@/i18n'
+
+const { m } = useI18n()
+
 const props = defineProps<{
   show: boolean
 }>()

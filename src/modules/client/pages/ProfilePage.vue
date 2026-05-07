@@ -68,7 +68,7 @@
                   type="email"
                   required
                   class="input-field"
-                  placeholder="email@example.com"
+                  :placeholder="m.profile.emailPlaceholder"
                 />
               </div>
             </div>
@@ -162,7 +162,7 @@
                 <button
                   type="button"
                   class="password-toggle"
-                  :aria-label="showNewPassword ? 'Hide password' : 'Show password'"
+                  :aria-label="showNewPassword ? m.profile.hidePassword : m.profile.showPassword"
                   @click="showNewPassword = !showNewPassword"
                 >
                   <svg v-if="!showNewPassword" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -189,7 +189,7 @@
                 <button
                   type="button"
                   class="password-toggle"
-                  :aria-label="showConfirmPassword ? 'Hide password' : 'Show password'"
+                  :aria-label="showConfirmPassword ? m.profile.hidePassword : m.profile.showPassword"
                   @click="showConfirmPassword = !showConfirmPassword"
                 >
                   <svg v-if="!showConfirmPassword" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
