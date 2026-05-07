@@ -46,9 +46,9 @@
         </div>
 
         <!-- Subdomain preview -->
-        <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-200 dark:border-blue-800">
-          <span class="text-xs text-blue-600 dark:text-blue-400 font-semibold uppercase">{{ m.adminTenantRequestsUi.subdomainLabel }}</span>
-          <p class="text-sm text-blue-900 dark:text-blue-200 font-mono mt-1 break-all">
+        <div class="mb-4 p-3 rounded border bg-[var(--app-surface-alt)] border-[var(--app-border)]">
+          <span class="text-xs font-semibold uppercase text-[var(--fleetly-baltic-blue)]">{{ m.adminTenantRequestsUi.subdomainLabel }}</span>
+          <p class="text-sm font-mono mt-1 break-all text-[var(--app-text)]">
             https://{{ r.slug }}.jordiarnau.iemhosting.asix2.iesmontsia.cat
           </p>
         </div>
@@ -64,7 +64,7 @@
           <button
             @click="approveReq(r.id)"
             :disabled="approving === r.id"
-            class="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+            class="flex-1 bg-[var(--app-btn-bg)] hover:bg-[var(--app-btn-hover-bg)] disabled:opacity-50 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
           >
             <CheckCircleIcon v-if="approving !== r.id" class="h-5 w-5" />
             <span v-if="approving !== r.id">{{ m.adminTenantRequestsUi.approve }}</span>
