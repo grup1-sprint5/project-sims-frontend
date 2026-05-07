@@ -256,7 +256,7 @@ const renderMap = () => {
   overlayLayer = L.layerGroup().addTo(map)
 
   if (geofence.value.type === 'polygon') {
-    const points = (geofence.value.polygon || geofence.value.coordinates || [])
+    const points = (geofence.value.geometry_geojson?.coordinates?.[0] || geofence.value.polygon || geofence.value.coordinates || [])
       .filter((point) => Array.isArray(point) && point.length >= 2)
       .map((point) => [Number(point[1]), Number(point[0])] as [number, number])
 

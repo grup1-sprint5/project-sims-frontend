@@ -34,6 +34,10 @@ export interface Geofence {
   hysteresis_m: number
   polygon?: number[][]
   coordinates?: number[][]
+  geometry_geojson?: {
+    type: 'Polygon'
+    coordinates: number[][][]
+  } | null
   center?: { lat: number; lng: number }
   radius_m?: number
   schedule?: GeofenceSchedule | null

@@ -15,6 +15,13 @@
           <p v-if="errors.name" class="mt-1 text-xs text-red-500">{{ errors.name }}</p>
         </FormField>
 
+        <FormField :label="m.adminGeofenceFormUi.type">
+          <FormSelect :model-value="form.type" @update:model-value="handleTypeChange">
+            <option value="circle">{{ m.adminGeofenceFormUi.typeCircle }}</option>
+            <option value="polygon">{{ m.adminGeofenceFormUi.typePolygon }}</option>
+          </FormSelect>
+        </FormField>
+
         <FormField :label="m.adminGeofenceFormUi.ruleType">
           <FormSelect v-model="form.rule_type">
             <option v-for="option in ruleOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
@@ -42,14 +49,14 @@
 
         <div class="mt-4 space-y-3">
           <GeofenceMapEditor
-            type="circle"
+            :type="form.type"
             :polygon-points="form.polygonPoints"
             :center="form.center"
             :radius-m="form.radius_m"
             @update:geometry="handleGeometryUpdate"
           />
 
-          <p v-if="form.radius_m !== null" class="text-xs text-[var(--app-muted-text)]">
+          <p v-if="form.type === 'circle' && form.radius_m !== null" class="text-xs text-[var(--app-muted-text)]">
             {{ m.adminGeofenceFormUi.currentRadius }}: {{ Math.round(form.radius_m) }}m
           </p>
 
@@ -104,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from '@/i18n'
 import PageHeading from '@/modules/admin/components/PageHeading.vue'
@@ -167,7 +174,7 @@ onMounted(async () => {
   if (!record) return
 
   form.name = record.name
-  form.type = 'circle'
+  form.type = record.type
   form.rule_type = record.rule_type
   form.active = record.active
   form.hysteresis_m = record.hysteresis_m ?? 0
@@ -177,7 +184,7 @@ onMounted(async () => {
     lng: record.center?.lng ?? null,
   }
   form.radius_m = record.radius_m ?? null
-  form.polygonPoints = []
+  form.polygonPoints = extractPolygonPoints(record)
 
   if (record.schedule) {
     form.scheduleEnabled = true
@@ -202,17 +209,45 @@ const handleGeometryUpdate = (geometry: {
   form.radius_m = geometry.radius_m
 }
 
+const resetGeometry = () => {
+  form.polygonPoints = []
+  form.center = { lat: null, lng: null }
+  form.radius_m = null
+}
+
+const handleTypeChange = (type: string) => {
+  if (type !== 'circle' && type !== 'polygon') return
+
+  form.type = type
+  resetGeometry()
+}
+
+const extractPolygonPoints = (record: Awaited<ReturnType<typeof getGeofence>>): GeofencePoint[] => {
+  if (!record || record.type !== 'polygon') return []
+
+  const ring = record.geometry_geojson?.coordinates?.[0] || record.polygon || record.coordinates || []
+
+  return ring
+    .filter((point): point is number[] => Array.isArray(point) && point.length >= 2)
+    .map((point) => ({ lng: Number(point[0]), lat: Number(point[1]) }))
+    .filter((point) => Number.isFinite(point.lng) && Number.isFinite(point.lat))
+}
+
 const buildPayload = (): CreateGeofencePayload => {
   const payload: CreateGeofencePayload = {
     name: form.name.trim(),
-    type: 'circle',
+    type: form.type,
     rule_type: form.rule_type,
     active: form.active,
     hysteresis_m: Number(form.hysteresis_m),
     schedule: form.scheduleEnabled ? { ...form.schedule } : null,
   }
 
-  if (form.center.lat !== null && form.center.lng !== null && form.radius_m !== null) {
+  if (form.type === 'polygon') {
+    payload.polygon = form.polygonPoints
+      .filter((point) => Number.isFinite(point.lng) && Number.isFinite(point.lat))
+      .map((point) => [Number(point.lng), Number(point.lat)])
+  } else if (form.center.lat !== null && form.center.lng !== null && form.radius_m !== null) {
     payload.center = { lat: Number(form.center.lat), lng: Number(form.center.lng) }
     payload.radius_m = Number(form.radius_m)
   }
