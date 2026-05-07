@@ -2,10 +2,11 @@
   <div class="space-y-3">
     <div class="flex items-center justify-between">
       <p class="text-xs text-[var(--app-muted-text)]">
-        {{ m.adminGeofenceFormUi.mapCircleHint }}
+        {{ props.type === 'polygon' ? m.adminGeofenceFormUi.mapPolygonHint : m.adminGeofenceFormUi.mapCircleHint }}
       </p>
       <button
         v-if="currentLayer"
+        type="button"
         @click="clearZone"
         class="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors"
         :title="m.commonUi.delete"
@@ -19,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useI18n } from '@/i18n'
@@ -48,8 +49,9 @@ const mapContainer = ref<HTMLElement | null>(null)
 let map: L.Map | null = null
 let featureGroup: L.FeatureGroup | null = null
 let drawButtonControl: L.Control | null = null
-let currentLayer: L.Layer | null = null
+const currentLayer = shallowRef<L.Layer | null>(null)
 let circleDrawer: any = null
+let polygonDrawer: any = null
 
 const DRAW_CREATED_EVENT = 'draw:created'
 
@@ -57,6 +59,7 @@ const DEFAULT_CENTER: [number, number] = [41.3851, 2.1734]
 const DEFAULT_ZOOM = 13
 
 const isFiniteNumber = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value)
+const leafletDraw = L as typeof L & { Draw?: Record<string, any> }
 
 let drawPluginReady = false
 
@@ -72,14 +75,14 @@ const ensureLeafletDraw = async () => {
 }
 
 const removeCurrentLayer = () => {
-  if (currentLayer instanceof L.Circle) {
-    currentLayer.off('edit', emitGeometryFromLayer)
+  if (currentLayer.value instanceof L.Circle || currentLayer.value instanceof L.Polygon) {
+    currentLayer.value.off('edit', emitGeometryFromLayer)
   }
 
-  if (currentLayer && featureGroup) {
-    featureGroup.removeLayer(currentLayer)
+  if (currentLayer.value && featureGroup) {
+    featureGroup.removeLayer(currentLayer.value)
   }
-  currentLayer = null
+  currentLayer.value = null
 }
 
 const buildClosedRing = (points: GeofencePoint[]) => {
@@ -110,26 +113,27 @@ const emitEmptyGeometry = () => {
 }
 
 const emitGeometryFromLayer = () => {
-  if (!currentLayer) {
+  const layer = currentLayer.value
+  if (!layer) {
     emitEmptyGeometry()
     return
   }
 
-  if (currentLayer instanceof L.Circle) {
-    const center = currentLayer.getLatLng()
+  if (layer instanceof L.Circle) {
+    const center = layer.getLatLng()
     emit('update:geometry', {
       polygonPoints: [],
       center: {
         lat: Number(center.lat.toFixed(6)),
         lng: Number(center.lng.toFixed(6)),
       },
-      radius_m: Math.round(currentLayer.getRadius()),
+      radius_m: Math.round(layer.getRadius()),
     })
     return
   }
 
-  if (currentLayer instanceof L.Polygon) {
-    const latLngGroups = currentLayer.getLatLngs() as L.LatLng[][]
+  if (layer instanceof L.Polygon) {
+    const latLngGroups = layer.getLatLngs() as L.LatLng[][]
     const ring = latLngGroups[0] ?? []
     const polygonPoints = buildClosedRing(
       ring.map((point) => ({
@@ -150,6 +154,14 @@ const emitGeometryFromLayer = () => {
 }
 
 const enableCircleEditing = (layer: L.Circle) => {
+  enableLayerEditing(layer)
+}
+
+const enablePolygonEditing = (layer: L.Polygon) => {
+  enableLayerEditing(layer)
+}
+
+const enableLayerEditing = (layer: L.Circle | L.Polygon) => {
   const editable = (layer as any).editing
   if (editable?.enable) {
     editable.enable()
@@ -175,22 +187,42 @@ const syncLayerFromProps = () => {
 
   removeCurrentLayer()
 
+  if (props.type === 'polygon') {
+    const polygonPoints = buildClosedRing(props.polygonPoints)
+    if (polygonPoints.length >= 4) {
+      const leafletPoints = polygonPoints.slice(0, -1).map((point) => [point.lat, point.lng] as [number, number])
+      currentLayer.value = L.polygon(leafletPoints, {
+        color: '#4f46e5',
+        fillOpacity: 0.2,
+      })
+      featureGroup.addLayer(currentLayer.value)
+      if (currentLayer.value instanceof L.Polygon) {
+        enablePolygonEditing(currentLayer.value)
+      }
+      fitLayer(currentLayer.value)
+      return
+    }
+
+    map.setView(DEFAULT_CENTER, DEFAULT_ZOOM)
+    return
+  }
+
   if (
     isFiniteNumber(props.center.lat) &&
     isFiniteNumber(props.center.lng) &&
     isFiniteNumber(props.radiusM) &&
     props.radiusM > 0
   ) {
-    currentLayer = L.circle([props.center.lat, props.center.lng], {
+    currentLayer.value = L.circle([props.center.lat, props.center.lng], {
       radius: props.radiusM,
       color: '#4f46e5',
       fillOpacity: 0.2,
     })
-    featureGroup.addLayer(currentLayer)
-    if (currentLayer instanceof L.Circle) {
-      enableCircleEditing(currentLayer)
+    featureGroup.addLayer(currentLayer.value)
+    if (currentLayer.value instanceof L.Circle) {
+      enableCircleEditing(currentLayer.value)
     }
-    fitLayer(currentLayer)
+    fitLayer(currentLayer.value)
     return
   }
 
@@ -200,12 +232,22 @@ const syncLayerFromProps = () => {
 const handleCreated = (event: any) => {
   if (!featureGroup) return
 
+  if (
+    (props.type === 'circle' && !(event.layer instanceof L.Circle)) ||
+    (props.type === 'polygon' && !(event.layer instanceof L.Polygon))
+  ) {
+    return
+  }
+
   removeCurrentLayer()
-  currentLayer = event.layer
-  if (currentLayer) {
-    featureGroup.addLayer(currentLayer)
-    if (currentLayer instanceof L.Circle) {
-      enableCircleEditing(currentLayer)
+  currentLayer.value = event.layer
+  if (currentLayer.value) {
+    featureGroup.addLayer(currentLayer.value)
+    if (currentLayer.value instanceof L.Circle) {
+      enableCircleEditing(currentLayer.value)
+    }
+    if (currentLayer.value instanceof L.Polygon) {
+      enablePolygonEditing(currentLayer.value)
     }
   }
   emitGeometryFromLayer()
@@ -214,7 +256,7 @@ const handleCreated = (event: any) => {
 const startCircleDrawing = () => {
   if (!map) return
 
-  const CircleDrawer = (L.Draw as any)?.Circle
+  const CircleDrawer = leafletDraw.Draw?.Circle
   if (!CircleDrawer) return
 
   if (circleDrawer?.disable) {
@@ -232,19 +274,49 @@ const startCircleDrawing = () => {
   circleDrawer.enable()
 }
 
-const addCircleDrawButton = () => {
+const startPolygonDrawing = () => {
   if (!map) return
 
-  const CircleDrawButtonControl = L.Control.extend({
+  const PolygonDrawer = leafletDraw.Draw?.Polygon
+  if (!PolygonDrawer) return
+
+  if (polygonDrawer?.disable) {
+    polygonDrawer.disable()
+  }
+
+  polygonDrawer = new PolygonDrawer(map, {
+    allowIntersection: false,
+    shapeOptions: {
+      color: '#4f46e5',
+      fillOpacity: 0.2,
+    },
+  })
+
+  polygonDrawer.enable()
+}
+
+const startDrawingForType = () => {
+  if (props.type === 'polygon') {
+    startPolygonDrawing()
+    return
+  }
+
+  startCircleDrawing()
+}
+
+const addDrawButton = () => {
+  if (!map) return
+
+  const DrawButtonControl = L.Control.extend({
     onAdd: () => {
       const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control')
       const button = L.DomUtil.create('a', '', container)
 
       button.href = '#'
-      button.title = m.value.adminGeofenceFormUi.typeCircle
-      button.innerHTML = '◯'
+      button.title = props.type === 'polygon' ? m.value.adminGeofenceFormUi.typePolygon : m.value.adminGeofenceFormUi.typeCircle
+      button.innerHTML = props.type === 'polygon' ? '▱' : '◯'
       button.setAttribute('role', 'button')
-      button.setAttribute('aria-label', m.value.adminGeofenceFormUi.typeCircle)
+      button.setAttribute('aria-label', button.title)
       button.style.fontSize = '18px'
       button.style.fontWeight = '700'
       button.style.lineHeight = '30px'
@@ -254,14 +326,14 @@ const addCircleDrawButton = () => {
       L.DomEvent.disableClickPropagation(container)
       L.DomEvent.on(button, 'click', (event: Event) => {
         L.DomEvent.stop(event)
-        startCircleDrawing()
+        startDrawingForType()
       })
 
       return container
     },
   })
 
-  drawButtonControl = new CircleDrawButtonControl({ position: 'topleft' })
+  drawButtonControl = new DrawButtonControl({ position: 'topleft' })
   map.addControl(drawButtonControl)
 }
 
@@ -269,8 +341,8 @@ const clearZone = () => {
   if (!featureGroup) return
 
   featureGroup.clearLayers()
-  currentLayer = null
-  emit('update:geometry', { center: { lat: 0, lng: 0 }, radius_m: 0, polygonPoints: [] })
+  currentLayer.value = null
+  emitEmptyGeometry()
 }
 
 onMounted(async () => {
@@ -288,7 +360,7 @@ onMounted(async () => {
   map.addLayer(featureGroup)
 
   map.on(DRAW_CREATED_EVENT, handleCreated)
-  addCircleDrawButton()
+  addDrawButton()
   syncLayerFromProps()
 
   await nextTick()
@@ -308,37 +380,30 @@ onBeforeUnmount(() => {
     circleDrawer.disable()
   }
 
+  if (polygonDrawer?.disable) {
+    polygonDrawer.disable()
+  }
+
   map.remove()
 
   map = null
   featureGroup = null
   drawButtonControl = null
   circleDrawer = null
-  currentLayer = null
+  polygonDrawer = null
+  currentLayer.value = null
 })
 
 watch(
-  () => [props.polygonPoints, props.center.lat, props.center.lng, props.radiusM],
+  () => [props.type, props.polygonPoints, props.center.lat, props.center.lng, props.radiusM],
   () => {
+    if (drawButtonControl && map) {
+      map.removeControl(drawButtonControl)
+      drawButtonControl = null
+      addDrawButton()
+    }
     syncLayerFromProps()
   },
   { deep: true },
 )
 </script>
-
-<style scoped>
-:deep(.leaflet-editing-icon),
-:deep(.leaflet-div-icon.leaflet-editing-icon),
-:deep(.leaflet-marker-icon.leaflet-editing-icon),
-:deep(.leaflet-edit-move),
-:deep(.leaflet-edit-resize),
-:deep(.leaflet-touch-icon),
-:deep(.leaflet-draw-marker),
-:deep(.leaflet-draw-vertex-marker),
-:deep(.leaflet-draw-middle-marker),
-:deep(.leaflet-draw-resize-marker),
-:deep(.leaflet-draw-resize-marker-center),
-:deep(.leaflet-marker-icon.leaflet-draw-marker-draggable) {
-  display: none !important;
-}
-</style>
