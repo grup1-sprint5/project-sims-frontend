@@ -24,7 +24,6 @@ export function useTenantRequests() {
   const approve = async (id: number) => {
     try {
       const res = await api.post(`/tenant-requests/${id}/approve`)
-      // Reload to get updated list
       await new Promise(resolve => setTimeout(resolve, 500))
       await load()
       return res.data
@@ -33,5 +32,15 @@ export function useTenantRequests() {
     }
   }
 
-  return { loading, error, requests, load, approve }
+  const reject = async (id: number) => {
+    try {
+      const res = await api.post(`/tenant-requests/${id}/reject`)
+      await load()
+      return res.data
+    } catch (e: any) {
+      throw e
+    }
+  }
+
+  return { loading, error, requests, load, approve, reject }
 }

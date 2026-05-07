@@ -63,12 +63,21 @@
         <div class="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
           <button
             @click="approveReq(r.id)"
-            :disabled="approving === r.id"
+            :disabled="approving === r.id || rejecting === r.id"
             class="flex-1 bg-[var(--app-btn-bg)] hover:bg-[var(--app-btn-hover-bg)] disabled:opacity-50 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
           >
             <CheckCircleIcon v-if="approving !== r.id" class="h-5 w-5" />
             <span v-if="approving !== r.id">{{ m.adminTenantRequestsUi.approve }}</span>
             <span v-else>{{ m.adminTenantRequestsUi.approving }}</span>
+          </button>
+          <button
+            @click="rejectReq(r.id)"
+            :disabled="approving === r.id || rejecting === r.id"
+            class="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+          >
+            <XCircleIcon v-if="rejecting !== r.id" class="h-5 w-5" />
+            <span v-if="rejecting !== r.id">{{ m.adminTenantRequestsUi.reject }}</span>
+            <span v-else>{{ m.adminTenantRequestsUi.rejecting }}</span>
           </button>
         </div>
       </div>
@@ -80,12 +89,13 @@
 import { onMounted, ref } from 'vue'
 import PageHeading from '@/modules/admin/components/PageHeading.vue'
 import { useTenantRequests } from '../composables/useTenantRequests'
-import { BuildingOfficeIcon, CheckCircleIcon } from '@heroicons/vue/24/outline'
+import { BuildingOfficeIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/vue/24/outline'
 import { useToast } from '@/modules/common/composables/useToast'
 import { useI18n } from '@/i18n'
 
-const { loading, error, requests, load, approve } = useTenantRequests()
+const { loading, error, requests, load, approve, reject } = useTenantRequests()
 const approving = ref<number | null>(null)
+const rejecting = ref<number | null>(null)
 const toast = useToast()
 const { m, locale } = useI18n()
 
@@ -113,6 +123,19 @@ const approveReq = async (id: number) => {
     toast.error(message)
   } finally {
     approving.value = null
+  }
+}
+
+const rejectReq = async (id: number) => {
+  rejecting.value = id
+  try {
+    await reject(id)
+    toast.success(m.value.adminTenantRequestsUi.rejectSuccess)
+  } catch (e: any) {
+    const message = e?.response?.data?.message || m.value.adminTenantRequestsUi.rejectError
+    toast.error(message)
+  } finally {
+    rejecting.value = null
   }
 }
 

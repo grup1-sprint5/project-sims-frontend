@@ -605,6 +605,10 @@ const messages = {
       approving: 'Aprovant...',
       approveSuccess: 'Empresa aprovada correctament',
       approveError: 'No s\'ha pogut aprovar l\'empresa',
+      reject: 'Rebutjar empresa',
+      rejecting: 'Rebutjant...',
+      rejectSuccess: 'Sol·licitud rebutjada',
+      rejectError: 'No s\'ha pogut rebutjar la sol·licitud',
     },
     superAdminUi: {
       title: 'Vista global super admin',
@@ -1404,6 +1408,10 @@ const messages = {
       approving: 'Aprobando...',
       approveSuccess: 'Empresa aprobada correctamente',
       approveError: 'No se pudo aprobar la empresa',
+      reject: 'Rechazar empresa',
+      rejecting: 'Rechazando...',
+      rejectSuccess: 'Solicitud rechazada',
+      rejectError: 'No se pudo rechazar la solicitud',
     },
     superAdminUi: {
       title: 'Vista global super admin',
@@ -2203,6 +2211,10 @@ const messages = {
       approving: 'Approving...',
       approveSuccess: 'Company approved successfully',
       approveError: 'Failed to approve company',
+      reject: 'Reject company',
+      rejecting: 'Rejecting...',
+      rejectSuccess: 'Request rejected',
+      rejectError: 'Failed to reject request',
     },
     superAdminUi: {
       title: 'Super Admin Overview',
