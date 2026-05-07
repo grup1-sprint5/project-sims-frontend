@@ -21,6 +21,13 @@ export function useUsers() {
     }) ?? false
   })
 
+  const isCurrentUserSuperAdmin = computed(() => {
+    return currentUser.value?.roles?.some((role: any) => {
+      const name = typeof role.name === 'string' ? role.name.trim().toLowerCase() : ''
+      return name === 'superadmin' || name === 'super admin'
+    }) ?? false
+  })
+
   const getUsers = async (page = 1, filters: UserFilters = {}) => {
     loading.value = true
     error.value = null
@@ -117,6 +124,7 @@ export function useUsers() {
     error,
     pagination,
     isCurrentUserAdmin,
+    isCurrentUserSuperAdmin,
     getUsers,
     createUser,
     updateUser,

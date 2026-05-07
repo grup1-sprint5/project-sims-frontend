@@ -40,66 +40,47 @@
     <AdminsTable
       v-else
       :columns="columns"
-      :empty="!users"
+      :empty="users.length === 0"
     >
       <template #empty>
         {{ m.adminUsersUi.empty }}
       </template>
 
-      <tr v-for="user in users" :key="`${user.tenant_id || 'central'}-${user.id}`">
-        <AdminTd first variant="muted">
-          {{ user.id }}
-        </AdminTd>
-        <AdminTd variant="primary">
-          {{ user.name }}
-        </AdminTd>
-        <AdminTd variant="muted">
-          {{ user.username || '-' }}
-        </AdminTd>
-        <AdminTd variant="muted">
-          {{ user.email }}
-        </AdminTd>
-        <AdminTd variant="muted">
-          <span v-if="user.roles && user.roles.length > 0" class="inline-block">
-            {{ user.roles[0]?.name }}
-          </span>
-          <span v-else class="text-gray-400">-</span>
-        </AdminTd>
-        <AdminTd variant="muted">
-            <span
-            :class="[
-              'inline-flex rounded-full px-2 py-1 text-xs font-semibold',
-              user.active 
-                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
-                : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
-            ]"
-          >
-            {{ user.active ? m.commonUi.active : m.commonUi.inactive }}
-          </span>
-        </AdminTd>
-        <AdminTd variant="actions">
-          <div class="flex gap-2">
-            <button
-              v-if="isCurrentUserAdmin"
-              class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
-              @click="navigateToDetail(user)"
-              :title="m.commonUi.view"
+      <template v-if="isCurrentUserSuperAdmin">
+        <template v-for="group in groupedUsers" :key="group.key">
+          <tr>
+            <td
+              :colspan="columns.length"
+              class="bg-[var(--app-bg)] px-4 py-3 text-sm font-semibold text-[var(--app-text)] sm:px-0"
             >
-              <span class="material-icons text-xl">visibility</span>
-              <span class="sr-only">{{ m.commonUi.view }}, {{ user.name }}</span>
-            </button>
-            <button
-              v-if="isCurrentUserAdmin"
-              class="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
-              @click="navigateToEdit(user)"
-              :title="m.commonUi.edit"
-            >
-              <span class="material-icons text-xl">edit</span>
-              <span class="sr-only">{{ m.commonUi.edit }}, {{ user.name }}</span>
-            </button>
-          </div>
-        </AdminTd>
-      </tr>
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span>{{ group.name }}</span>
+                <span class="rounded-full bg-[var(--app-surface-muted)] px-2 py-0.5 text-xs font-medium text-[var(--app-muted-text)]">
+                  {{ group.users.length }} {{ m.adminUsersUi.title.toLowerCase() }}
+                </span>
+              </div>
+            </td>
+          </tr>
+          <UserRow
+            v-for="user in group.users"
+            :key="`${group.key}-${user.id}`"
+            :user="user"
+            :is-current-user-admin="isCurrentUserAdmin"
+            @view="navigateToDetail"
+            @edit="navigateToEdit"
+          />
+        </template>
+      </template>
+
+      <UserRow
+        v-else
+        v-for="user in users"
+        :key="`${user.tenant_id || 'central'}-${user.id}`"
+        :user="user"
+        :is-current-user-admin="isCurrentUserAdmin"
+        @view="navigateToDetail"
+        @edit="navigateToEdit"
+      />
     </AdminsTable>
 
     <!-- Pagination -->
@@ -115,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { defineComponent, computed, h, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUsers } from '../composables/useUsers'
 import { useToast } from '@/modules/common/composables/useToast'
@@ -128,7 +109,7 @@ import PageHeading from '@/modules/admin/components/PageHeading.vue'
 
 const router = useRouter()
 const { m } = useI18n()
-const { users, loading, error, pagination, getUsers, isCurrentUserAdmin } = useUsers()
+const { users, loading, error, pagination, getUsers, isCurrentUserAdmin, isCurrentUserSuperAdmin } = useUsers()
 const toast = useToast()
 
 const columns = [
@@ -143,6 +124,27 @@ const columns = [
 
 const filters = ref<UserFilters>({
   search: ''
+})
+
+const groupedUsers = computed(() => {
+  const groups = new Map<string, { key: string; name: string; users: User[] }>()
+
+  for (const user of users.value) {
+    const key = user.tenant_id || 'central'
+    const name = user.tenant?.name || user.tenant_id || 'Central'
+
+    if (!groups.has(key)) {
+      groups.set(key, { key, name, users: [] })
+    }
+
+    groups.get(key)!.users.push(user)
+  }
+
+  return Array.from(groups.values()).sort((a, b) => {
+    if (a.key === 'central') return -1
+    if (b.key === 'central') return 1
+    return a.name.localeCompare(b.name)
+  })
 })
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
@@ -181,5 +183,60 @@ const navigateToEdit = (user: User) => {
     query: user.tenant_id ? { tenant_id: user.tenant_id } : undefined,
   })
 }
+
+const UserRow = defineComponent({
+  name: 'UserRow',
+  props: {
+    user: {
+      type: Object as () => User,
+      required: true,
+    },
+    isCurrentUserAdmin: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  emits: ['view', 'edit'],
+  setup(props, { emit }) {
+    return () => h('tr', [
+      h(AdminTd, { first: true, variant: 'muted' }, () => props.user.id),
+      h(AdminTd, { variant: 'primary' }, () => props.user.name),
+      h(AdminTd, { variant: 'muted' }, () => props.user.username || '-'),
+      h(AdminTd, { variant: 'muted' }, () => props.user.email),
+      h(AdminTd, { variant: 'muted' }, () => {
+        const roleName = props.user.roles?.[0]?.name
+        return roleName
+          ? h('span', { class: 'inline-block' }, roleName)
+          : h('span', { class: 'text-gray-400' }, '-')
+      }),
+      h(AdminTd, { variant: 'muted' }, () => h('span', {
+        class: [
+          'inline-flex rounded-full px-2 py-1 text-xs font-semibold',
+          props.user.active
+            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+            : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
+        ],
+      }, props.user.active ? m.value.commonUi.active : m.value.commonUi.inactive)),
+      h(AdminTd, { variant: 'actions' }, () => h('div', { class: 'flex gap-2 justify-end' }, [
+        props.isCurrentUserAdmin ? h('button', {
+          class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors',
+          title: m.value.commonUi.view,
+          onClick: () => emit('view', props.user),
+        }, [
+          h('span', { class: 'material-icons text-xl' }, 'visibility'),
+          h('span', { class: 'sr-only' }, `${m.value.commonUi.view}, ${props.user.name}`),
+        ]) : null,
+        props.isCurrentUserAdmin ? h('button', {
+          class: 'text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 transition-colors',
+          title: m.value.commonUi.edit,
+          onClick: () => emit('edit', props.user),
+        }, [
+          h('span', { class: 'material-icons text-xl' }, 'edit'),
+          h('span', { class: 'sr-only' }, `${m.value.commonUi.edit}, ${props.user.name}`),
+        ]) : null,
+      ])),
+    ])
+  },
+})
 
 </script>
