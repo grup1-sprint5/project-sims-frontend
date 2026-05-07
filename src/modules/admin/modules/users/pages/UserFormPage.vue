@@ -219,6 +219,7 @@ const toast = useToast()
 const { m } = useI18n()
 
 const userId = computed(() => route.params.id ? Number(route.params.id) : null)
+const routeTenantId = computed(() => typeof route.query.tenant_id === 'string' ? route.query.tenant_id : null)
 const isEditMode = computed(() => !!userId.value)
 
 const formData = reactive({
@@ -249,12 +250,12 @@ onMounted(async () => {
 
   if (isEditMode.value && userId.value) {
     try {
-      const user = await getUser(userId.value)
+      const user = await getUser(userId.value, routeTenantId.value)
       formData.name = user.name
       formData.username = user.username
       formData.email = user.email
       formData.active = user.active
-      formData.tenant_id = user.tenant?.id != null ? String(user.tenant.id) : null
+      formData.tenant_id = user.tenant_id || (user.tenant?.id != null ? String(user.tenant.id) : null)
       if (user.roles && user.roles.length > 0) {
         formData.role_id = user.roles[0]?.id ?? null
       }
@@ -285,7 +286,7 @@ const handleSubmit = async () => {
     }
 
     if (isEditMode.value && userId.value) {
-      await updateUser(userId.value, submitData)
+      await updateUser(userId.value, submitData, routeTenantId.value || formData.tenant_id)
       toast.success(m.value.adminUserFormUi.updatedSuccess)
     } else {
       await createUser(submitData as UserForm)

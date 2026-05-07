@@ -59,7 +59,7 @@ const isDeleting = ref(false)
 const handleDelete = async () => {
   try {
     isDeleting.value = true
-    await deleteUser(props.user.id)
+    await deleteUser(props.user.id, props.user.tenant_id)
     toast.success(m.value.adminUsersUi.deleteSuccess)
     emit('confirmed')
   } catch (err: any) {

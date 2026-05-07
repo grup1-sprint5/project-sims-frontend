@@ -67,11 +67,12 @@ export function useUsers() {
     }
   }
 
-  const updateUser = async (id: number, data: Partial<UserForm>) => {
+  const updateUser = async (id: number, data: Partial<UserForm>, tenantId?: string | null) => {
     loading.value = true
     error.value = null
     try {
-      const response = await api.put<{ data: User; message: string }>(`/users/${id}`, data)
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      const response = await api.put<{ data: User; message: string }>(`/users/${id}`, data, { params })
       return response.data.data
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Error updating user'
@@ -81,11 +82,12 @@ export function useUsers() {
     }
   }
 
-  const deleteUser = async (id: number) => {
+  const deleteUser = async (id: number, tenantId?: string | null) => {
     loading.value = true
     error.value = null
     try {
-      await api.delete(`/users/${id}`)
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      await api.delete(`/users/${id}`, { params })
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Error deleting user'
       throw err
@@ -94,11 +96,12 @@ export function useUsers() {
     }
   }
 
-  const getUser = async (id: number): Promise<User> => {
+  const getUser = async (id: number, tenantId?: string | null): Promise<User> => {
     loading.value = true
     error.value = null
     try {
-      const response = await api.get<{ data: User }>(`/users/${id}`)
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      const response = await api.get<{ data: User }>(`/users/${id}`, { params })
       return response.data.data
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Error fetching user'

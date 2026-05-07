@@ -46,7 +46,7 @@
         {{ m.adminUsersUi.empty }}
       </template>
 
-      <tr v-for="user in users" :key="user.id">
+      <tr v-for="user in users" :key="`${user.tenant_id || 'central'}-${user.id}`">
         <AdminTd first variant="muted">
           {{ user.id }}
         </AdminTd>
@@ -169,11 +169,17 @@ const handlePageChange = (page: number) => {
 }
 
 const navigateToDetail = (user: User) => {
-  router.push(`/admin/users/${user.id}`)
+  router.push({
+    path: `/admin/users/${user.id}`,
+    query: user.tenant_id ? { tenant_id: user.tenant_id } : undefined,
+  })
 }
 
 const navigateToEdit = (user: User) => {
-  router.push(`/admin/users/${user.id}/edit`)
+  router.push({
+    path: `/admin/users/${user.id}/edit`,
+    query: user.tenant_id ? { tenant_id: user.tenant_id } : undefined,
+  })
 }
 
 </script>

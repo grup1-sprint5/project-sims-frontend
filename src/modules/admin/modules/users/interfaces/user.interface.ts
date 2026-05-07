@@ -4,7 +4,7 @@ export interface UserRole {
 }
 
 export interface UserTenant {
-  id: number
+  id: string
   name: string
 }
 
@@ -16,6 +16,7 @@ export interface User {
   active: boolean
   roles?: UserRole[]
   tenant?: UserTenant | null
+  tenant_id?: string | null
   created_at: string
   updated_at: string
 }
@@ -34,7 +35,7 @@ export interface UserForm {
 export interface UserFilters {
   search?: string
   role?: string
-  tenant_id?: number
+  tenant_id?: string
   active?: boolean
 }
 

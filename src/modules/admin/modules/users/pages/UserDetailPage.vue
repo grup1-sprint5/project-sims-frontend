@@ -104,7 +104,7 @@
       <!-- Actions -->
       <div v-if="isCurrentUserAdmin" class="border-t border-gray-200 dark:border-gray-700 px-4 py-4 sm:px-6 flex gap-3">
         <router-link
-          :to="`/admin/users/${user.id}/edit`"
+          :to="{ path: `/admin/users/${user.id}/edit`, query: user.tenant_id ? { tenant_id: user.tenant_id } : undefined }"
           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700"
         >
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,6 +156,7 @@ const error = ref<string | null>(null)
 const showDeleteModal = ref(false)
 
 const userId = computed(() => Number(route.params.id))
+const routeTenantId = computed(() => typeof route.query.tenant_id === 'string' ? route.query.tenant_id : null)
 const isViewedUserSuperAdmin = computed(() => {
   if (!user.value) return false
 
@@ -181,7 +182,7 @@ const loadUser = async () => {
   loading.value = true
   error.value = null
   try {
-    user.value = await getUser(userId.value)
+    user.value = await getUser(userId.value, routeTenantId.value)
   } catch (err: any) {
     error.value = err.response?.data?.message || m.value.adminUsersUi.errorLoadingUser
   } finally {
