@@ -66,8 +66,10 @@
             :key="`${group.key}-${user.id}`"
             :user="user"
             :is-current-user-admin="isCurrentUserAdmin"
+            :is-current-user-super-admin="isCurrentUserSuperAdmin"
             @view="navigateToDetail"
             @edit="navigateToEdit"
+            @delete="handleDeleteClick"
           />
         </template>
       </template>
@@ -78,10 +80,20 @@
         :key="`${user.tenant_id || 'central'}-${user.id}`"
         :user="user"
         :is-current-user-admin="isCurrentUserAdmin"
+        :is-current-user-super-admin="isCurrentUserSuperAdmin"
         @view="navigateToDetail"
         @edit="navigateToEdit"
+        @delete="handleDeleteClick"
       />
     </AdminsTable>
+
+    <!-- Delete Modal -->
+    <UserDeleteModal
+      v-if="showDeleteModal && userToDelete"
+      :user="userToDelete"
+      @confirmed="handleDeleteConfirmed"
+      @cancel="showDeleteModal = false"
+    />
 
     <!-- Pagination -->
     <AdminPagination
@@ -106,6 +118,7 @@ import AdminsTable from '@/modules/admin/components/AdminsTable.vue'
 import AdminTd from '@/modules/admin/components/AdminTd.vue'
 import AdminPagination from '@/modules/admin/components/AdminPagination.vue'
 import PageHeading from '@/modules/admin/components/PageHeading.vue'
+import UserDeleteModal from '../components/UserDeleteModal.vue'
 
 const router = useRouter()
 const { m } = useI18n()
@@ -125,6 +138,9 @@ const columns = [
 const filters = ref<UserFilters>({
   search: ''
 })
+
+const showDeleteModal = ref(false)
+const userToDelete = ref<User | null>(null)
 
 const groupedUsers = computed(() => {
   const groups = new Map<string, { key: string; name: string; users: User[] }>()
@@ -185,6 +201,17 @@ const navigateToEdit = (user: User) => {
   })
 }
 
+const handleDeleteClick = (user: User) => {
+  userToDelete.value = user
+  showDeleteModal.value = true
+}
+
+const handleDeleteConfirmed = () => {
+  showDeleteModal.value = false
+  userToDelete.value = null
+  loadUsers()
+}
+
 const UserRow = defineComponent({
   name: 'UserRow',
   props: {
@@ -196,8 +223,12 @@ const UserRow = defineComponent({
       type: Boolean,
       required: true,
     },
+    isCurrentUserSuperAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
-  emits: ['view', 'edit'],
+  emits: ['view', 'edit', 'delete'],
   setup(props, { emit }) {
     return () => h('tr', [
       h(AdminTd, { first: true, variant: 'muted' }, () => props.user.id),
@@ -234,6 +265,14 @@ const UserRow = defineComponent({
         }, [
           h('span', { class: 'material-icons text-xl' }, 'edit'),
           h('span', { class: 'sr-only' }, `${m.value.commonUi.edit}, ${props.user.name}`),
+        ]) : null,
+        props.isCurrentUserSuperAdmin ? h('button', {
+          class: 'text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors',
+          title: m.value.commonUi.delete,
+          onClick: () => emit('delete', props.user),
+        }, [
+          h('span', { class: 'material-icons text-xl' }, 'delete'),
+          h('span', { class: 'sr-only' }, `${m.value.commonUi.delete}, ${props.user.name}`),
         ]) : null,
       ])),
     ])
