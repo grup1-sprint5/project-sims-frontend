@@ -132,6 +132,7 @@ const router = useRouter()
 const { loading, saving, error, getGeofence, createGeofence, updateGeofence } = useGeofencing()
 
 const isEditMode = computed(() => Boolean(route.params.id))
+const routeTenantId = computed(() => typeof route.query.tenant_id === 'string' ? route.query.tenant_id : null)
 
 const form = reactive<GeofenceFormModel>({
   name: '',
@@ -170,7 +171,7 @@ const dayOptions = [
 
 onMounted(async () => {
   if (!isEditMode.value) return
-  const record = await getGeofence(String(route.params.id))
+  const record = await getGeofence(String(route.params.id), routeTenantId.value)
   if (!record) return
 
   form.name = record.name
@@ -262,7 +263,7 @@ const handleSubmit = async () => {
   const payload = buildPayload()
 
   if (isEditMode.value) {
-    await updateGeofence(String(route.params.id), payload)
+    await updateGeofence(String(route.params.id), payload, routeTenantId.value)
   } else {
     await createGeofence(payload)
   }

@@ -167,6 +167,7 @@ const { ticket, loading, error, getTicket, updateTicket, deleteTicket, sendMessa
 const { m } = useI18n()
 
 const id = Number(route.params.id)
+const routeTenantId = typeof route.query.tenant_id === 'string' ? route.query.tenant_id : null
 const currentUserId = computed(() => authUser.value?.id ?? null)
 const initials = (name?: string) =>
   (name ?? '?').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
@@ -205,7 +206,7 @@ const scrollChatToBottom = () => {
 
 const load = async () => {
   try {
-    const data = await getTicket(id)
+    const data = await getTicket(id, routeTenantId)
     messages.value = data.messages ?? []
     await nextTick()
     scrollChatToBottom()
@@ -217,7 +218,7 @@ const load = async () => {
 const toggleStatus = async (event: Event) => {
   const active = (event.target as HTMLSelectElement).value === 'true'
   try {
-    await updateTicket(id, { active })
+    await updateTicket(id, { active }, routeTenantId)
     toast.success(m.value.adminTicketDetailUi.statusUpdated)
   } catch {
     toast.error(m.value.adminTicketDetailUi.statusError)
@@ -228,7 +229,7 @@ const handleReply = async () => {
   if (!replyText.value.trim()) return
   sending.value = true
   try {
-    const msg = await sendMessage(id, replyText.value.trim())
+    const msg = await sendMessage(id, replyText.value.trim(), routeTenantId)
     messages.value.push(msg)
     replyText.value = ''
     await nextTick()
@@ -244,7 +245,7 @@ const handleReply = async () => {
 
 const handleDelete = async () => {
   try {
-    await deleteTicket(id)
+    await deleteTicket(id, routeTenantId)
     toast.success(m.value.adminTicketDetailUi.ticketDeleted)
     router.push('/admin/tickets')
   } catch {

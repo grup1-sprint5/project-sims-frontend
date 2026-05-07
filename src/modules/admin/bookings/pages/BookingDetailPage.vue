@@ -48,7 +48,7 @@
         </div>
         <div class="flex gap-3">
           <router-link
-            :to="`/admin/bookings/${booking.id}/edit`"
+            :to="{ path: `/admin/bookings/${booking.id}/edit`, query: routeTenantId ? { tenant_id: routeTenantId } : undefined }"
             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700"
           >
             {{ m.adminBookingsUi.edit }}
@@ -132,6 +132,7 @@ import { useI18n } from '@/i18n'
 const route = useRoute()
 const { currentBooking, getBooking, loading, error } = useBookings()
 const { m } = useI18n()
+const routeTenantId = typeof route.query.tenant_id === 'string' ? route.query.tenant_id : null
 
 const booking = computed<Booking | null>(() => currentBooking.value)
 
@@ -140,7 +141,7 @@ const bookingId = ref<number>(Number(route.params.id))
 onMounted(async () => {
   if (bookingId.value) {
     try {
-      await getBooking(bookingId.value)
+      await getBooking(bookingId.value, routeTenantId)
     } catch (e) {
       // error state is handled by composable
     }

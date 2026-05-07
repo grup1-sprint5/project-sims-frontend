@@ -40,13 +40,14 @@ export function useBookings() {
     }
   }
 
-  const getBooking = async (id: number) => {
+  const getBooking = async (id: number, tenantId?: string | null) => {
     loading.value = true
     error.value = null
 
     try {
       // AdminReservationController@show returns the booking directly, not wrapped in { data: ... }
-      const response = await api.get<Booking>(`/admin/reservations/${id}`)
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      const response = await api.get<Booking>(`/admin/reservations/${id}`, { params })
       currentBooking.value = response.data
       return response.data
     } catch (err: any) {
@@ -63,35 +64,39 @@ export function useBookings() {
     }
   }
 
-  const forceFinishBooking = async (id: number) => {
+  const forceFinishBooking = async (id: number, tenantId?: string | null) => {
     try {
-      await api.post(`/admin/reservations/${id}/force-finish`)
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      await api.post(`/admin/reservations/${id}/force-finish`, {}, { params })
     } catch (err: any) {
       throw err?.response?.data?.message || 'Error finishing booking'
     }
   }
 
-  const deleteBooking = async (id: number) => {
+  const deleteBooking = async (id: number, tenantId?: string | null) => {
     try {
       // Si la reserva està activa o pending, primer canviem l'estat a cancelled
       const booking = bookings.value.find(b => b.id === id)
       if (booking && (booking.status === 'active' || booking.status === 'pending')) {
-        await api.put(`/admin/reservations/${id}`, { status: 'cancelled' })
+        const params = tenantId ? { tenant_id: tenantId } : undefined
+        await api.put(`/admin/reservations/${id}`, { status: 'cancelled' }, { params })
       }
       
-      await api.delete(`/admin/reservations/${id}`)
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      await api.delete(`/admin/reservations/${id}`, { params })
     } catch (err: any) {
       throw err?.response?.data?.message || 'Error deleting booking'
     }
   }
 
-  const updateBooking = async (id: number, payload: Partial<BookingCreatePayload>) => {
+  const updateBooking = async (id: number, payload: Partial<BookingCreatePayload>, tenantId?: string | null) => {
     loading.value = true
     error.value = null
 
     try {
       // AdminReservationController@update devuelve { message, data: reservation }
-      const response = await api.put<{ message: string; data: Booking }>(`/admin/reservations/${id}`, payload)
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      const response = await api.put<{ message: string; data: Booking }>(`/admin/reservations/${id}`, payload, { params })
       currentBooking.value = response.data.data
       return response.data.data
     } catch (err: any) {

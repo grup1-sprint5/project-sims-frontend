@@ -1,5 +1,7 @@
 export interface Vehicle {
   id: number
+  tenant_id?: string | null
+  tenant?: { id: string; name: string } | null
   license_plate: string
   brand: string | null
   model: string | null

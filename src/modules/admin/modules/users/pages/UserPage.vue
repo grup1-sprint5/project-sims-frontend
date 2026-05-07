@@ -130,8 +130,9 @@ const groupedUsers = computed(() => {
   const groups = new Map<string, { key: string; name: string; users: User[] }>()
 
   for (const user of users.value) {
-    const key = user.tenant_id || 'central'
-    const name = user.tenant?.name || user.tenant_id || 'Central'
+    const tenantId = String(user.tenant_id || user.tenant?.id || '').trim()
+    const key = tenantId ? tenantId.toLowerCase() : 'central'
+    const name = user.tenant?.name || tenantId || 'Central'
 
     if (!groups.has(key)) {
       groups.set(key, { key, name, users: [] })

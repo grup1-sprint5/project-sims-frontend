@@ -22,6 +22,8 @@ export type BookingStatus = 'active' | 'pending' | 'finished' | 'cancelled' | 'c
 
 export interface Booking {
   id: number
+  tenant_id?: string | null
+  tenant?: { id: string; name: string } | null
   status: BookingStatus
   // Classic booking fields (if returned by backend)
   user_id?: number

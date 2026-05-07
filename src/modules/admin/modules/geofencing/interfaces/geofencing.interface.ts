@@ -26,7 +26,8 @@ export interface GeofenceAssignment {
 
 export interface Geofence {
   id: string
-  tenant_id?: string | number
+  tenant_id?: string | null
+  tenant?: { id: string; name: string } | null
   name: string
   type: GeofenceType
   rule_type: GeofenceRuleType
@@ -94,6 +95,8 @@ export interface AssignmentPayload {
 
 export interface GeofenceEvent {
   id: number | string
+  tenant_id?: string | null
+  tenant?: { id: string; name: string } | null
   geofence_id: string
   vehicle_id: number
   event_type: GeofenceEventType

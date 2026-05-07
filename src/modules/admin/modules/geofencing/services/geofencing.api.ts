@@ -30,8 +30,9 @@ export const geofencingApi = {
     return response.data
   },
 
-  async getGeofence(id: string) {
-    const response = await apiClient.get<Geofence | ApiEnvelope<Geofence>>(`/geofences/${id}`)
+  async getGeofence(id: string, tenantId?: string | null) {
+    const params = tenantId ? { tenant_id: tenantId } : undefined
+    const response = await apiClient.get<Geofence | ApiEnvelope<Geofence>>(`/geofences/${id}`, { params })
     return unwrapData(response.data)
   },
 
@@ -40,26 +41,31 @@ export const geofencingApi = {
     return unwrapData(response.data)
   },
 
-  async updateGeofence(id: string, payload: Partial<CreateGeofencePayload>) {
-    const response = await apiClient.patch<Geofence | ApiEnvelope<Geofence>>(`/geofences/${id}`, payload)
+  async updateGeofence(id: string, payload: Partial<CreateGeofencePayload>, tenantId?: string | null) {
+    const params = tenantId ? { tenant_id: tenantId } : undefined
+    const response = await apiClient.patch<Geofence | ApiEnvelope<Geofence>>(`/geofences/${id}`, payload, { params })
     return unwrapData(response.data)
   },
 
-  async deleteGeofence(id: string) {
-    await apiClient.delete(`/geofences/${id}`)
+  async deleteGeofence(id: string, tenantId?: string | null) {
+    const params = tenantId ? { tenant_id: tenantId } : undefined
+    await apiClient.delete(`/geofences/${id}`, { params })
   },
 
-  async addAssignment(geofenceId: string, payload: AssignmentPayload) {
+  async addAssignment(geofenceId: string, payload: AssignmentPayload, tenantId?: string | null) {
+    const params = tenantId ? { tenant_id: tenantId } : undefined
     const response = await apiClient.post<GeofenceAssignment | ApiEnvelope<GeofenceAssignment>>(
       `/geofences/${geofenceId}/assignments`,
       payload,
+      { params },
     )
 
     return unwrapData(response.data)
   },
 
-  async deleteAssignment(geofenceId: string, assignmentId: string | number) {
-    await apiClient.delete(`/geofences/${geofenceId}/assignments/${assignmentId}`)
+  async deleteAssignment(geofenceId: string, assignmentId: string | number, tenantId?: string | null) {
+    const params = tenantId ? { tenant_id: tenantId } : undefined
+    await apiClient.delete(`/geofences/${geofenceId}/assignments/${assignmentId}`, { params })
   },
 
   async listEvents(filters: Record<string, unknown>) {

@@ -33,11 +33,12 @@ export function useTickets() {
     }
   }
 
-  const getTicket = async (id: number): Promise<Ticket> => {
+  const getTicket = async (id: number, tenantId?: string | null): Promise<Ticket> => {
     loading.value = true
     error.value = null
     try {
-      const res = await api.get(`/tickets/${id}`)
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      const res = await api.get(`/tickets/${id}`, { params })
       const data = res.data.data ?? res.data
       ticket.value = data
       return data
@@ -65,12 +66,14 @@ export function useTickets() {
 
   const updateTicket = async (
     id: number,
-    data: Partial<TicketForm & { active: boolean }>
+    data: Partial<TicketForm & { active: boolean }>,
+    tenantId?: string | null
   ): Promise<Ticket> => {
     loading.value = true
     error.value = null
     try {
-      const res = await api.put(`/tickets/${id}`, data)
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      const res = await api.put(`/tickets/${id}`, data, { params })
       const updated = res.data.data ?? res.data
       ticket.value = updated
       return updated
@@ -82,11 +85,12 @@ export function useTickets() {
     }
   }
 
-  const deleteTicket = async (id: number): Promise<void> => {
+  const deleteTicket = async (id: number, tenantId?: string | null): Promise<void> => {
     loading.value = true
     error.value = null
     try {
-      await api.delete(`/tickets/${id}`)
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      await api.delete(`/tickets/${id}`, { params })
       tickets.value = tickets.value.filter(t => t.id !== id)
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Error deleting ticket'
@@ -98,10 +102,11 @@ export function useTickets() {
 
   // ── Messages ───────────────────────────────────────────────────────────────
 
-  const sendMessage = async (ticketId: number, message: string): Promise<TicketMessage> => {
+  const sendMessage = async (ticketId: number, message: string, tenantId?: string | null): Promise<TicketMessage> => {
     sending.value = true
     try {
-      const res = await api.post(`/tickets/${ticketId}/messages`, { message })
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      const res = await api.post(`/tickets/${ticketId}/messages`, { message }, { params })
       return res.data.data ?? res.data
     } catch (err: any) {
       throw err

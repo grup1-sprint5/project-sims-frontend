@@ -46,7 +46,7 @@
         {{ m.adminVehiclesUi.empty }}
       </template>
 
-      <tr v-for="vehicle in vehicles" :key="vehicle.id">
+      <tr v-for="vehicle in vehicles" :key="`${vehicle.tenant_id || 'central'}-${vehicle.id}`">
         <AdminTd first variant="muted">
           {{ vehicle.id }}
         </AdminTd>
@@ -60,12 +60,15 @@
           {{ vehicle.model || '-' }}
         </AdminTd>
         <AdminTd variant="muted">
+          {{ vehicle.tenant?.name || vehicle.tenant_id || '-' }}
+        </AdminTd>
+        <AdminTd variant="muted">
           <StatusBadge :active="vehicle.active" :active-text="m.commonUi.active" :inactive-text="m.commonUi.inactive" />
         </AdminTd>
         <AdminTd variant="actions">
           <div class="flex gap-2">
             <router-link
-              :to="`/admin/vehicles/${vehicle.id}`"
+              :to="{ path: `/admin/vehicles/${vehicle.id}`, query: vehicle.tenant_id ? { tenant_id: vehicle.tenant_id } : undefined }"
               class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
               :title="m.commonUi.view"
             >
@@ -73,7 +76,7 @@
               <span class="sr-only">{{ m.commonUi.view }}, {{ vehicle.license_plate }}</span>
             </router-link>
             <router-link
-              :to="`/admin/vehicles/${vehicle.id}/edit`"
+              :to="{ path: `/admin/vehicles/${vehicle.id}/edit`, query: vehicle.tenant_id ? { tenant_id: vehicle.tenant_id } : undefined }"
               class="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
               :title="m.commonUi.edit"
             >
@@ -140,7 +143,7 @@ function confirmDelete(vehicle: Vehicle) {
 async function handleDelete() {
   if (!vehicleToDelete.value) return
   try {
-    await deleteVehicle(vehicleToDelete.value.id)
+    await deleteVehicle(vehicleToDelete.value.id, vehicleToDelete.value.tenant_id)
     showDeleteDialog.value = false
     vehicleToDelete.value = null
     loadVehicles()
@@ -152,9 +155,10 @@ async function handleDelete() {
 const columns = computed(() => [
   { key: 'id', label: m.value.commonUi.id, width: '9%' },
   { key: 'license_plate', label: m.value.adminVehiclesUi.plate, width: '27%' },
-  { key: 'brand', label: m.value.adminVehiclesUi.brand, width: '21%' },
-  { key: 'model', label: m.value.adminVehiclesUi.model, width: '21%' },
-  { key: 'active', label: m.value.commonUi.status, width: '14%' },
+  { key: 'brand', label: m.value.adminVehiclesUi.brand, width: '18%' },
+  { key: 'model', label: m.value.adminVehiclesUi.model, width: '18%' },
+  { key: 'tenant', label: m.value.adminTenantsUi.title, width: '14%' },
+  { key: 'active', label: m.value.commonUi.status, width: '12%' },
   { key: 'actions', label: m.value.commonUi.actions, srOnly: true, width: '8%' }
 ])
 

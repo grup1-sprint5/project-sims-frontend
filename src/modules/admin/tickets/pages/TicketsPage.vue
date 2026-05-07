@@ -32,9 +32,10 @@
     <AdminsTable v-else :columns="columns" :empty="filteredTickets.length === 0">
       <template #empty>{{ m.adminTicketsUi.empty }}</template>
 
-      <tr v-for="t in filteredTickets" :key="t.id">
+      <tr v-for="t in filteredTickets" :key="`${t.tenant_id || 'central'}-${t.id}`">
         <AdminTd first variant="muted">#{{ t.id }}</AdminTd>
         <AdminTd variant="primary">{{ t.title }}</AdminTd>
+        <AdminTd variant="muted">{{ t.tenant?.name || t.tenant_id || '-' }}</AdminTd>
         <AdminTd variant="muted">{{ t.user?.name || '-' }}</AdminTd>
         <AdminTd variant="muted">{{ t.user?.email || '-' }}</AdminTd>
         <AdminTd variant="muted">{{ t.messages?.length ?? 0 }}</AdminTd>
@@ -54,7 +55,7 @@
         <AdminTd variant="actions">
           <div class="flex justify-end gap-2">
             <router-link
-              :to="`/admin/tickets/${t.id}`"
+              :to="{ path: `/admin/tickets/${t.id}`, query: t.tenant_id ? { tenant_id: t.tenant_id } : undefined }"
               class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
               :title="m.commonUi.view"
             >
@@ -101,6 +102,7 @@ const { m } = useI18n()
 const columns = [
   { key: 'id', label: m.value.commonUi.id },
   { key: 'title', label: m.value.ticketsUi.title },
+  { key: 'tenant', label: m.value.adminTenantsUi.title },
   { key: 'user', label: m.value.adminTicketsUi.user },
   { key: 'email', label: m.value.commonUi.email },
   { key: 'messages', label: m.value.adminTicketsUi.messages },
@@ -137,7 +139,7 @@ const confirmDelete = (t: Ticket) => {
 const handleDeleteConfirmed = async () => {
   if (!ticketToDelete.value) return
   try {
-    await deleteTicket(ticketToDelete.value.id)
+    await deleteTicket(ticketToDelete.value.id, ticketToDelete.value.tenant_id)
     toast.success(m.value.adminTicketsUi.deleteSuccess)
   } catch {
     toast.error(m.value.adminTicketsUi.deleteError)

@@ -104,6 +104,7 @@ const { success: toastSuccess, error: toastError } = useToast()
 const { m } = useI18n()
 
 const bookingId = computed(() => (route.params.id ? Number(route.params.id) : null))
+const routeTenantId = computed(() => typeof route.query.tenant_id === 'string' ? route.query.tenant_id : null)
 
 const form = reactive<{
   user_id: string
@@ -127,7 +128,7 @@ onMounted(async () => {
   }
 
   try {
-    const booking = await getBooking(bookingId.value)
+    const booking = await getBooking(bookingId.value, routeTenantId.value)
     if (booking.user_id) form.user_id = String(booking.user_id)
     if (booking.vehicle_id) form.vehicle_id = String(booking.vehicle_id)
     if (booking.scheduled_start) {
@@ -158,7 +159,7 @@ const handleSubmit = async () => {
       return
     }
 
-    await updateBooking(bookingId.value, payload)
+    await updateBooking(bookingId.value, payload, routeTenantId.value)
     toastSuccess(m.value.adminBookingsUi.updatedSuccess)
 
     router.push('/admin/bookings')

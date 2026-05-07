@@ -6,7 +6,7 @@
     >
       <template #actions>
         <router-link
-          :to="`/admin/vehicles/${vehicleId}/edit`"
+          :to="{ path: `/admin/vehicles/${vehicleId}/edit`, query: routeTenantId ? { tenant_id: routeTenantId } : undefined }"
           class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
         >
           {{ m.commonUi.edit }}
@@ -81,6 +81,7 @@ const { getVehicle, loading, error } = useVehicles()
 const { m, locale } = useI18n()
 
 const vehicleId = Number(route.params.id)
+const routeTenantId = typeof route.query.tenant_id === 'string' ? route.query.tenant_id : null
 const vehicle = ref<Vehicle | null>(null)
 
 const formatDate = (dateString: string): string => {
@@ -96,7 +97,7 @@ const formatDate = (dateString: string): string => {
 
 onMounted(async () => {
   try {
-    vehicle.value = await getVehicle(vehicleId)
+    vehicle.value = await getVehicle(vehicleId, routeTenantId)
   } catch {
     router.push('/admin/vehicles')
   }

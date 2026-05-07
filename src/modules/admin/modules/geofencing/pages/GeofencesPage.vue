@@ -73,20 +73,21 @@
         {{ m.adminGeofencesUi.empty }}
       </template>
 
-      <tr v-for="item in geofences" :key="item.id">
+      <tr v-for="item in geofences" :key="`${item.tenant_id || 'central'}-${item.id}`">
         <AdminTd first variant="primary">{{ item.name }}</AdminTd>
         <AdminTd variant="muted" class="uppercase">{{ item.type }}</AdminTd>
         <AdminTd variant="muted" class="uppercase">{{ item.rule_type }}</AdminTd>
+        <AdminTd variant="muted">{{ item.tenant?.name || item.tenant_id || '-' }}</AdminTd>
         <AdminTd variant="muted">
           <StatusBadge :active="item.active" :active-text="m.adminGeofencesUi.active" :inactive-text="m.adminGeofencesUi.inactive" />
         </AdminTd>
         <AdminTd variant="muted">{{ formatDate(item.updated_at) }}</AdminTd>
         <AdminTd variant="actions">
           <div class="flex justify-end gap-2">
-            <router-link :to="`/admin/geofences/${item.id}`" class="text-indigo-500 hover:text-indigo-700" :title="m.commonUi.view">
+            <router-link :to="{ path: `/admin/geofences/${item.id}`, query: item.tenant_id ? { tenant_id: item.tenant_id } : undefined }" class="text-indigo-500 hover:text-indigo-700" :title="m.commonUi.view">
               <span class="material-icons text-lg">visibility</span>
             </router-link>
-            <router-link :to="`/admin/geofences/${item.id}/edit`" class="text-purple-500 hover:text-purple-700" :title="m.commonUi.edit">
+            <router-link :to="{ path: `/admin/geofences/${item.id}/edit`, query: item.tenant_id ? { tenant_id: item.tenant_id } : undefined }" class="text-purple-500 hover:text-purple-700" :title="m.commonUi.edit">
               <span class="material-icons text-lg">edit</span>
             </router-link>
             <button class="text-red-500 hover:text-red-700" @click="openDeleteDialog(item)" :title="m.commonUi.delete">
@@ -154,6 +155,7 @@ const columns = computed(() => [
   { key: 'name', label: m.value.adminGeofencesUi.colName },
   { key: 'type', label: m.value.adminGeofencesUi.colType },
   { key: 'rule_type', label: m.value.adminGeofencesUi.colRule },
+  { key: 'tenant', label: m.value.adminTenantsUi.title },
   { key: 'active', label: m.value.commonUi.status },
   { key: 'updated_at', label: m.value.commonUi.updated },
   { key: 'actions', label: m.value.commonUi.actions, srOnly: true },
@@ -193,7 +195,7 @@ const openDeleteDialog = (item: Geofence) => {
 
 const handleDelete = async () => {
   if (!geofenceToDelete.value) return
-  await deleteGeofence(geofenceToDelete.value.id)
+  await deleteGeofence(geofenceToDelete.value.id, geofenceToDelete.value.tenant_id)
   showDeleteDialog.value = false
   geofenceToDelete.value = null
   loadGeofences()

@@ -24,10 +24,11 @@
     <AdminsTable v-else :columns="columns" :empty="events.length === 0">
       <template #empty>{{ m.adminGeofenceEventsUi.empty }}</template>
 
-      <tr v-for="event in events" :key="event.id">
+      <tr v-for="event in events" :key="`${event.tenant_id || 'central'}-${event.id}`">
         <AdminTd first variant="muted">{{ event.id }}</AdminTd>
         <AdminTd variant="muted">{{ event.vehicle_id }}</AdminTd>
         <AdminTd variant="muted" class="truncate max-w-[220px]">{{ event.geofence_id }}</AdminTd>
+        <AdminTd variant="muted">{{ event.tenant?.name || event.tenant_id || '-' }}</AdminTd>
         <AdminTd variant="muted"><GeofenceEventBadge :event-type="event.event_type" /></AdminTd>
         <AdminTd variant="muted">{{ event.position.lat }}, {{ event.position.lng }}</AdminTd>
         <AdminTd variant="muted">{{ formatDate(event.occurred_at) }}</AdminTd>
@@ -81,6 +82,7 @@ const columns = [
   { key: 'id', label: m.value.commonUi.id },
   { key: 'vehicle_id', label: m.value.adminGeofenceEventsUi.colVehicle },
   { key: 'geofence_id', label: m.value.adminGeofenceEventsUi.colGeofence },
+  { key: 'tenant', label: m.value.adminTenantsUi.title },
   { key: 'event_type', label: m.value.adminGeofenceEventsUi.colEventType },
   { key: 'position', label: m.value.adminGeofenceEventsUi.colPosition },
   { key: 'occurred_at', label: m.value.adminGeofenceEventsUi.colOccurredAt },

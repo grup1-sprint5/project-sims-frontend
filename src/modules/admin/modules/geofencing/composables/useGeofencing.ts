@@ -116,11 +116,11 @@ export function useGeofencing() {
     }
   }
 
-  const getGeofence = async (id: string) => {
+  const getGeofence = async (id: string, tenantId?: string | null) => {
     loading.value = true
     error.value = null
     try {
-      geofence.value = await geofencingApi.getGeofence(id)
+      geofence.value = await geofencingApi.getGeofence(id, tenantId)
       return geofence.value
     } catch (err: any) {
       error.value = readMessageFromError(err, m.value.adminGeofencesUi.errorLoadingGeofence)
@@ -143,11 +143,11 @@ export function useGeofencing() {
     }
   }
 
-  const updateGeofence = async (id: string, payload: Partial<CreateGeofencePayload>) => {
+  const updateGeofence = async (id: string, payload: Partial<CreateGeofencePayload>, tenantId?: string | null) => {
     saving.value = true
     error.value = null
     try {
-      return await geofencingApi.updateGeofence(id, payload)
+      return await geofencingApi.updateGeofence(id, payload, tenantId)
     } catch (err: any) {
       error.value = readMessageFromError(err, m.value.adminGeofencesUi.errorUpdatingGeofence)
       throw err
@@ -156,11 +156,11 @@ export function useGeofencing() {
     }
   }
 
-  const deleteGeofence = async (id: string) => {
+  const deleteGeofence = async (id: string, tenantId?: string | null) => {
     saving.value = true
     error.value = null
     try {
-      await geofencingApi.deleteGeofence(id)
+      await geofencingApi.deleteGeofence(id, tenantId)
     } catch (err: any) {
       error.value = readMessageFromError(err, m.value.adminGeofencesUi.errorDeletingGeofence)
       throw err
@@ -169,11 +169,11 @@ export function useGeofencing() {
     }
   }
 
-  const addAssignment = async (geofenceId: string, payload: AssignmentPayload) => {
+  const addAssignment = async (geofenceId: string, payload: AssignmentPayload, tenantId?: string | null) => {
     saving.value = true
     error.value = null
     try {
-      return await geofencingApi.addAssignment(geofenceId, payload)
+      return await geofencingApi.addAssignment(geofenceId, payload, tenantId)
     } catch (err: any) {
       error.value = readMessageFromError(err, m.value.adminGeofencesUi.errorCreatingAssignment)
       throw err
@@ -182,11 +182,11 @@ export function useGeofencing() {
     }
   }
 
-  const deleteAssignment = async (geofenceId: string, assignmentId: string | number) => {
+  const deleteAssignment = async (geofenceId: string, assignmentId: string | number, tenantId?: string | null) => {
     saving.value = true
     error.value = null
     try {
-      await geofencingApi.deleteAssignment(geofenceId, assignmentId)
+      await geofencingApi.deleteAssignment(geofenceId, assignmentId, tenantId)
     } catch (err: any) {
       error.value = readMessageFromError(err, m.value.adminGeofencesUi.errorDeletingAssignment)
       throw err

@@ -112,7 +112,7 @@
         {{ m.adminBookingsUi.empty }}
       </template>
 
-      <tr v-for="booking in bookings" :key="booking.id">
+      <tr v-for="booking in bookings" :key="`${booking.tenant_id || 'central'}-${booking.id}`">
         <AdminTd first variant="primary">
           <div class="flex items-center gap-3">
             <div class="h-8 w-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">
@@ -151,6 +151,10 @@
         </AdminTd>
 
         <AdminTd variant="muted">
+          {{ booking.tenant?.name || booking.tenant_id || '-' }}
+        </AdminTd>
+
+        <AdminTd variant="muted">
           <div class="text-xs text-gray-900 dark:text-white">
             <span class="font-semibold">{{ formatDateDay(getStartDate(booking)) }}</span>
             · {{ formatDateHour(getStartDate(booking)) }}
@@ -179,7 +183,7 @@
           <div class="flex gap-2">
             <button
               class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
-              @click="navigateToDetail(booking.id)"
+              @click="navigateToDetail(booking)"
               :title="m.commonUi.view"
             >
               <span class="material-icons text-xl">visibility</span>
@@ -187,14 +191,14 @@
             </button>
             <button
               class="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
-              @click="navigateToEdit(booking.id)"
+              @click="navigateToEdit(booking)"
               :title="m.commonUi.edit"
             >
               <span class="material-icons text-xl">edit</span>
               <span class="sr-only">{{ m.commonUi.edit }}, #{{ booking.id }}</span>
             </button>
             <button
-              @click="handleDelete(booking.id)"
+              @click="handleDelete(booking)"
               class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors"
               :title="m.commonUi.delete"
             >
@@ -270,6 +274,7 @@ const { success: toastSuccess, error: toastError } = useToast()
 const columns = [
   { key: 'guest', label: m.value.adminBookingsUi.guest },
   { key: 'vehicle', label: m.value.adminBookingsUi.vehicle },
+  { key: 'tenant', label: m.value.adminTenantsUi.title },
   { key: 'schedule', label: m.value.adminBookingsUi.schedule },
   { key: 'price', label: m.value.adminBookingsUi.price },
   { key: 'status', label: m.value.commonUi.status },
@@ -286,7 +291,7 @@ const creating = ref(false)
 
 const showDeleteModal = ref(false)
 const deleting = ref(false)
-const bookingToDelete = ref<number | null>(null)
+const bookingToDelete = ref<Booking | null>(null)
 
 const createForm = ref<{
   user_id: string
@@ -363,8 +368,8 @@ const handleCreate = async () => {
   }
 }
 
-const handleDelete = (id: number) => {
-  bookingToDelete.value = id
+const handleDelete = (booking: Booking) => {
+  bookingToDelete.value = booking
   showDeleteModal.value = true
 }
 
@@ -373,7 +378,7 @@ const confirmDelete = async () => {
   
   deleting.value = true
   try {
-    await deleteBooking(bookingToDelete.value)
+    await deleteBooking(bookingToDelete.value.id, bookingToDelete.value.tenant_id)
     toastSuccess(m.value.adminBookingsUi.bookingDeleted)
     loadBookings(pagination.value.current_page)
     showDeleteModal.value = false
@@ -434,11 +439,17 @@ const getEndDate = (booking: Booking) =>
 const getTotal = (booking: Booking) =>
   booking.total_price ?? booking.trip?.total_amount ?? 0
 
-const navigateToDetail = (id: number) => {
-  router.push(`/admin/bookings/${id}`)
+const navigateToDetail = (booking: Booking) => {
+  router.push({
+    path: `/admin/bookings/${booking.id}`,
+    query: booking.tenant_id ? { tenant_id: booking.tenant_id } : undefined,
+  })
 }
 
-const navigateToEdit = (id: number) => {
-  router.push(`/admin/bookings/${id}/edit`)
+const navigateToEdit = (booking: Booking) => {
+  router.push({
+    path: `/admin/bookings/${booking.id}/edit`,
+    query: booking.tenant_id ? { tenant_id: booking.tenant_id } : undefined,
+  })
 }
 </script>

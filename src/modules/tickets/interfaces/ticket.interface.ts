@@ -16,6 +16,8 @@ export interface TicketMessage {
 
 export interface Ticket {
   id: number
+  tenant_id?: string | null
+  tenant?: { id: string; name: string } | null
   user_id: number
   vehicle_id?: number | null
   title: string

@@ -2,7 +2,7 @@
   <div class="px-4 sm:px-6 lg:px-8">
     <div class="mb-6 flex items-center justify-between">
       <router-link to="/admin/geofences" class="text-sm text-indigo-500 hover:text-indigo-700">← {{ m.adminGeofenceDetailUi.back }}</router-link>
-      <router-link :to="`/admin/geofences/${id}/edit`" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500">{{ m.commonUi.edit }}</router-link>
+      <router-link :to="{ path: `/admin/geofences/${id}/edit`, query: routeTenantId ? { tenant_id: routeTenantId } : undefined }" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500">{{ m.commonUi.edit }}</router-link>
     </div>
 
     <div v-if="loading" class="text-sm text-[var(--app-muted-text)]">{{ m.adminGeofenceDetailUi.loading }}</div>
@@ -132,6 +132,7 @@ const { m } = useI18n()
 
 const route = useRoute()
 const id = String(route.params.id)
+const routeTenantId = typeof route.query.tenant_id === 'string' ? route.query.tenant_id : null
 const mapContainer = ref<HTMLElement | null>(null)
 let map: L.Map | null = null
 let overlayLayer: L.LayerGroup | null = null
@@ -191,7 +192,7 @@ const assignments = computed(() => geofence.value?.assignments || [])
 
 onMounted(async () => {
   await Promise.all([
-    getGeofence(id),
+    getGeofence(id, routeTenantId),
     getEvents({ geofence_id: id, page: 1 }),
     getVehicles(1),
   ])
@@ -224,15 +225,15 @@ const handleCreateAssignment = async () => {
   await addAssignment(id, {
     assign_type: assignmentForm.assign_type,
     assign_id: assignmentForm.assign_id,
-  })
+  }, routeTenantId)
 
   assignmentForm.assign_id = ''
-  await getGeofence(id)
+  await getGeofence(id, routeTenantId)
 }
 
 const handleDeleteAssignment = async (assignmentId: string | number) => {
-  await deleteAssignment(id, assignmentId)
-  await getGeofence(id)
+  await deleteAssignment(id, assignmentId, routeTenantId)
+  await getGeofence(id, routeTenantId)
 }
 
 const renderMap = () => {

@@ -86,6 +86,7 @@ const { m } = useI18n()
 
 const loadingVehicle = ref(true)
 const vehicleId = Number(route.params.id)
+const routeTenantId = typeof route.query.tenant_id === 'string' ? route.query.tenant_id : null
 
 const form = reactive<VehicleForm>({
   license_plate: '',
@@ -102,7 +103,7 @@ const errors = reactive<Record<string, string | null>>({
 
 onMounted(async () => {
   try {
-    const vehicle = await getVehicle(vehicleId)
+    const vehicle = await getVehicle(vehicleId, routeTenantId)
     form.license_plate = vehicle.license_plate
     form.brand = vehicle.brand || ''
     form.model = vehicle.model || ''
@@ -147,7 +148,7 @@ async function handleSubmit() {
   if (!validate()) return
 
   try {
-    await updateVehicle(vehicleId, { ...form })
+    await updateVehicle(vehicleId, { ...form }, routeTenantId)
     router.push('/admin/vehicles')
   } catch (err: any) {
     if (err.response?.status === 422) {

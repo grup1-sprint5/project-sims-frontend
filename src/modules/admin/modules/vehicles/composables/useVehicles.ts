@@ -65,11 +65,12 @@ export function useVehicles() {
     }
   }
 
-  const getVehicle = async (id: number): Promise<Vehicle> => {
+  const getVehicle = async (id: number, tenantId?: string | null): Promise<Vehicle> => {
     loading.value = true
     error.value = null
     try {
-      const response = await api.get<{ data: Vehicle }>(`/vehicles/${id}`)
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      const response = await api.get<{ data: Vehicle }>(`/vehicles/${id}`, { params })
       return response.data.data
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Error loading vehicle'
@@ -79,7 +80,7 @@ export function useVehicles() {
     }
   }
 
-  const updateVehicle = async (id: number, data: VehicleForm): Promise<Vehicle> => {
+  const updateVehicle = async (id: number, data: VehicleForm, tenantId?: string | null): Promise<Vehicle> => {
     loading.value = true
     error.value = null
     try {
@@ -97,7 +98,8 @@ export function useVehicles() {
         payload.lng = data.longitude
       }
 
-      const response = await api.put<{ data?: Vehicle; message?: string }>(`/vehicles/${id}`, payload)
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      const response = await api.put<{ data?: Vehicle; message?: string }>(`/vehicles/${id}`, payload, { params })
       return (response.data?.data ?? response.data) as Vehicle
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Error updating vehicle'
@@ -107,11 +109,12 @@ export function useVehicles() {
     }
   }
 
-  const deleteVehicle = async (id: number) => {
+  const deleteVehicle = async (id: number, tenantId?: string | null) => {
     loading.value = true
     error.value = null
     try {
-      await api.delete(`/vehicles/${id}`)
+      const params = tenantId ? { tenant_id: tenantId } : undefined
+      await api.delete(`/vehicles/${id}`, { params })
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Error deleting vehicle'
       throw err
