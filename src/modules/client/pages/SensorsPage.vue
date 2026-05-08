@@ -123,6 +123,44 @@
             <div class="ml-auto text-xs text-gray-400" v-if="loadingLatest">{{ m.sensorsUi.loading }}</div>
           </div>
         </div>
+      <!-- LED Control -->
+      <div class="mt-4 rounded-xl p-4" style="background:var(--app-card-bg);border:1px solid var(--app-card-border);">
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <div class="text-sm font-semibold">{{ m.sensorsUi.ledControl }}</div>
+            <div class="mt-1 flex items-center gap-2">
+              <span class="text-xs font-medium">{{ m.sensorsUi.ledState }}:</span>
+              <span
+                class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold"
+                :style="ledState === 'ON'
+                  ? 'background:color-mix(in srgb,#fbbf24 20%,var(--app-card-bg));color:#d97706;border:1px solid color-mix(in srgb,#fbbf24 50%,transparent)'
+                  : 'background:var(--app-surface-alt);color:var(--app-muted-text);border:1px solid var(--app-border)'"
+              >
+                <span
+                  class="h-2 w-2 rounded-full"
+                  :style="ledState === 'ON' ? 'background:#fbbf24' : 'background:#6b7280'"
+                />
+                {{ ledState }}
+              </span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div v-if="ledLoading" class="text-xs text-gray-400">{{ m.sensorsUi.ledLoading }}</div>
+            <div v-if="ledError" class="text-xs text-red-400">{{ m.sensorsUi.ledError }}</div>
+            <button
+              type="button"
+              class="rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:opacity-50"
+              :style="ledState === 'ON'
+                ? 'background:#374151;color:#f9fafb;border:1px solid #4b5563;'
+                : 'background:#f59e0b;color:#1c1917;border:1px solid #d97706;'"
+              :disabled="ledLoading"
+              @click="toggleLed"
+            >
+              {{ ledState === 'ON' ? m.sensorsUi.ledOff : m.sensorsUi.ledOn }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -132,8 +170,34 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useSensorData } from '../composables/useSensorData'
 import { useI18n } from '@/i18n'
+import api from '@/services/api'
 
 const { m } = useI18n()
+
+const ledState = ref<'ON' | 'OFF'>('OFF')
+const ledLoading = ref(false)
+const ledError = ref(false)
+
+const fetchLedStatus = async () => {
+  try {
+    const res = await api.get('/actuator/status')
+    ledState.value = res.data?.data?.current_state ?? res.data?.current_state ?? 'OFF'
+  } catch {}
+}
+
+const toggleLed = async () => {
+  ledLoading.value = true
+  ledError.value = false
+  const newState = ledState.value === 'ON' ? 'OFF' : 'ON'
+  try {
+    const res = await api.post('/actuator', { state: newState })
+    ledState.value = res.data?.data?.current_state ?? newState
+  } catch {
+    ledError.value = true
+  } finally {
+    ledLoading.value = false
+  }
+}
 
 const {
   devices,
@@ -192,6 +256,7 @@ onMounted(async () => {
     await fetchLatest()
     start()
   }
+  fetchLedStatus()
 })
 
 const pollingLabel = computed(() => (isPolling.value ? m.value.sensorsUi.live : m.value.sensorsUi.paused))
