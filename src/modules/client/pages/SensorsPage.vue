@@ -123,6 +123,8 @@
             <div class="ml-auto text-xs text-gray-400" v-if="loadingLatest">{{ m.sensorsUi.loading }}</div>
           </div>
         </div>
+      </div>
+
       <!-- LED Control -->
       <div class="mt-4 rounded-xl p-4" style="background:var(--app-card-bg);border:1px solid var(--app-card-border);">
         <div class="flex items-center justify-between gap-4">
@@ -162,6 +164,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -246,7 +249,6 @@ const onDeviceChange = async () => {
 }
 
 watch(selectedDeviceId, async () => {
-  // if device is cleared, stop polling
   if (!selectedDeviceId.value) stop()
 })
 
