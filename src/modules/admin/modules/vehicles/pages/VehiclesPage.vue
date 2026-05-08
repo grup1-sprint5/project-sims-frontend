@@ -46,54 +46,35 @@
         {{ m.adminVehiclesUi.empty }}
       </template>
 
-      <tr v-for="vehicle in vehicles" :key="`${vehicle.tenant_id || 'central'}-${vehicle.id}`">
-        <AdminTd first variant="muted">
-          {{ vehicle.id }}
-        </AdminTd>
-        <AdminTd variant="primary">
-          {{ vehicle.license_plate }}
-        </AdminTd>
-        <AdminTd variant="muted">
-          {{ vehicle.brand || '-' }}
-        </AdminTd>
-        <AdminTd variant="muted">
-          {{ vehicle.model || '-' }}
-        </AdminTd>
-        <AdminTd variant="muted">
-          {{ vehicle.tenant?.name || vehicle.tenant_id || '-' }}
-        </AdminTd>
-        <AdminTd variant="muted">
-          <StatusBadge :active="vehicle.active" :active-text="m.commonUi.active" :inactive-text="m.commonUi.inactive" />
-        </AdminTd>
-        <AdminTd variant="actions">
-          <div class="flex gap-2">
-            <router-link
-              :to="{ path: `/admin/vehicles/${vehicle.id}`, query: vehicle.tenant_id ? { tenant_id: vehicle.tenant_id } : undefined }"
-              class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
-              :title="m.commonUi.view"
+      <template v-if="isCurrentUserSuperAdmin">
+        <template v-for="group in groupedVehicles" :key="group.key">
+          <tr>
+            <td
+              :colspan="columns.length"
+              class="bg-[var(--app-bg)] px-4 py-3 text-sm font-semibold text-[var(--app-text)] sm:px-0"
             >
-              <span class="material-icons text-xl">visibility</span>
-              <span class="sr-only">{{ m.commonUi.view }}, {{ vehicle.license_plate }}</span>
-            </router-link>
-            <router-link
-              :to="{ path: `/admin/vehicles/${vehicle.id}/edit`, query: vehicle.tenant_id ? { tenant_id: vehicle.tenant_id } : undefined }"
-              class="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
-              :title="m.commonUi.edit"
-            >
-              <span class="material-icons text-xl">edit</span>
-              <span class="sr-only">{{ m.commonUi.edit }}, {{ vehicle.license_plate }}</span>
-            </router-link>
-            <button
-              @click="confirmDelete(vehicle)"
-              class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors"
-              :title="m.commonUi.delete"
-            >
-              <span class="material-icons text-xl">delete</span>
-              <span class="sr-only">{{ m.commonUi.delete }}, {{ vehicle.license_plate }}</span>
-            </button>
-          </div>
-        </AdminTd>
-      </tr>
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span>{{ group.name }}</span>
+                <span class="rounded-full bg-[var(--app-surface-muted)] px-2 py-0.5 text-xs font-medium text-[var(--app-muted-text)]">
+                  {{ group.vehicles.length }} {{ m.adminVehiclesUi.title.toLowerCase() }}
+                </span>
+              </div>
+            </td>
+          </tr>
+          <VehicleRow
+            v-for="vehicle in group.vehicles"
+            :key="`${group.key}-${vehicle.id}`"
+            :vehicle="vehicle"
+          />
+        </template>
+      </template>
+
+      <VehicleRow
+        v-else
+        v-for="vehicle in vehicles"
+        :key="`${vehicle.tenant_id || 'central'}-${vehicle.id}`"
+        :vehicle="vehicle"
+      />
     </AdminsTable>
 
     <!-- Pagination -->
@@ -117,9 +98,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
+import { computed, defineComponent, h, ref, onMounted } from 'vue'
 import { useVehicles } from '../composables/useVehicles'
+import { useAuth } from '@/modules/auth/composables/useAuth'
 import { useI18n } from '@/i18n'
+import { useRouter } from 'vue-router'
 import type { Vehicle, VehicleFilters } from '../interfaces/vehicle.interface'
 import AdminsTable from '@/modules/admin/components/AdminsTable.vue'
 import AdminTd from '@/modules/admin/components/AdminTd.vue'
@@ -129,7 +112,32 @@ import StatusBadge from '@/modules/admin/components/StatusBadge.vue'
 import ConfirmDialog from '@/modules/admin/components/ConfirmDialog.vue'
 
 const { vehicles, loading, error, pagination, getVehicles, deleteVehicle } = useVehicles()
+const { user: currentUser } = useAuth()
 const { m } = useI18n()
+const router = useRouter()
+
+const isCurrentUserSuperAdmin = computed(() =>
+  currentUser.value?.roles?.some((role: any) => {
+    const name = typeof role.name === 'string' ? role.name.trim().toLowerCase() : ''
+    return name === 'superadmin' || name === 'super admin'
+  }) ?? false
+)
+
+const groupedVehicles = computed(() => {
+  const groups = new Map<string, { key: string; name: string; vehicles: Vehicle[] }>()
+  for (const vehicle of vehicles.value) {
+    const tenantId = String(vehicle.tenant_id || vehicle.tenant?.id || '').trim()
+    const key = tenantId ? tenantId.toLowerCase() : 'central'
+    const name = vehicle.tenant?.name || tenantId || 'Central'
+    if (!groups.has(key)) groups.set(key, { key, name, vehicles: [] })
+    groups.get(key)!.vehicles.push(vehicle)
+  }
+  return Array.from(groups.values()).sort((a, b) => {
+    if (a.key === 'central') return -1
+    if (b.key === 'central') return 1
+    return a.name.localeCompare(b.name)
+  })
+})
 
 // Delete state
 const showDeleteDialog = ref(false)
@@ -188,4 +196,50 @@ const handlePageChange = (page: number) => {
   pagination.value.current_page = page
   loadVehicles()
 }
+
+const VehicleRow = defineComponent({
+  name: 'VehicleRow',
+  props: { vehicle: { type: Object as () => Vehicle, required: true } },
+  setup(props) {
+    return () => h('tr', [
+      h(AdminTd, { first: true, variant: 'muted' }, () => props.vehicle.id),
+      h(AdminTd, { variant: 'primary' }, () => props.vehicle.license_plate),
+      h(AdminTd, { variant: 'muted' }, () => props.vehicle.brand || '-'),
+      h(AdminTd, { variant: 'muted' }, () => props.vehicle.model || '-'),
+      h(AdminTd, { variant: 'muted' }, () => props.vehicle.tenant?.name || props.vehicle.tenant_id || '-'),
+      h(AdminTd, { variant: 'muted' }, () =>
+        h(StatusBadge, {
+          active: props.vehicle.active,
+          activeText: m.value.commonUi.active,
+          inactiveText: m.value.commonUi.inactive,
+        })
+      ),
+      h(AdminTd, { variant: 'actions' }, () => h('div', { class: 'flex gap-2' }, [
+        h('a', {
+          href: `#`,
+          class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors',
+          title: m.value.commonUi.view,
+          onClick: (e: Event) => {
+            e.preventDefault()
+            router.push({ path: `/admin/vehicles/${props.vehicle.id}`, query: props.vehicle.tenant_id ? { tenant_id: props.vehicle.tenant_id } : undefined })
+          },
+        }, [h('span', { class: 'material-icons text-xl' }, 'visibility')]),
+        h('a', {
+          href: `#`,
+          class: 'text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 transition-colors',
+          title: m.value.commonUi.edit,
+          onClick: (e: Event) => {
+            e.preventDefault()
+            router.push({ path: `/admin/vehicles/${props.vehicle.id}/edit`, query: props.vehicle.tenant_id ? { tenant_id: props.vehicle.tenant_id } : undefined })
+          },
+        }, [h('span', { class: 'material-icons text-xl' }, 'edit')]),
+        h('button', {
+          class: 'text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors',
+          title: m.value.commonUi.delete,
+          onClick: () => confirmDelete(props.vehicle),
+        }, [h('span', { class: 'material-icons text-xl' }, 'delete')]),
+      ])),
+    ])
+  },
+})
 </script>
