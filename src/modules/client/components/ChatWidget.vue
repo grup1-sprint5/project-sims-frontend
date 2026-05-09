@@ -157,7 +157,7 @@
     >
       <svg xmlns="http://www.w3.org/2000/svg" class="size-6 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <circle cx="12" cy="4" r="2"/>
-        <path d="M19 9h-6l-1-3H8a1 1 0 000 2h3l1 3v7l-2 4h2l1.5-3h1l1.5 3h2l-2-4v-5h3a1 1 0 000-2z"/>
+        <path d="M21 9H3v2h6v12h2v-6h2v6h2V11h6V9z"/>
       </svg>
     </button>
 
