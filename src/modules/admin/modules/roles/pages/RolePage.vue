@@ -112,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from '@/i18n'
 import PageHeading from '@/modules/admin/components/PageHeading.vue'
@@ -128,13 +128,13 @@ const { m } = useI18n()
 const { roles, loading, error, pagination, getRoles } = useRoles()
 const roleToDelete = ref<Role | null>(null)
 
-const columns = [
+const columns = computed(() => [
   { key: 'name', label: m.value.adminRolesUi.name },
   { key: 'permissions', label: m.value.adminRolesUi.permissions },
   { key: 'created_at', label: m.value.adminRolesUi.createdAt },
   { key: 'updated_at', label: m.value.adminRolesUi.updatedAt },
   { key: 'actions', label: m.value.commonUi.actions, srOnly: true },
-]
+])
 
 const filters = ref<RoleFilters>({
   search: '',

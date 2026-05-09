@@ -251,7 +251,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useBookings } from '../composables/useBookings'
 import type { Booking, BookingFilters, BookingCreatePayload } from '../interfaces/booking.interface'
@@ -271,7 +271,7 @@ const { bookings, loading, error, pagination, getBookings, deleteBooking, create
 
 const { success: toastSuccess, error: toastError } = useToast()
 
-const columns = [
+const columns = computed(() => [
   { key: 'guest', label: m.value.adminBookingsUi.guest },
   { key: 'vehicle', label: m.value.adminBookingsUi.vehicle },
   { key: 'tenant', label: m.value.adminTenantsUi.title },
@@ -279,7 +279,7 @@ const columns = [
   { key: 'price', label: m.value.adminBookingsUi.price },
   { key: 'status', label: m.value.commonUi.status },
   { key: 'actions', label: m.value.commonUi.actions, srOnly: true },
-]
+])
 
 const filters = ref<BookingFilters>({
   search: '',

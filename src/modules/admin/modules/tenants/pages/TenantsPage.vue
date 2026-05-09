@@ -148,7 +148,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useTenants } from '../composables/useTenants'
 import { useI18n } from '@/i18n'
 import type { Tenant, TenantFilters } from '../interfaces/tenant.interface'
@@ -193,7 +193,7 @@ async function handleToggleActive(tenant: Tenant) {
   }
 }
 
-const columns = [
+const columns = computed(() => [
   { key: 'id', label: m.value.commonUi.id },
   { key: 'name', label: m.value.adminTenantsUi.name },
   { key: 'slug', label: m.value.commonUi.slug },
@@ -204,7 +204,7 @@ const columns = [
   { key: 'users_count', label: m.value.adminTenantsUi.users },
   { key: 'vehicles_count', label: m.value.adminTenantsUi.vehicles },
   { key: 'actions', label: m.value.commonUi.actions, srOnly: true }
-]
+])
 
 const filters = ref<TenantFilters>({
   search: ''

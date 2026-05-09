@@ -125,7 +125,7 @@ const { m } = useI18n()
 const { users, loading, error, pagination, getUsers, isCurrentUserAdmin, isCurrentUserSuperAdmin } = useUsers()
 const toast = useToast()
 
-const columns = [
+const columns = computed(() => [
   { key: 'id', label: m.value.adminUsersUi.id },
   { key: 'name', label: m.value.adminUsersUi.name },
   { key: 'username', label: m.value.adminUsersUi.username },
@@ -133,7 +133,7 @@ const columns = [
   { key: 'roles', label: m.value.adminUsersUi.role },
   { key: 'active', label: m.value.commonUi.status },
   { key: 'actions', label: m.value.commonUi.actions, srOnly: true }
-]
+])
 
 const filters = ref<UserFilters>({
   search: ''

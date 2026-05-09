@@ -99,7 +99,7 @@ const { tickets, loading, error, getTickets, deleteTicket } = useTickets()
 const toast = useToast()
 const { m } = useI18n()
 
-const columns = [
+const columns = computed(() => [
   { key: 'id', label: m.value.commonUi.id },
   { key: 'title', label: m.value.ticketsUi.title },
   { key: 'tenant', label: m.value.adminTenantsUi.title },
@@ -109,7 +109,7 @@ const columns = [
   { key: 'status', label: m.value.commonUi.status },
   { key: 'created_at', label: m.value.commonUi.created },
   { key: 'actions', label: m.value.commonUi.actions, srOnly: true },
-]
+])
 
 const search = ref('')
 const statusFilter = ref<'all' | 'active' | 'closed'>('all')
