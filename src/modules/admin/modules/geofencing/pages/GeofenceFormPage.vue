@@ -154,12 +154,12 @@ const form = reactive<GeofenceFormModel>({
 
 const errors = ref<GeofenceValidationErrors>({})
 
-const ruleOptions = [
+const ruleOptions = computed(() => [
   { value: 'allow', label: m.value.adminGeofenceFormUi.ruleAllow },
   { value: 'forbid', label: m.value.adminGeofenceFormUi.ruleForbid },
-]
+])
 
-const dayOptions = [
+const dayOptions = computed(() => [
   { value: 1, label: m.value.adminGeofenceFormUi.dayMon },
   { value: 2, label: m.value.adminGeofenceFormUi.dayTue },
   { value: 3, label: m.value.adminGeofenceFormUi.dayWed },
@@ -167,7 +167,7 @@ const dayOptions = [
   { value: 5, label: m.value.adminGeofenceFormUi.dayFri },
   { value: 6, label: m.value.adminGeofenceFormUi.daySat },
   { value: 7, label: m.value.adminGeofenceFormUi.daySun },
-]
+])
 
 onMounted(async () => {
   if (!isEditMode.value) return

@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useSuperAdmin } from '../composables/useSuperAdmin'
 import { useI18n } from '@/i18n'
 import PageHeading from '@/modules/admin/components/PageHeading.vue'
@@ -98,22 +98,22 @@ const {
 } = useSuperAdmin()
 const { m } = useI18n()
 
-const vehicleColumns = [
+const vehicleColumns = computed(() => [
   { key: 'tenant', label: m.value.superAdminUi.tenant },
   { key: 'license_plate', label: m.value.superAdminUi.plate },
   { key: 'brand', label: m.value.adminVehiclesUi.brand },
   { key: 'model', label: m.value.adminVehiclesUi.model },
   { key: 'active', label: m.value.commonUi.status },
-]
+])
 
-const userColumns = [
+const userColumns = computed(() => [
   { key: 'tenant', label: m.value.superAdminUi.tenant },
   { key: 'name', label: m.value.adminUsersUi.name },
   { key: 'username', label: m.value.adminUsersUi.username },
   { key: 'email', label: m.value.adminUsersUi.email },
   { key: 'role', label: m.value.superAdminUi.role },
   { key: 'active', label: m.value.commonUi.status },
-]
+])
 
 onMounted(() => {
   refreshOverview()

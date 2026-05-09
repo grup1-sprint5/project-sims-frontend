@@ -78,7 +78,7 @@ const filters = reactive({
   event_type: '' as '' | 'enter' | 'exit' | 'violation',
 })
 
-const columns = [
+const columns = computed(() => [
   { key: 'id', label: m.value.commonUi.id },
   { key: 'vehicle_id', label: m.value.adminGeofenceEventsUi.colVehicle },
   { key: 'geofence_id', label: m.value.adminGeofenceEventsUi.colGeofence },
@@ -86,14 +86,14 @@ const columns = [
   { key: 'event_type', label: m.value.adminGeofenceEventsUi.colEventType },
   { key: 'position', label: m.value.adminGeofenceEventsUi.colPosition },
   { key: 'occurred_at', label: m.value.adminGeofenceEventsUi.colOccurredAt },
-]
+])
 
-const eventTypeOptions = [
+const eventTypeOptions = computed(() => [
   { value: '', label: m.value.adminGeofenceEventsUi.allEventTypes },
   { value: 'enter', label: m.value.adminGeofenceEventsUi.enter },
   { value: 'exit', label: m.value.adminGeofenceEventsUi.exit },
   { value: 'violation', label: m.value.adminGeofenceEventsUi.violation },
-]
+])
 
 const geofenceOptions = computed(() => {
   const options = geofences.value.map((item) => ({
