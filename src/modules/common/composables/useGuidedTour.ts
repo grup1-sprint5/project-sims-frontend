@@ -100,9 +100,8 @@ export function useGuidedTour() {
       ].filter((step): step is DriveStep => step !== null),
     )
 
-    const tour = createDriver(labels, () => {
-      localStorage.setItem(doneKey(scope), '1')
-    })
+    localStorage.setItem(doneKey(scope), '1')
+    const tour = createDriver(labels, () => {})
     tour.setSteps(steps)
     tour.drive()
   }
@@ -148,9 +147,8 @@ export function useGuidedTour() {
       ].filter((step): step is DriveStep => step !== null),
     )
 
-    const tour = createDriver(labels, () => {
-      localStorage.setItem(doneKey(scope), '1')
-    })
+    localStorage.setItem(doneKey(scope), '1')
+    const tour = createDriver(labels, () => {})
     tour.setSteps(steps)
     tour.drive()
   }

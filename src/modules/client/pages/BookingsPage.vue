@@ -226,15 +226,15 @@
       <Transition name="modal">
         <div v-if="showCancelModal" class="fixed inset-0 z-50 flex items-end md:items-center justify-center md:p-4" @click.self="showCancelModal = false">
           <div class="fixed inset-0 bg-black/50"></div>
-          <div class="relative bg-gray-800 rounded-t-2xl md:rounded-2xl shadow-xl w-full md:max-w-sm p-6" @click.stop>
-            <div class="md:hidden w-10 h-1 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto mb-4"></div>
-            <div class="w-12 h-12 bg-red-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <div class="relative bg-[var(--app-surface)] rounded-t-2xl md:rounded-2xl shadow-xl w-full md:max-w-sm p-6" @click.stop>
+            <div class="md:hidden w-10 h-1 bg-[var(--app-border)] rounded-full mx-auto mb-4"></div>
+            <div class="w-12 h-12 bg-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <h3 class="text-lg font-bold text-white text-center mb-1">{{ m.bookingsUi.confirmCancelTitle }}</h3>
-            <p class="text-sm text-gray-400 text-center mb-6">{{ m.bookingsUi.confirmCancelText }}</p>
+            <h3 class="text-lg font-bold text-[var(--app-text)] text-center mb-1">{{ m.bookingsUi.confirmCancelTitle }}</h3>
+            <p class="text-sm text-[var(--app-muted-text)] text-center mb-6">{{ m.bookingsUi.confirmCancelText }}</p>
             <div class="flex gap-3">
-              <button @click="showCancelModal = false" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 rounded-xl transition-colors">
+              <button @click="showCancelModal = false" class="flex-1 bg-[var(--app-surface-alt)] hover:opacity-80 text-[var(--app-text)] font-semibold py-3 rounded-xl transition-colors">
                 {{ m.bookingsUi.back }}
               </button>
               <button @click="confirmCancelBooking" :disabled="bookingStore.loading" class="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition-colors">
@@ -251,71 +251,71 @@
       <Transition name="modal">
         <div v-if="showDetailsModal && selectedBooking" class="fixed inset-0 z-50 flex items-end md:items-center justify-center md:p-4" @click.self="closeDetailsModal">
           <div class="fixed inset-0 bg-black/50"></div>
-          <div class="relative bg-gray-800 rounded-t-2xl md:rounded-2xl shadow-xl w-full md:max-w-md max-h-[85dvh] flex flex-col" @click.stop>
-            <div class="md:hidden w-10 h-1 bg-gray-600 rounded-full mx-auto mt-3 mb-1 shrink-0"></div>
+          <div class="relative bg-[var(--app-surface)] rounded-t-2xl md:rounded-2xl shadow-xl w-full md:max-w-md max-h-[85dvh] flex flex-col" @click.stop>
+            <div class="md:hidden w-10 h-1 bg-[var(--app-border)] rounded-full mx-auto mt-3 mb-1 shrink-0"></div>
 
             <!-- Header -->
-            <div class="flex items-center justify-between px-5 py-4 border-b border-gray-700 shrink-0">
+            <div class="flex items-center justify-between px-5 py-4 border-b border-[var(--app-border)] shrink-0">
               <div>
-                <h3 class="font-bold text-white">{{ m.bookingsUi.bookingNumber }} #{{ selectedBooking.id }}</h3>
+                <h3 class="font-bold text-[var(--app-text)]">{{ m.bookingsUi.bookingNumber }} #{{ selectedBooking.id }}</h3>
                 <span class="text-xs font-semibold px-2 py-0.5 rounded-full" :style="getStatusBadgeStyle(selectedBooking.status)">{{ getStatusLabel(selectedBooking.status) }}</span>
               </div>
-              <button @click="closeDetailsModal" class="p-2 rounded-full hover:bg-gray-700 transition-colors">
-                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              <button @click="closeDetailsModal" class="p-2 rounded-full hover:bg-[var(--app-surface-alt)] transition-colors">
+                <svg class="h-5 w-5 text-[var(--app-muted-text)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
               </button>
             </div>
 
             <!-- Cos -->
             <div class="flex-1 overflow-y-auto px-5 py-4 space-y-3">
               <!-- Vehicle -->
-              <div class="bg-gray-700/50 rounded-2xl p-4 flex items-center gap-3">
-                <div class="w-10 h-10 bg-indigo-900/40 rounded-xl flex items-center justify-center shrink-0">
-                  <svg class="h-5 w-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+              <div class="bg-[var(--app-surface-alt)] rounded-2xl p-4 flex items-center gap-3">
+                <div class="w-10 h-10 bg-[var(--fleetly-baltic-blue)]/20 rounded-xl flex items-center justify-center shrink-0">
+                  <svg class="h-5 w-5 text-[var(--fleetly-baltic-blue)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
                 </div>
                 <div>
-                  <p class="font-bold text-white">{{ selectedBooking.vehicle?.license_plate || 'N/A' }}</p>
-                  <p class="text-sm text-gray-400">{{ selectedBooking.vehicle?.brand }} {{ selectedBooking.vehicle?.model }}</p>
+                  <p class="font-bold text-[var(--app-text)]">{{ selectedBooking.vehicle?.license_plate || 'N/A' }}</p>
+                  <p class="text-sm text-[var(--app-muted-text)]">{{ selectedBooking.vehicle?.brand }} {{ selectedBooking.vehicle?.model }}</p>
                 </div>
               </div>
 
               <!-- Dates -->
               <div class="grid grid-cols-2 gap-2">
-                <div class="bg-gray-800 rounded-xl p-3">
-                  <p class="text-xs text-gray-400 mb-1">{{ m.bookingsUi.scheduledStart }}</p>
-                  <p class="text-sm font-semibold text-white">{{ formatDate(selectedBooking.scheduled_start) }}</p>
+                <div class="bg-[var(--app-surface-alt)] rounded-xl p-3">
+                  <p class="text-xs text-[var(--app-muted-text)] mb-1">{{ m.bookingsUi.scheduledStart }}</p>
+                  <p class="text-sm font-semibold text-[var(--app-text)]">{{ formatDate(selectedBooking.scheduled_start) }}</p>
                 </div>
-                <div class="bg-gray-800 rounded-xl p-3">
-                  <p class="text-xs text-gray-400 mb-1">{{ m.bookingsUi.scheduledEnd }}</p>
-                  <p class="text-sm font-semibold text-white">{{ formatDate(selectedBooking.scheduled_end) }}</p>
+                <div class="bg-[var(--app-surface-alt)] rounded-xl p-3">
+                  <p class="text-xs text-[var(--app-muted-text)] mb-1">{{ m.bookingsUi.scheduledEnd }}</p>
+                  <p class="text-sm font-semibold text-[var(--app-text)]">{{ formatDate(selectedBooking.scheduled_end) }}</p>
                 </div>
-                <div v-if="selectedBooking.activation_deadline" class="bg-gray-800 rounded-xl p-3">
-                  <p class="text-xs text-gray-400 mb-1">{{ m.bookingsUi.activationLimit }}</p>
-                  <p class="text-sm font-semibold text-white">{{ formatDate(selectedBooking.activation_deadline) }}</p>
+                <div v-if="selectedBooking.activation_deadline" class="bg-[var(--app-surface-alt)] rounded-xl p-3">
+                  <p class="text-xs text-[var(--app-muted-text)] mb-1">{{ m.bookingsUi.activationLimit }}</p>
+                  <p class="text-sm font-semibold text-[var(--app-text)]">{{ formatDate(selectedBooking.activation_deadline) }}</p>
                 </div>
-                <div v-if="selectedBooking.trip?.engine_started_at" class="bg-gray-800 rounded-xl p-3">
-                  <p class="text-xs text-gray-400 mb-1">{{ m.bookingsUi.realStart }}</p>
-                  <p class="text-sm font-semibold text-white">{{ formatDate(selectedBooking.trip.engine_started_at) }}</p>
+                <div v-if="selectedBooking.trip?.engine_started_at" class="bg-[var(--app-surface-alt)] rounded-xl p-3">
+                  <p class="text-xs text-[var(--app-muted-text)] mb-1">{{ m.bookingsUi.realStart }}</p>
+                  <p class="text-sm font-semibold text-[var(--app-text)]">{{ formatDate(selectedBooking.trip.engine_started_at) }}</p>
                 </div>
-                <div v-if="selectedBooking.cancelled_at" class="col-span-2 bg-red-900/20 rounded-xl p-3">
-                  <p class="text-xs text-red-400 mb-1">{{ m.bookingsUi.cancelledOn }}</p>
-                  <p class="text-sm font-semibold text-red-300">{{ formatDate(selectedBooking.cancelled_at) }}</p>
+                <div v-if="selectedBooking.cancelled_at" class="col-span-2 bg-red-500/10 rounded-xl p-3">
+                  <p class="text-xs text-red-500 mb-1">{{ m.bookingsUi.cancelledOn }}</p>
+                  <p class="text-sm font-semibold text-red-500">{{ formatDate(selectedBooking.cancelled_at) }}</p>
                 </div>
               </div>
 
               <!-- Preu -->
-              <div class="bg-indigo-900/20 rounded-2xl p-4 flex items-center justify-between">
+              <div class="bg-[var(--fleetly-baltic-blue)]/10 rounded-2xl p-4 flex items-center justify-between">
                 <div>
-                  <p class="text-xs text-indigo-400 mb-0.5">{{ getBookingPriceLabel(selectedBooking) }}</p>
-                  <p v-if="selectedBooking.trip?.minutes_driven" class="text-xs text-indigo-400">{{ selectedBooking.trip.minutes_driven }} {{ m.bookingsUi.minutesDriven }}</p>
+                  <p class="text-xs text-[var(--fleetly-baltic-blue)] mb-0.5">{{ getBookingPriceLabel(selectedBooking) }}</p>
+                  <p v-if="selectedBooking.trip?.minutes_driven" class="text-xs text-[var(--fleetly-baltic-blue)]">{{ selectedBooking.trip.minutes_driven }} {{ m.bookingsUi.minutesDriven }}</p>
                 </div>
                 <span v-if="getBookingPrice(selectedBooking) === m.bookingsUi.pendingPrice" class="text-sm font-semibold text-yellow-500">{{ m.bookingsUi.pendingPriceMsg }}</span>
-                <span v-else class="text-2xl font-bold text-indigo-400">{{ getBookingPrice(selectedBooking) }}€</span>
+                <span v-else class="text-2xl font-bold text-[var(--fleetly-baltic-blue)]">{{ getBookingPrice(selectedBooking) }}€</span>
               </div>
             </div>
 
             <!-- Footer -->
-            <div v-if="selectedBooking.status === 'pending'" class="shrink-0 px-5 pb-5 pt-3 border-t border-gray-700">
-              <button @click="initCancelBooking(selectedBooking.id)" class="w-full bg-red-900/20 hover:bg-red-900/40 text-red-400 font-semibold py-3 rounded-xl transition-colors">
+            <div v-if="selectedBooking.status === 'pending'" class="shrink-0 px-5 pb-5 pt-3 border-t border-[var(--app-border)]">
+              <button @click="initCancelBooking(selectedBooking.id)" class="w-full bg-red-500/10 hover:bg-red-500/20 text-red-500 font-semibold py-3 rounded-xl transition-colors">
                 {{ m.bookingsUi.cancelThisBooking }}
               </button>
             </div>

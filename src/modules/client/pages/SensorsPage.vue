@@ -24,8 +24,8 @@
         <div class="sm:col-span-1 rounded-xl p-4" style="background:var(--app-card-bg);border:1px solid var(--app-card-border);">
           <div class="text-sm font-semibold">{{ m.sensorsUi.device }}</div>
           <div class="mt-2">
-            <div v-if="loadingDevices" class="text-sm text-gray-400">{{ m.sensorsUi.loadingDevices }}</div>
-            <div v-else-if="!hasDevices" class="text-sm text-gray-400">{{ m.sensorsUi.noDevices }}</div>
+            <div v-if="loadingDevices" class="text-sm text-[var(--app-muted-text)]">{{ m.sensorsUi.loadingDevices }}</div>
+            <div v-else-if="!hasDevices" class="text-sm text-[var(--app-muted-text)]">{{ m.sensorsUi.noDevices }}</div>
 
             <select
               v-else
@@ -37,8 +37,8 @@
               <option v-for="d in devices" :key="d" :value="d">{{ d }}</option>
             </select>
 
-            <p class="mt-2 text-xs text-gray-500">
-              Endpoint: <span class="text-gray-300">/api/sensor-data/devices</span>
+            <p class="mt-2 text-xs text-[var(--app-muted-text)]">
+              Endpoint: <span class="text-[var(--app-muted-text)]">/api/sensor-data/devices</span>
             </p>
           </div>
         </div>
@@ -47,7 +47,7 @@
           <div class="flex items-center justify-between gap-4">
             <div>
               <div class="text-sm font-semibold">{{ m.sensorsUi.latestReading }}</div>
-              <div class="mt-1 text-xs text-gray-400">
+              <div class="mt-1 text-xs text-[var(--app-muted-text)]">
                 <span v-if="lastUpdatedAt">{{ m.sensorsUi.updated }}: {{ lastUpdatedAt.toLocaleTimeString() }}</span>
                 <span v-else>{{ m.sensorsUi.notUpdated }}</span>
               </div>
@@ -64,33 +64,33 @@
 
           <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div class="rounded-lg p-4" style="background:var(--app-surface-alt);border:1px solid var(--app-border);">
-              <div class="text-xs uppercase tracking-wide text-gray-400">{{ m.sensorsUi.distance }}</div>
+              <div class="text-xs uppercase tracking-wide text-[var(--app-muted-text)]">{{ m.sensorsUi.distance }}</div>
               <div class="mt-2 text-3xl font-bold">
                 <span v-if="latest">{{ formatValue(latest.value) }}</span>
-                <span v-else class="text-gray-500">—</span>
-                <span class="ml-1 text-base font-medium text-gray-300">{{ latest?.unit || 'cm' }}</span>
+                <span v-else class="text-[var(--app-muted-text)]">—</span>
+                <span class="ml-1 text-base font-medium text-[var(--app-muted-text)]">{{ latest?.unit || 'cm' }}</span>
               </div>
             </div>
 
             <div class="rounded-lg p-4" style="background:var(--app-surface-alt);border:1px solid var(--app-border);">
-              <div class="text-xs uppercase tracking-wide text-gray-400">{{ m.sensorsUi.sensorType }}</div>
+              <div class="text-xs uppercase tracking-wide text-[var(--app-muted-text)]">{{ m.sensorsUi.sensorType }}</div>
               <div class="mt-2 text-lg font-semibold">
                 <span v-if="latest">{{ latest.sensor_type }}</span>
-                <span v-else class="text-gray-500">—</span>
+                <span v-else class="text-[var(--app-muted-text)]">—</span>
               </div>
             </div>
 
             <div class="rounded-lg p-4" style="background:var(--app-surface-alt);border:1px solid var(--app-border);">
-              <div class="text-xs uppercase tracking-wide text-gray-400">{{ m.sensorsUi.timestamp }}</div>
-              <div class="mt-2 text-sm text-gray-200">
+              <div class="text-xs uppercase tracking-wide text-[var(--app-muted-text)]">{{ m.sensorsUi.timestamp }}</div>
+              <div class="mt-2 text-sm text-[var(--app-text)]">
                 <span v-if="latest">{{ latest.timestamp || latest.created_at || '—' }}</span>
-                <span v-else class="text-gray-500">—</span>
+                <span v-else class="text-[var(--app-muted-text)]">—</span>
               </div>
             </div>
           </div>
 
-          <div class="mt-4 text-xs text-gray-500">
-            Polling: <span class="text-gray-300">/api/sensor-data/devices/{{ selectedDeviceId }}/latest</span>
+          <div class="mt-4 text-xs text-[var(--app-muted-text)]">
+            Polling: <span class="text-[var(--app-muted-text)]">/api/sensor-data/devices/{{ selectedDeviceId }}/latest</span>
           </div>
 
           <div class="mt-6 flex items-center gap-2">
@@ -120,7 +120,7 @@
               {{ m.sensorsUi.refreshNow }}
             </button>
 
-            <div class="ml-auto text-xs text-gray-400" v-if="loadingLatest">{{ m.sensorsUi.loading }}</div>
+            <div class="ml-auto text-xs text-[var(--app-muted-text)]" v-if="loadingLatest">{{ m.sensorsUi.loading }}</div>
           </div>
         </div>
       </div>
@@ -148,7 +148,7 @@
           </div>
 
           <div class="flex items-center gap-2">
-            <div v-if="ledLoading" class="text-xs text-gray-400">{{ m.sensorsUi.ledLoading }}</div>
+            <div v-if="ledLoading" class="text-xs text-[var(--app-muted-text)]">{{ m.sensorsUi.ledLoading }}</div>
             <div v-if="ledError" class="text-xs text-red-400">{{ m.sensorsUi.ledError }}</div>
             <button
               type="button"

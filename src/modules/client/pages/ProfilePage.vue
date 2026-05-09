@@ -22,7 +22,7 @@
           </span>
           <div>
             <p class="text-lg font-semibold">{{ user.name }}</p>
-            <p class="text-sm text-gray-400">@{{ user.username }}</p>
+            <p class="text-sm text-[var(--app-muted-text)]">@{{ user.username }}</p>
             <span
               :class="user.active
                 ? 'status-pill status-pill--active'
@@ -34,13 +34,13 @@
           </div>
         </div>
 
-        <section class="rounded-xl bg-gray-800/60 border border-white/5 p-6 mb-6">
+        <section class="rounded-xl bg-[var(--app-surface)] border border-[var(--app-border)] p-6 mb-6">
           <h2 class="text-base font-semibold mb-5">{{ m.profile.personalInfo }}</h2>
 
           <form @submit.prevent="submitProfile" class="space-y-4">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-1">{{ m.profile.fullName }}</label>
+                <label class="block text-sm font-medium text-[var(--app-text)] mb-1">{{ m.profile.fullName }}</label>
                 <input
                   v-model="profileForm.name"
                   type="text"
@@ -51,7 +51,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-1">{{ m.profile.username }}</label>
+                <label class="block text-sm font-medium text-[var(--app-text)] mb-1">{{ m.profile.username }}</label>
                 <input
                   v-model="profileForm.username"
                   type="text"
@@ -62,7 +62,7 @@
               </div>
 
               <div class="sm:col-span-2">
-                <label class="block text-sm font-medium text-gray-300 mb-1">{{ m.profile.email }}</label>
+                <label class="block text-sm font-medium text-[var(--app-text)] mb-1">{{ m.profile.email }}</label>
                 <input
                   v-model="profileForm.email"
                   type="email"
@@ -89,11 +89,11 @@
           </form>
         </section>
 
-        <section class="rounded-xl bg-gray-800/60 border border-white/5 p-6 mb-6">
+        <section class="rounded-xl bg-[var(--app-surface)] border border-[var(--app-border)] p-6 mb-6">
           <div class="flex items-start justify-between gap-4">
             <div>
               <h2 class="text-base font-semibold mb-1">{{ m.profile.paymentMethodTitle }}</h2>
-              <p class="text-sm text-gray-400">{{ m.profile.paymentMethodSubtitle }}</p>
+              <p class="text-sm text-[var(--app-muted-text)]">{{ m.profile.paymentMethodSubtitle }}</p>
             </div>
             <span class="status-pill status-pill--active">
               <span class="h-1.5 w-1.5 rounded-full bg-current opacity-80"></span>
@@ -144,12 +144,12 @@
           </div>
         </section>
 
-        <section class="rounded-xl bg-gray-800/60 border border-white/5 p-6">
+        <section class="rounded-xl bg-[var(--app-surface)] border border-[var(--app-border)] p-6">
           <h2 class="text-base font-semibold mb-5">{{ m.profile.changePassword }}</h2>
 
           <form @submit.prevent="submitPassword" class="space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-1">{{ m.profile.newPassword }}</label>
+              <label class="block text-sm font-medium text-[var(--app-text)] mb-1">{{ m.profile.newPassword }}</label>
               <div class="password-field-wrap">
                 <input
                   v-model="passwordForm.password"
@@ -176,7 +176,7 @@
               </div>
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-1">{{ m.profile.confirmPassword }}</label>
+              <label class="block text-sm font-medium text-[var(--app-text)] mb-1">{{ m.profile.confirmPassword }}</label>
               <div class="password-field-wrap">
                 <input
                   v-model="passwordForm.password_confirmation"
