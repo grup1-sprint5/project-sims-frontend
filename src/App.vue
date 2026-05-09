@@ -7,7 +7,6 @@ onMounted(() => {
     script.id = 'userway-widget-script';
     script.src = 'https://cdn.userway.org/widget.js';
     script.setAttribute('data-account', 'k5lLyDk8Vk');
-    script.setAttribute('data-position', '6');
     script.async = true;
     document.body.appendChild(script);
   }
@@ -20,4 +19,18 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped></style>
+<!-- Posiciona el contenidor extern de UserWay (.uwy) sobre el chatbot -->
+<style>
+.uwy {
+  bottom: 144px !important;
+  right: 16px !important;
+  left: auto !important;
+  top: auto !important;
+}
+
+@media (min-width: 640px) {
+  .uwy {
+    bottom: 88px !important;
+  }
+}
+</style>
