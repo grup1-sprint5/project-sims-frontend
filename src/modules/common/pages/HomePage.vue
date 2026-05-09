@@ -25,7 +25,7 @@ import { useI18n } from '@/i18n'
 
 const router = useRouter()
 const { m } = useI18n()
-const openMap = () => router.push('/vehicles-map')
+const openMap = () => router.push('/home/vehicles-map')
 
 const { map, mapContainer, initMap, destroyMap, fetchVehicles, rawVehicles } = useMap()
 const miniMap = ref<HTMLElement | null>(null)
