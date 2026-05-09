@@ -73,7 +73,45 @@
         {{ m.adminGeofencesUi.empty }}
       </template>
 
-      <tr v-for="item in geofences" :key="`${item.tenant_id || 'central'}-${item.id}`">
+      <template v-if="isCurrentUserSuperAdmin">
+        <template v-for="group in groupedGeofences" :key="group.key">
+          <tr>
+            <td :colspan="columns.length" class="bg-[var(--app-bg)] px-4 py-3 text-sm font-semibold text-[var(--app-text)] sm:px-0">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span>{{ group.name }}</span>
+                <span class="rounded-full bg-[var(--app-surface-muted)] px-2 py-0.5 text-xs font-medium text-[var(--app-muted-text)]">
+                  {{ group.geofences.length }} {{ m.adminGeofencesUi.title.toLowerCase() }}
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr v-for="item in group.geofences" :key="`${group.key}-${item.id}`">
+            <AdminTd first variant="primary">{{ item.name }}</AdminTd>
+            <AdminTd variant="muted" class="uppercase">{{ item.type }}</AdminTd>
+            <AdminTd variant="muted" class="uppercase">{{ item.rule_type }}</AdminTd>
+            <AdminTd variant="muted">{{ item.tenant?.name || item.tenant_id || '-' }}</AdminTd>
+            <AdminTd variant="muted">
+              <StatusBadge :active="item.active" :active-text="m.adminGeofencesUi.active" :inactive-text="m.adminGeofencesUi.inactive" />
+            </AdminTd>
+            <AdminTd variant="muted">{{ formatDate(item.updated_at) }}</AdminTd>
+            <AdminTd variant="actions">
+              <div class="flex justify-end gap-2">
+                <router-link :to="{ path: `/admin/geofences/${item.id}`, query: item.tenant_id ? { tenant_id: item.tenant_id } : undefined }" class="text-indigo-500 hover:text-indigo-700" :title="m.commonUi.view">
+                  <span class="material-icons text-lg">visibility</span>
+                </router-link>
+                <router-link :to="{ path: `/admin/geofences/${item.id}/edit`, query: item.tenant_id ? { tenant_id: item.tenant_id } : undefined }" class="text-purple-500 hover:text-purple-700" :title="m.commonUi.edit">
+                  <span class="material-icons text-lg">edit</span>
+                </router-link>
+                <button class="text-red-500 hover:text-red-700" @click="openDeleteDialog(item)" :title="m.commonUi.delete">
+                  <span class="material-icons text-lg">delete</span>
+                </button>
+              </div>
+            </AdminTd>
+          </tr>
+        </template>
+      </template>
+
+      <tr v-else v-for="item in geofences" :key="`${item.tenant_id || 'central'}-${item.id}`">
         <AdminTd first variant="primary">{{ item.name }}</AdminTd>
         <AdminTd variant="muted" class="uppercase">{{ item.type }}</AdminTd>
         <AdminTd variant="muted" class="uppercase">{{ item.rule_type }}</AdminTd>
@@ -119,6 +157,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from '@/i18n'
+import { useAuth } from '@/modules/auth/composables/useAuth'
 import PageHeading from '@/modules/admin/components/PageHeading.vue'
 import AdminsTable from '@/modules/admin/components/AdminsTable.vue'
 import AdminTd from '@/modules/admin/components/AdminTd.vue'
@@ -129,6 +168,7 @@ import { useGeofencing } from '../composables/useGeofencing'
 import type { Geofence, GeofenceFilters } from '../interfaces/geofencing.interface'
 
 const { m } = useI18n()
+const { user: currentUser } = useAuth()
 
 const {
   geofences,
@@ -138,6 +178,29 @@ const {
   getGeofences,
   deleteGeofence,
 } = useGeofencing()
+
+const isCurrentUserSuperAdmin = computed(() =>
+  currentUser.value?.roles?.some((role: any) => {
+    const name = typeof role.name === 'string' ? role.name.trim().toLowerCase() : ''
+    return name === 'superadmin' || name === 'super admin'
+  }) ?? false
+)
+
+const groupedGeofences = computed(() => {
+  const groups = new Map<string, { key: string; name: string; geofences: Geofence[] }>()
+  for (const item of geofences.value) {
+    const tenantId = String(item.tenant_id || item.tenant?.id || '').trim()
+    const key = tenantId ? tenantId.toLowerCase() : 'central'
+    const name = item.tenant?.name || tenantId || 'Central'
+    if (!groups.has(key)) groups.set(key, { key, name, geofences: [] })
+    groups.get(key)!.geofences.push(item)
+  }
+  return Array.from(groups.values()).sort((a, b) => {
+    if (a.key === 'central') return -1
+    if (b.key === 'central') return 1
+    return a.name.localeCompare(b.name)
+  })
+})
 
 const filters = ref<GeofenceFilters>({
   name: '',

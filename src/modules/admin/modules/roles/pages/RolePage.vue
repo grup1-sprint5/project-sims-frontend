@@ -46,44 +46,59 @@
         {{ m.adminRolesUi.empty }}
       </template>
 
-      <tr v-for="role in roles" :key="role.id">
-        <AdminTd first variant="primary">
-          {{ role.name }}
-        </AdminTd>
-        <AdminTd variant="muted">
-          {{ role.permissions?.length || 0 }}
-        </AdminTd>
-        <AdminTd variant="muted">
-          {{ formatDate(role.created_at) }}
-        </AdminTd>
-        <AdminTd variant="muted">
-          {{ formatDate(role.updated_at) }}
-        </AdminTd>
+      <template v-if="isCurrentUserSuperAdmin">
+        <template v-for="group in groupedRoles" :key="group.key">
+          <tr>
+            <td :colspan="columns.length" class="bg-[var(--app-bg)] px-4 py-3 text-sm font-semibold text-[var(--app-text)] sm:px-0">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span>{{ group.name }}</span>
+                <span class="rounded-full bg-[var(--app-surface-muted)] px-2 py-0.5 text-xs font-medium text-[var(--app-muted-text)]">
+                  {{ group.roles.length }} {{ m.adminRolesUi.title.toLowerCase() }}
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr v-for="role in group.roles" :key="`${group.key}-${role.id}`">
+            <AdminTd first variant="primary">{{ role.name }}</AdminTd>
+            <AdminTd variant="muted">{{ role.permissions?.length || 0 }}</AdminTd>
+            <AdminTd variant="muted">{{ formatDate(role.created_at) }}</AdminTd>
+            <AdminTd variant="muted">{{ formatDate(role.updated_at) }}</AdminTd>
+            <AdminTd variant="actions">
+              <div class="flex gap-2">
+                <button class="text-[var(--fleetly-baltic-blue)] hover:text-[var(--fleetly-gunmetal)] transition-colors" @click="navigateToDetail(role)" :title="m.commonUi.view">
+                  <span class="material-icons text-xl">visibility</span>
+                  <span class="sr-only">{{ m.commonUi.view }}, {{ role.name }}</span>
+                </button>
+                <button v-if="role.name.toLowerCase() !== 'admin'" class="text-[var(--fleetly-baltic-blue)] hover:text-[var(--fleetly-gunmetal)] transition-colors" @click="navigateToEdit(role)" :title="m.commonUi.edit">
+                  <span class="material-icons text-xl">edit</span>
+                  <span class="sr-only">{{ m.commonUi.edit }}, {{ role.name }}</span>
+                </button>
+                <button v-if="role.name.toLowerCase() !== 'admin'" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors" @click="openDeleteModal(role)" :title="m.commonUi.delete">
+                  <span class="material-icons text-xl">delete</span>
+                  <span class="sr-only">{{ m.commonUi.delete }}, {{ role.name }}</span>
+                </button>
+              </div>
+            </AdminTd>
+          </tr>
+        </template>
+      </template>
+
+      <tr v-else v-for="role in roles" :key="role.id">
+        <AdminTd first variant="primary">{{ role.name }}</AdminTd>
+        <AdminTd variant="muted">{{ role.permissions?.length || 0 }}</AdminTd>
+        <AdminTd variant="muted">{{ formatDate(role.created_at) }}</AdminTd>
+        <AdminTd variant="muted">{{ formatDate(role.updated_at) }}</AdminTd>
         <AdminTd variant="actions">
           <div class="flex gap-2">
-            <button
-              class="text-[var(--fleetly-baltic-blue)] hover:text-[var(--fleetly-gunmetal)] transition-colors"
-              @click="navigateToDetail(role)"
-              :title="m.commonUi.view"
-            >
+            <button class="text-[var(--fleetly-baltic-blue)] hover:text-[var(--fleetly-gunmetal)] transition-colors" @click="navigateToDetail(role)" :title="m.commonUi.view">
               <span class="material-icons text-xl">visibility</span>
               <span class="sr-only">{{ m.commonUi.view }}, {{ role.name }}</span>
             </button>
-            <button
-              v-if="role.name.toLowerCase() !== 'admin'"
-              class="text-[var(--fleetly-baltic-blue)] hover:text-[var(--fleetly-gunmetal)] transition-colors"
-              @click="navigateToEdit(role)"
-              :title="m.commonUi.edit"
-            >
+            <button v-if="role.name.toLowerCase() !== 'admin'" class="text-[var(--fleetly-baltic-blue)] hover:text-[var(--fleetly-gunmetal)] transition-colors" @click="navigateToEdit(role)" :title="m.commonUi.edit">
               <span class="material-icons text-xl">edit</span>
               <span class="sr-only">{{ m.commonUi.edit }}, {{ role.name }}</span>
             </button>
-            <button
-              v-if="role.name.toLowerCase() !== 'admin'"
-              class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors"
-              @click="openDeleteModal(role)"
-              :title="m.commonUi.delete"
-            >
+            <button v-if="role.name.toLowerCase() !== 'admin'" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors" @click="openDeleteModal(role)" :title="m.commonUi.delete">
               <span class="material-icons text-xl">delete</span>
               <span class="sr-only">{{ m.commonUi.delete }}, {{ role.name }}</span>
             </button>
@@ -115,6 +130,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from '@/i18n'
+import { useAuth } from '@/modules/auth/composables/useAuth'
 import PageHeading from '@/modules/admin/components/PageHeading.vue'
 import AdminsTable from '@/modules/admin/components/AdminsTable.vue'
 import AdminTd from '@/modules/admin/components/AdminTd.vue'
@@ -125,8 +141,32 @@ import type { Role, RoleFilters } from '../interfaces/role.interface'
 
 const router = useRouter()
 const { m } = useI18n()
+const { user: currentUser } = useAuth()
 const { roles, loading, error, pagination, getRoles } = useRoles()
 const roleToDelete = ref<Role | null>(null)
+
+const isCurrentUserSuperAdmin = computed(() =>
+  currentUser.value?.roles?.some((role: any) => {
+    const name = typeof role.name === 'string' ? role.name.trim().toLowerCase() : ''
+    return name === 'superadmin' || name === 'super admin'
+  }) ?? false
+)
+
+const groupedRoles = computed(() => {
+  const groups = new Map<string, { key: string; name: string; roles: Role[] }>()
+  for (const role of roles.value) {
+    const tenantId = String(role.tenant_id || '').trim()
+    const key = tenantId ? tenantId.toLowerCase() : 'central'
+    const name = role.tenant?.name || tenantId || 'Central'
+    if (!groups.has(key)) groups.set(key, { key, name, roles: [] })
+    groups.get(key)!.roles.push(role)
+  }
+  return Array.from(groups.values()).sort((a, b) => {
+    if (a.key === 'central') return -1
+    if (b.key === 'central') return 1
+    return a.name.localeCompare(b.name)
+  })
+})
 
 const columns = computed(() => [
   { key: 'name', label: m.value.adminRolesUi.name },

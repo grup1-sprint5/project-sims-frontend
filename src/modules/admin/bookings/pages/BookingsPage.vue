@@ -112,7 +112,76 @@
         {{ m.adminBookingsUi.empty }}
       </template>
 
-      <tr v-for="booking in bookings" :key="`${booking.tenant_id || 'central'}-${booking.id}`">
+      <template v-if="isCurrentUserSuperAdmin">
+        <template v-for="group in groupedBookings" :key="group.key">
+          <tr>
+            <td :colspan="columns.length" class="bg-[var(--app-bg)] px-4 py-3 text-sm font-semibold text-[var(--app-text)] sm:px-0">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span>{{ group.name }}</span>
+                <span class="rounded-full bg-[var(--app-surface-muted)] px-2 py-0.5 text-xs font-medium text-[var(--app-muted-text)]">
+                  {{ group.bookings.length }} {{ m.adminBookingsUi.title.toLowerCase() }}
+                </span>
+              </div>
+            </td>
+          </tr>
+          <tr v-for="booking in group.bookings" :key="`${group.key}-${booking.id}`">
+            <AdminTd first variant="primary">
+              <div class="flex items-center gap-3">
+                <div class="h-8 w-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">
+                  {{ getInitials(booking.user?.name || `U${booking.user_id ?? ''}`) }}
+                </div>
+                <div>
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">
+                    <span v-if="booking.user">{{ booking.user.name }}</span>
+                    <span v-else>User #{{ booking.user_id ?? '-' }}</span>
+                  </div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">{{ booking.user?.email || '-' }}</div>
+                </div>
+              </div>
+            </AdminTd>
+            <AdminTd variant="muted">
+              <div v-if="booking.vehicle">
+                <div class="text-sm text-gray-900 dark:text-white">{{ booking.vehicle.brand }} {{ booking.vehicle.model }}</div>
+                <div class="text-xs font-mono text-gray-500 dark:text-gray-400">{{ booking.vehicle.license_plate }}</div>
+              </div>
+              <div v-else>
+                <div class="text-sm text-gray-900 dark:text-white">{{ m.adminBookingsUi.vehicleLabel }} #{{ booking.vehicle_id ?? '-' }}</div>
+              </div>
+            </AdminTd>
+            <AdminTd variant="muted">{{ booking.tenant?.name || booking.tenant_id || '-' }}</AdminTd>
+            <AdminTd variant="muted">
+              <div class="text-xs text-gray-900 dark:text-white">
+                <span class="font-semibold">{{ formatDateDay(getStartDate(booking)) }}</span> · {{ formatDateHour(getStartDate(booking)) }}
+              </div>
+              <div class="text-xs text-gray-500 dark:text-gray-400">→ {{ formatDateDay(getEndDate(booking)) }} · {{ formatDateHour(getEndDate(booking)) }}</div>
+            </AdminTd>
+            <AdminTd variant="muted">{{ formatCurrency(getTotal(booking)) }}</AdminTd>
+            <AdminTd variant="muted">
+              <span :class="['inline-flex rounded-full px-2 py-1 text-xs font-semibold', getStatusClasses(booking.status)]">
+                {{ translateStatus(booking.status) }}
+              </span>
+            </AdminTd>
+            <AdminTd variant="actions">
+              <div class="flex gap-2">
+                <button class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors" @click="navigateToDetail(booking)" :title="m.commonUi.view">
+                  <span class="material-icons text-xl">visibility</span>
+                  <span class="sr-only">{{ m.commonUi.view }}, #{{ booking.id }}</span>
+                </button>
+                <button class="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 transition-colors" @click="navigateToEdit(booking)" :title="m.commonUi.edit">
+                  <span class="material-icons text-xl">edit</span>
+                  <span class="sr-only">{{ m.commonUi.edit }}, #{{ booking.id }}</span>
+                </button>
+                <button @click="handleDelete(booking)" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors" :title="m.commonUi.delete">
+                  <span class="material-icons text-xl">delete</span>
+                  <span class="sr-only">{{ m.commonUi.delete }}, #{{ booking.id }}</span>
+                </button>
+              </div>
+            </AdminTd>
+          </tr>
+        </template>
+      </template>
+
+      <tr v-else v-for="booking in bookings" :key="`${booking.tenant_id || 'central'}-${booking.id}`">
         <AdminTd first variant="primary">
           <div class="flex items-center gap-3">
             <div class="h-8 w-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">
@@ -256,6 +325,7 @@ import { useRouter } from 'vue-router'
 import { useBookings } from '../composables/useBookings'
 import type { Booking, BookingFilters, BookingCreatePayload } from '../interfaces/booking.interface'
 import { useI18n } from '@/i18n'
+import { useAuth } from '@/modules/auth/composables/useAuth'
 import AdminsTable from '@/modules/admin/components/AdminsTable.vue'
 import AdminTd from '@/modules/admin/components/AdminTd.vue'
 import AdminPagination from '@/modules/admin/components/AdminPagination.vue'
@@ -267,7 +337,31 @@ import { useToast } from '@/modules/common/composables/useToast'
 
 const router = useRouter()
 const { m } = useI18n()
+const { user: currentUser } = useAuth()
 const { bookings, loading, error, pagination, getBookings, deleteBooking, createBooking } = useBookings()
+
+const isCurrentUserSuperAdmin = computed(() =>
+  currentUser.value?.roles?.some((role: any) => {
+    const name = typeof role.name === 'string' ? role.name.trim().toLowerCase() : ''
+    return name === 'superadmin' || name === 'super admin'
+  }) ?? false
+)
+
+const groupedBookings = computed(() => {
+  const groups = new Map<string, { key: string; name: string; bookings: Booking[] }>()
+  for (const booking of bookings.value) {
+    const tenantId = String(booking.tenant_id || booking.tenant?.id || '').trim()
+    const key = tenantId ? tenantId.toLowerCase() : 'central'
+    const name = booking.tenant?.name || tenantId || 'Central'
+    if (!groups.has(key)) groups.set(key, { key, name, bookings: [] })
+    groups.get(key)!.bookings.push(booking)
+  }
+  return Array.from(groups.values()).sort((a, b) => {
+    if (a.key === 'central') return -1
+    if (b.key === 'central') return 1
+    return a.name.localeCompare(b.name)
+  })
+})
 
 const { success: toastSuccess, error: toastError } = useToast()
 

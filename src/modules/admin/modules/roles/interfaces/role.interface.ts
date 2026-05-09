@@ -14,6 +14,8 @@ export interface Role {
   id: number
   name: string
   description?: string
+  tenant_id?: string | null
+  tenant?: { id: string; name: string } | null
   created_at: string
   updated_at: string
   permissions?: Permission[]
