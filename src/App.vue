@@ -19,18 +19,13 @@ onMounted(() => {
   </div>
 </template>
 
-<!-- Posiciona el contenidor extern de UserWay (.uwy) sobre el chatbot -->
+<!-- Amaga el botó flotant original de UserWay; el nostre botó custom el substitueix -->
 <style>
-.uwy {
-  bottom: 144px !important;
-  right: 16px !important;
-  left: auto !important;
-  top: auto !important;
-}
-
-@media (min-width: 640px) {
-  .uwy {
-    bottom: 88px !important;
-  }
+#userwayAccessibilityIcon,
+.uwy > button:first-child,
+[id*="userway"][class*="btn"],
+.userway_buttons_reset {
+  display: none !important;
+  visibility: hidden !important;
 }
 </style>

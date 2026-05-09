@@ -147,6 +147,20 @@
       </div>
     </Transition>
 
+    <!-- Accessibility trigger (above chat button) -->
+    <button
+      type="button"
+      @click="openAccessibility"
+      class="flex size-12 items-center justify-center rounded-full bg-blue-600 shadow-lg shadow-black/40 transition hover:opacity-90 hover:scale-105 active:scale-95"
+      title="Accessibilitat"
+      aria-label="Obre opcions d'accessibilitat"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="size-6 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <circle cx="12" cy="4" r="2"/>
+        <path d="M19 9h-6l-1-3H8a1 1 0 000 2h3l1 3v7l-2 4h2l1.5-3h1l1.5 3h2l-2-4v-5h3a1 1 0 000-2z"/>
+      </svg>
+    </button>
+
     <!-- Trigger bubble -->
     <button
       type="button"
@@ -180,6 +194,12 @@
 
 <script setup lang="ts">
 import { ref, computed, nextTick, watch } from 'vue'
+
+const openAccessibility = () => {
+  const uw = (window as any).UserWay
+  if (uw?.widgetOpen) uw.widgetOpen()
+  else document.querySelector<HTMLElement>('#userwayAccessibilityIcon')?.click()
+}
 import {
   ChatBubbleLeftRightIcon,
   PaperAirplaneIcon,
