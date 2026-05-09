@@ -171,15 +171,6 @@
               </transition>
             </Menu>
 
-            <RouterLink
-              to="/home/perfil"
-              class="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]"
-            >
-              <span class="sr-only">{{ m.userMenu.yourProfile }}</span>
-              <span class="size-8 rounded-full outline -outline-offset-1 outline-white/10 bg-[var(--fleetly-baltic-blue)] flex items-center justify-center text-xs font-bold text-white">
-                {{ userInitials }}
-              </span>
-            </RouterLink>
           </div>
         </div>
       </div>
