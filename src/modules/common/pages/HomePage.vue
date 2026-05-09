@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-gray-900 text-white flex items-start justify-center py-12 px-4">
+  <div class="min-h-[calc(100vh-4rem)] bg-[var(--app-bg)] text-[var(--app-text)] flex items-start justify-center py-12 px-4">
     <div class="w-full max-w-3xl">
       <h1 class="text-3xl font-bold text-center text-[var(--app-text)]">{{ m.homeUi.title }}</h1>
-      <p class="text-center text-gray-400 mt-2">{{ m.homeUi.subtitle }}</p>
+      <p class="text-center text-[var(--app-muted-text)] mt-2">{{ m.homeUi.subtitle }}</p>
 
-      <div class="mt-6 bg-gray-800 rounded-lg shadow-lg overflow-hidden border border-white/5">
+      <div class="mt-6 bg-[var(--app-surface)] rounded-lg shadow-lg overflow-hidden border border-[var(--app-border)]">
         <div ref="miniMap" class="w-full h-96 cursor-pointer"></div>
       </div>
 
@@ -12,7 +12,7 @@
         <button @click="openMap" class="px-4 py-2 bg-[var(--fleetly-baltic-blue)] rounded text-white hover:opacity-90">{{ m.homeUi.openFullMap }}</button>
       </div>
 
-      <footer class="mt-6 text-center text-sm text-gray-500">{{ m.homeUi.brand }}</footer>
+      <footer class="mt-6 text-center text-sm text-[var(--app-muted-text)]">{{ m.homeUi.brand }}</footer>
     </div>
   </div>
 </template>

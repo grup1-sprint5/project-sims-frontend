@@ -29,9 +29,9 @@
               <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ m.mapUi.status }}</p>
               <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold"
                 :class="{
-                  'bg-green-100 text-green-800': selectedVehicle?.status === 'available',
-                  'bg-orange-100 text-orange-800': selectedVehicle?.status === 'occupied',
-                  'bg-red-100 text-red-800': selectedVehicle?.status === 'running'
+                  'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300': selectedVehicle?.status === 'available',
+                  'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300': selectedVehicle?.status === 'occupied',
+                  'bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300': selectedVehicle?.status === 'running'
                 }">
                 {{ vehicleStatusLabel(selectedVehicle?.status) }}
               </span>
@@ -39,7 +39,7 @@
             <div>
               <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ m.mapUi.active }}</p>
               <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold"
-                :class="selectedVehicle?.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+                :class="selectedVehicle?.active ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'">
                 {{ selectedVehicle?.active ? m.mapUi.yes : m.mapUi.no }}
               </span>
             </div>
@@ -120,7 +120,7 @@
               <div class="flex-1 bg-gray-50 dark:bg-gray-800 rounded-xl p-3">
                 <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ m.mapUi.active }}</p>
                 <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold"
-                  :class="selectedVehicle?.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+                  :class="selectedVehicle?.active ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'">
                   {{ selectedVehicle?.active ? m.mapUi.yes : m.mapUi.no }}
                 </span>
               </div>
