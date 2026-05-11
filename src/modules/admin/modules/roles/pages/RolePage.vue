@@ -22,6 +22,7 @@
         @input="handleSearch"
         type="text"
         :placeholder="m.adminRolesUi.searchPlaceholder"
+        :aria-label="m.adminRolesUi.searchPlaceholder"
         class="block w-full max-w-md rounded-md bg-[var(--app-surface)] px-3 py-1.5 text-[var(--app-text)] shadow-sm ring-1 ring-inset ring-[var(--app-border)] placeholder:text-[var(--app-muted-text)] focus:ring-2 focus:ring-inset focus:ring-[var(--fleetly-baltic-blue)] sm:text-sm"
       />
     </div>
@@ -66,15 +67,15 @@
             <AdminTd variant="actions">
               <div class="flex gap-2">
                 <button class="text-[var(--fleetly-baltic-blue)] hover:text-[var(--fleetly-gunmetal)] transition-colors" @click="navigateToDetail(role)" :title="m.commonUi.view">
-                  <span class="material-icons text-xl">visibility</span>
+                  <span class="material-icons text-xl" aria-hidden="true">visibility</span>
                   <span class="sr-only">{{ m.commonUi.view }}, {{ role.name }}</span>
                 </button>
                 <button v-if="role.name.toLowerCase() !== 'admin'" class="text-[var(--fleetly-baltic-blue)] hover:text-[var(--fleetly-gunmetal)] transition-colors" @click="navigateToEdit(role)" :title="m.commonUi.edit">
-                  <span class="material-icons text-xl">edit</span>
+                  <span class="material-icons text-xl" aria-hidden="true">edit</span>
                   <span class="sr-only">{{ m.commonUi.edit }}, {{ role.name }}</span>
                 </button>
                 <button v-if="role.name.toLowerCase() !== 'admin'" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors" @click="openDeleteModal(role)" :title="m.commonUi.delete">
-                  <span class="material-icons text-xl">delete</span>
+                  <span class="material-icons text-xl" aria-hidden="true">delete</span>
                   <span class="sr-only">{{ m.commonUi.delete }}, {{ role.name }}</span>
                 </button>
               </div>

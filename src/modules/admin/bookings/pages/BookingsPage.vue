@@ -24,12 +24,14 @@
           @input="handleSearch"
           type="text"
           :placeholder="m.adminBookingsUi.searchPlaceholder"
+          :aria-label="m.adminBookingsUi.searchPlaceholder"
           class="block w-full max-w-md rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
         />
 
         <select
           v-model="filters.status"
           @change="handleStatusChange"
+          :aria-label="m.commonUi.status"
           class="block w-full sm:w-48 rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
         >
           <option value="">{{ m.adminBookingsUi.allStatuses }}</option>
@@ -164,15 +166,15 @@
             <AdminTd variant="actions">
               <div class="flex gap-2">
                 <button class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors" @click="navigateToDetail(booking)" :title="m.commonUi.view">
-                  <span class="material-icons text-xl">visibility</span>
+                  <span class="material-icons text-xl" aria-hidden="true">visibility</span>
                   <span class="sr-only">{{ m.commonUi.view }}, #{{ booking.id }}</span>
                 </button>
                 <button class="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 transition-colors" @click="navigateToEdit(booking)" :title="m.commonUi.edit">
-                  <span class="material-icons text-xl">edit</span>
+                  <span class="material-icons text-xl" aria-hidden="true">edit</span>
                   <span class="sr-only">{{ m.commonUi.edit }}, #{{ booking.id }}</span>
                 </button>
                 <button @click="handleDelete(booking)" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors" :title="m.commonUi.delete">
-                  <span class="material-icons text-xl">delete</span>
+                  <span class="material-icons text-xl" aria-hidden="true">delete</span>
                   <span class="sr-only">{{ m.commonUi.delete }}, #{{ booking.id }}</span>
                 </button>
               </div>

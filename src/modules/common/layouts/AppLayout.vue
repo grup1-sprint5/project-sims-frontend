@@ -39,7 +39,7 @@
               class="rounded-md px-3 py-1.5 text-sm font-medium text-[var(--app-text)] border border-[var(--app-border)] hover:bg-[var(--app-surface-alt)]"
               @click="startGuide(true)"
             >
-              <QuestionMarkCircleIcon class="size-4 inline mr-1" />
+              <QuestionMarkCircleIcon class="size-4 inline mr-1" aria-hidden="true" />
               {{ m.guidedTour.startGuide }}
             </button>
             <button
@@ -48,8 +48,9 @@
               class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
               @click="toggleTheme"
             >
-              <MoonIcon v-if="!isDark" class="size-5" />
-              <SunIcon v-else class="size-5" />
+              <span class="sr-only">{{ isDark ? m.adminLayoutUi.themeLight : m.adminLayoutUi.themeDark }}</span>
+              <MoonIcon v-if="!isDark" class="size-5" aria-hidden="true" />
+              <SunIcon v-else class="size-5" aria-hidden="true" />
             </button>
             <div data-tour-id="language-switcher">
               <LanguageSwitcher />
@@ -118,7 +119,8 @@
               class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
               @click="startGuide(true)"
             >
-              <QuestionMarkCircleIcon class="size-5" />
+              <span class="sr-only">{{ m.guidedTour.startGuide }}</span>
+              <QuestionMarkCircleIcon class="size-5" aria-hidden="true" />
             </button>
             <button
               type="button"
@@ -126,8 +128,9 @@
               class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
               @click="toggleTheme"
             >
-              <MoonIcon v-if="!isDark" class="size-5" />
-              <SunIcon v-else class="size-5" />
+              <span class="sr-only">{{ isDark ? m.adminLayoutUi.themeLight : m.adminLayoutUi.themeDark }}</span>
+              <MoonIcon v-if="!isDark" class="size-5" aria-hidden="true" />
+              <SunIcon v-else class="size-5" aria-hidden="true" />
             </button>
             <div data-tour-id="language-switcher">
               <LanguageSwitcher />
@@ -182,22 +185,22 @@
     </main>
 
     <!-- Bottom nav (mobile-first) -->
-    <nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-[var(--app-border)] bg-[var(--app-surface)]/95 backdrop-blur sm:hidden" data-tour-id="client-mobile-nav">
+    <nav class="fixed bottom-0 left-0 right-0 z-30 border-t border-[var(--app-border)] bg-[var(--app-surface)]/95 backdrop-blur sm:hidden" data-tour-id="client-mobile-nav" :aria-label="m.adminLayoutUi.mainNav">
       <div class="mx-auto max-w-md px-2 py-1 grid grid-cols-5 text-center text-xs text-[var(--app-muted-text)]">
-        <RouterLink to="/home/vehicles-map" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/vehicles-map') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
-          <MapIcon class="size-6" />
+        <RouterLink to="/home/vehicles-map" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/vehicles-map') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'" :aria-label="m.nav.map" :aria-current="isActive('/home/vehicles-map') ? 'page' : undefined">
+          <MapIcon class="size-6" aria-hidden="true" />
         </RouterLink>
-        <RouterLink to="/home/bookings" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/bookings') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
-          <CalendarDaysIcon class="size-6" />
+        <RouterLink to="/home/bookings" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/bookings') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'" :aria-label="m.nav.bookings" :aria-current="isActive('/home/bookings') ? 'page' : undefined">
+          <CalendarDaysIcon class="size-6" aria-hidden="true" />
         </RouterLink>
-        <RouterLink to="/home/tickets" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/tickets') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
-          <TicketIcon class="size-6" />
+        <RouterLink to="/home/tickets" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/tickets') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'" :aria-label="m.nav.tickets" :aria-current="isActive('/home/tickets') ? 'page' : undefined">
+          <TicketIcon class="size-6" aria-hidden="true" />
         </RouterLink>
-        <RouterLink to="/home/sensors" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/sensors') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
-          <WifiIcon class="size-6" />
+        <RouterLink to="/home/sensors" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/sensors') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'" :aria-label="m.sensorsUi.title" :aria-current="isActive('/home/sensors') ? 'page' : undefined">
+          <WifiIcon class="size-6" aria-hidden="true" />
         </RouterLink>
-        <RouterLink to="/home/perfil" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/perfil') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'">
-          <UserIcon class="size-6" />
+        <RouterLink to="/home/perfil" class="flex items-center justify-center py-2 rounded-xl" :class="isActive('/home/perfil') ? 'text-[var(--fleetly-baltic-blue)]' : 'hover:text-[var(--app-text)]'" :aria-label="m.nav.profile" :aria-current="isActive('/home/perfil') ? 'page' : undefined">
+          <UserIcon class="size-6" aria-hidden="true" />
         </RouterLink>
       </div>
     </nav>

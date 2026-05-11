@@ -159,8 +159,9 @@
         class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
         @click="toggleTheme"
       >
-        <MoonIcon v-if="!isDark" class="size-5" />
-        <SunIcon v-else class="size-5" />
+        <span class="sr-only">{{ isDark ? m.adminLayoutUi.themeLight : m.adminLayoutUi.themeDark }}</span>
+        <MoonIcon v-if="!isDark" class="size-5" aria-hidden="true" />
+        <SunIcon v-else class="size-5" aria-hidden="true" />
       </button>
       <div data-tour-id="language-switcher">
         <LanguageSwitcher />
@@ -171,7 +172,8 @@
         class="rounded-md p-2 text-[var(--app-muted-text)] hover:bg-[var(--app-surface-alt)] hover:text-[var(--app-text)]"
         @click="startGuide(true)"
       >
-        <QuestionMarkCircleIcon class="size-5" />
+        <span class="sr-only">{{ m.guidedTour.startGuide }}</span>
+        <QuestionMarkCircleIcon class="size-5" aria-hidden="true" />
       </button>
       <Menu as="div" class="relative" data-tour-id="admin-user-menu-mobile">
         <MenuButton class="relative flex items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fleetly-baltic-blue)]">

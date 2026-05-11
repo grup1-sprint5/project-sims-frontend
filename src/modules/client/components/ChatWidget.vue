@@ -30,18 +30,19 @@
             <button
               v-if="messages.length > 0"
               type="button"
-              :title="m.chatWidgetUi.clearConversation"
+              :aria-label="m.chatWidgetUi.clearConversation"
               @click="clearConversation"
               class="chat-icon-btn rounded-lg p-1.5 transition"
             >
-              <TrashIcon class="size-4" />
+              <TrashIcon class="size-4" aria-hidden="true" />
             </button>
             <button
               type="button"
+              :aria-label="m.chatWidgetUi.closeTitle"
               @click="isOpen = false"
               class="chat-icon-btn rounded-lg p-1.5 transition"
             >
-              <XMarkIcon class="size-4" />
+              <XMarkIcon class="size-4" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -130,6 +131,7 @@
               v-model="inputText"
               type="text"
               :placeholder="m.chatWidgetUi.inputPlaceholder"
+              :aria-label="m.chatWidgetUi.inputPlaceholder"
               maxlength="2000"
               :disabled="loading"
               class="chat-input flex-1 rounded-xl px-3 py-2 text-xs outline-none transition focus:border-[var(--fleetly-baltic-blue)] focus:ring-1 focus:ring-[var(--fleetly-baltic-blue)] disabled:opacity-50"
@@ -138,9 +140,10 @@
             <button
               type="submit"
               :disabled="loading || !inputText.trim()"
+              :aria-label="m.chatWidgetUi.title"
               class="flex shrink-0 items-center justify-center rounded-xl bg-[var(--fleetly-baltic-blue)] px-3 py-2 text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              <PaperAirplaneIcon class="size-4" />
+              <PaperAirplaneIcon class="size-4" aria-hidden="true" />
             </button>
           </form>
         </div>
@@ -167,7 +170,8 @@
       data-tour-id="chat-widget-trigger"
       @click="isOpen = !isOpen"
       class="relative flex size-14 items-center justify-center rounded-full bg-[var(--fleetly-baltic-blue)] shadow-lg shadow-black/50 transition hover:opacity-90 hover:scale-105 active:scale-95"
-      :title="isOpen ? m.chatWidgetUi.closeTitle : m.chatWidgetUi.openTitle"
+      :aria-label="isOpen ? m.chatWidgetUi.closeTitle : m.chatWidgetUi.openTitle"
+      :aria-expanded="isOpen"
     >
       <Transition
         enter-active-class="transition duration-150"

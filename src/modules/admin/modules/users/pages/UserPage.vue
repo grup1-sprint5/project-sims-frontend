@@ -255,7 +255,7 @@ const UserRow = defineComponent({
           title: m.value.commonUi.view,
           onClick: () => emit('view', props.user),
         }, [
-          h('span', { class: 'material-icons text-xl' }, 'visibility'),
+          h('span', { class: 'material-icons text-xl', 'aria-hidden': 'true' }, 'visibility'),
           h('span', { class: 'sr-only' }, `${m.value.commonUi.view}, ${props.user.name}`),
         ]) : null,
         props.isCurrentUserAdmin ? h('button', {
@@ -263,7 +263,7 @@ const UserRow = defineComponent({
           title: m.value.commonUi.edit,
           onClick: () => emit('edit', props.user),
         }, [
-          h('span', { class: 'material-icons text-xl' }, 'edit'),
+          h('span', { class: 'material-icons text-xl', 'aria-hidden': 'true' }, 'edit'),
           h('span', { class: 'sr-only' }, `${m.value.commonUi.edit}, ${props.user.name}`),
         ]) : null,
         props.isCurrentUserSuperAdmin ? h('button', {
@@ -271,7 +271,7 @@ const UserRow = defineComponent({
           title: m.value.commonUi.delete,
           onClick: () => emit('delete', props.user),
         }, [
-          h('span', { class: 'material-icons text-xl' }, 'delete'),
+          h('span', { class: 'material-icons text-xl', 'aria-hidden': 'true' }, 'delete'),
           h('span', { class: 'sr-only' }, `${m.value.commonUi.delete}, ${props.user.name}`),
         ]) : null,
       ])),

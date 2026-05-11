@@ -22,6 +22,7 @@
         @input="handleSearch"
         type="text"
         :placeholder="m.adminVehiclesUi.searchPlaceholder"
+        :aria-label="m.adminVehiclesUi.searchPlaceholder"
         class="block w-full max-w-md rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
       />
     </div>
@@ -218,26 +219,26 @@ const VehicleRow = defineComponent({
         h('a', {
           href: `#`,
           class: 'text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors',
-          title: m.value.commonUi.view,
+          'aria-label': `${m.value.commonUi.view} ${props.vehicle.license_plate}`,
           onClick: (e: Event) => {
             e.preventDefault()
             router.push({ path: `/admin/vehicles/${props.vehicle.id}`, query: props.vehicle.tenant_id ? { tenant_id: props.vehicle.tenant_id } : undefined })
           },
-        }, [h('span', { class: 'material-icons text-xl' }, 'visibility')]),
+        }, [h('span', { class: 'material-icons text-xl', 'aria-hidden': 'true' }, 'visibility')]),
         h('a', {
           href: `#`,
           class: 'text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 transition-colors',
-          title: m.value.commonUi.edit,
+          'aria-label': `${m.value.commonUi.edit} ${props.vehicle.license_plate}`,
           onClick: (e: Event) => {
             e.preventDefault()
             router.push({ path: `/admin/vehicles/${props.vehicle.id}/edit`, query: props.vehicle.tenant_id ? { tenant_id: props.vehicle.tenant_id } : undefined })
           },
-        }, [h('span', { class: 'material-icons text-xl' }, 'edit')]),
+        }, [h('span', { class: 'material-icons text-xl', 'aria-hidden': 'true' }, 'edit')]),
         h('button', {
           class: 'text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors',
-          title: m.value.commonUi.delete,
+          'aria-label': `${m.value.commonUi.delete} ${props.vehicle.license_plate}`,
           onClick: () => confirmDelete(props.vehicle),
-        }, [h('span', { class: 'material-icons text-xl' }, 'delete')]),
+        }, [h('span', { class: 'material-icons text-xl', 'aria-hidden': 'true' }, 'delete')]),
       ])),
     ])
   },

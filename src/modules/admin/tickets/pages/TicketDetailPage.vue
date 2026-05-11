@@ -43,6 +43,7 @@
             <select
               :value="ticket.active"
               @change="toggleStatus($event)"
+              :aria-label="m.commonUi.status"
               class="rounded-md border-0 px-2 py-1 text-sm shadow-sm ring-1 ring-inset ring-gray-300 dark:bg-gray-800 dark:text-white dark:ring-gray-700"
             >
               <option :value="true">{{ m.adminTicketDetailUi.active }}</option>
@@ -53,7 +54,7 @@
               @click="confirmingDelete = true"
               class="inline-flex items-center gap-1 rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-500"
             >
-              <span class="material-icons text-base">delete</span>
+              <span class="material-icons text-base" aria-hidden="true">delete</span>
               {{ m.adminTicketDetailUi.delete }}
             </button>
           </div>
