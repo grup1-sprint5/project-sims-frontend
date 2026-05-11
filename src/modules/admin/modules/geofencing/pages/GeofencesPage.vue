@@ -24,12 +24,14 @@
         v-model="filters.name"
         type="text"
         :placeholder="m.adminGeofencesUi.searchByName"
+        :aria-label="m.adminGeofencesUi.searchByName"
         class="rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2 text-sm"
         @input="handleFilterChange"
       />
 
       <select
         v-model="activeFilter"
+        :aria-label="m.commonUi.status"
         class="rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2 text-sm"
         @change="handleFilterChange"
       >
@@ -40,6 +42,7 @@
 
       <select
         v-model="filters.assign_type"
+        :aria-label="m.adminGeofencesUi.allAssignmentTypes"
         class="rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2 text-sm"
         @change="handleFilterChange"
       >
@@ -52,6 +55,7 @@
         v-model="filters.assign_id"
         type="text"
         :placeholder="m.adminGeofencesUi.assignId"
+        :aria-label="m.adminGeofencesUi.assignId"
         class="rounded-md border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2 text-sm"
         @input="handleFilterChange"
       />
@@ -96,14 +100,14 @@
             <AdminTd variant="muted">{{ formatDate(item.updated_at) }}</AdminTd>
             <AdminTd variant="actions">
               <div class="flex justify-end gap-2">
-                <router-link :to="{ path: `/admin/geofences/${item.id}`, query: item.tenant_id ? { tenant_id: item.tenant_id } : undefined }" class="text-indigo-500 hover:text-indigo-700" :title="m.commonUi.view">
-                  <span class="material-icons text-lg">visibility</span>
+                <router-link :to="{ path: `/admin/geofences/${item.id}`, query: item.tenant_id ? { tenant_id: item.tenant_id } : undefined }" class="text-indigo-500 hover:text-indigo-700" :aria-label="`${m.commonUi.view} ${item.name}`">
+                  <span class="material-icons text-lg" aria-hidden="true">visibility</span>
                 </router-link>
-                <router-link :to="{ path: `/admin/geofences/${item.id}/edit`, query: item.tenant_id ? { tenant_id: item.tenant_id } : undefined }" class="text-purple-500 hover:text-purple-700" :title="m.commonUi.edit">
-                  <span class="material-icons text-lg">edit</span>
+                <router-link :to="{ path: `/admin/geofences/${item.id}/edit`, query: item.tenant_id ? { tenant_id: item.tenant_id } : undefined }" class="text-purple-500 hover:text-purple-700" :aria-label="`${m.commonUi.edit} ${item.name}`">
+                  <span class="material-icons text-lg" aria-hidden="true">edit</span>
                 </router-link>
-                <button class="text-red-500 hover:text-red-700" @click="openDeleteDialog(item)" :title="m.commonUi.delete">
-                  <span class="material-icons text-lg">delete</span>
+                <button class="text-red-500 hover:text-red-700" @click="openDeleteDialog(item)" :aria-label="`${m.commonUi.delete} ${item.name}`">
+                  <span class="material-icons text-lg" aria-hidden="true">delete</span>
                 </button>
               </div>
             </AdminTd>

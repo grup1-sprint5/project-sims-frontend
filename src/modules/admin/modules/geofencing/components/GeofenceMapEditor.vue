@@ -11,7 +11,7 @@
         class="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors"
         :title="m.commonUi.delete"
       >
-        <span class="material-icons text-sm">clear</span>
+        <span class="material-icons text-sm" aria-hidden="true">clear</span>
         {{ m.adminGeofenceFormUi.remove }}
       </button>
     </div>

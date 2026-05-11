@@ -12,7 +12,7 @@
         to="/tickets/create"
         class="inline-flex items-center gap-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
       >
-        <span class="material-icons text-base">add</span>
+        <span class="material-icons text-base" aria-hidden="true">add</span>
         {{ m.ticketsUi.newTicket }}
       </router-link>
     </div>
@@ -22,7 +22,7 @@
 
     <!-- Empty state -->
     <div v-else-if="tickets.length === 0" class="text-center py-16">
-      <span class="material-icons text-5xl text-gray-600">confirmation_number</span>
+      <span class="material-icons text-5xl text-gray-600" aria-hidden="true">confirmation_number</span>
       <p class="mt-3 text-gray-400">{{ m.ticketsUi.noTickets }}</p>
       <router-link
         to="/tickets/create"

@@ -267,10 +267,14 @@ const applyFiltersAndMarkers = () => {
     if (markers.has(v.id)) return
     
     const effectiveStatus = bookedVehicleIds.value.has(v.id) ? 'occupied' : v.status
-    const marker = L.marker([v.latitude, v.longitude], { 
-      icon: createVehicleIcon(effectiveStatus, false) 
+    const marker = L.marker([v.latitude, v.longitude], {
+      icon: createVehicleIcon(effectiveStatus, false)
     }).addTo(map.value as any)
-    
+
+    const plate = v.license_plate || v.plate || ''
+    const label = [v.brand, v.model, plate].filter(Boolean).join(' ')
+    marker.getElement()?.setAttribute('aria-label', label)
+
     marker.on('click', () => {
       if (onVehicleClickCallback) {
         onVehicleClickCallback(v)

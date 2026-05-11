@@ -16,8 +16,8 @@
             <p class="text-xl font-bold text-gray-900 dark:text-white">{{ selectedVehicle?.plate }}</p>
             <p class="text-sm text-gray-500 dark:text-gray-400">{{ selectedVehicle?.brand }} {{ selectedVehicle?.model }}</p>
           </div>
-          <button @click="closeSelectedPanel" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-            <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button @click="closeSelectedPanel" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" :aria-label="m.commonUi.close">
+            <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -97,8 +97,8 @@
               <p class="text-xl font-bold text-gray-900 dark:text-white">{{ selectedVehicle?.plate }}</p>
               <p class="text-sm text-gray-500 dark:text-gray-400">{{ selectedVehicle?.brand }} {{ selectedVehicle?.model }}</p>
             </div>
-            <button @click="closeSelectedPanel" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-              <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <button @click="closeSelectedPanel" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" :aria-label="m.commonUi.close">
+              <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -176,8 +176,8 @@
                 <h3 class="text-xl font-bold" style="color:var(--app-text)">{{ m.mapUi.bookingTitle }}</h3>
                 <p v-if="vehicleForBooking" class="text-sm" style="color:var(--app-muted-text)">{{ vehicleForBooking.brand }} {{ vehicleForBooking.model }} · {{ vehicleForBooking.plate }}</p>
               </div>
-              <button @click="closeBookingModal" class="p-2 rounded-full transition-colors hover:opacity-80" style="color:var(--app-muted-text);background:var(--app-surface-alt);">
-                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <button @click="closeBookingModal" class="p-2 rounded-full transition-colors hover:opacity-80" style="color:var(--app-muted-text);background:var(--app-surface-alt);" :aria-label="m.commonUi.close">
+                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>

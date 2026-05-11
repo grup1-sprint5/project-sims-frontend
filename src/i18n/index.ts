@@ -805,6 +805,7 @@ const messages = {
       themeLight: 'Mode clar',
       themeDark: 'Mode fosc',
       openUserMenu: 'Obrir menú d\'usuari',
+      mainNav: 'Navegació principal',
     },
     adminNav: { dashboard: 'Tauler', map: 'Mapa', users: 'Usuaris', roles: 'Rols', bookings: 'Reserves', vehicles: 'Vehicles', geofences: 'Geofencing', geofenceEvents: 'Events geofencing', tenants: 'Empreses', tenantRequests: 'Sol·licituds empreses', superAdmin: 'Vista global', tenantWorkspace: 'Espai tenant', tickets: 'Tiquets' },
     admin: { notAuthorizedTitle: 'No autoritzat', notAuthorizedMsg: "El teu compte no té permís per accedir a l'àrea d'administració." },
@@ -1614,6 +1615,7 @@ const messages = {
       themeLight: 'Modo claro',
       themeDark: 'Modo oscuro',
       openUserMenu: 'Abrir menú de usuario',
+      mainNav: 'Navegación principal',
     },
     adminNav: { dashboard: 'Panel', map: 'Mapa', users: 'Usuarios', roles: 'Roles', bookings: 'Reservas', vehicles: 'Vehículos', geofences: 'Geofencing', geofenceEvents: 'Eventos geofencing', tenants: 'Empresas', tenantRequests: 'Solicitudes de empresas', superAdmin: 'Vista global', tenantWorkspace: 'Espacio tenant', tickets: 'Tickets' },
     admin: { notAuthorizedTitle: 'No autorizado', notAuthorizedMsg: 'Tu cuenta no tiene permiso para acceder al área de administración.' },
@@ -2423,6 +2425,7 @@ const messages = {
       themeLight: 'Light mode',
       themeDark: 'Dark mode',
       openUserMenu: 'Open user menu',
+      mainNav: 'Main navigation',
     },
     adminNav: { dashboard: 'Dashboard', map: 'Map', users: 'Users', roles: 'Roles', bookings: 'Bookings', vehicles: 'Vehicles', geofences: 'Geofences', geofenceEvents: 'Geofence events', tenants: 'Tenants', tenantRequests: 'Company requests', superAdmin: 'Global view', tenantWorkspace: 'Tenant workspace', tickets: 'Tickets' },
     admin: { notAuthorizedTitle: 'Not authorized', notAuthorizedMsg: 'Your account does not have permission to access the admin area.' },
@@ -2433,6 +2436,7 @@ const messages = {
 }
 
 const locale = ref<Locale>((localStorage.getItem('locale') as Locale) || 'ca')
+document.documentElement.lang = locale.value
 
 export const LOCALES: { code: Locale; label: string }[] = [
   { code: 'ca', label: 'CA' },
@@ -2446,6 +2450,7 @@ export function useI18n() {
   const setLocale = (code: Locale) => {
     locale.value = code
     localStorage.setItem('locale', code)
+    document.documentElement.lang = code
   }
 
   return { locale, locales: LOCALES, setLocale, m }

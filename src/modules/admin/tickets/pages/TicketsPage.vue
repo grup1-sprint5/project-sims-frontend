@@ -10,10 +10,12 @@
         v-model="search"
         type="text"
         :placeholder="m.adminTicketsUi.searchPlaceholder"
+        :aria-label="m.adminTicketsUi.searchPlaceholder"
         class="block w-full max-w-xs rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
       />
       <select
         v-model="statusFilter"
+        :aria-label="m.commonUi.status"
         class="rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm dark:bg-gray-800 dark:text-white dark:ring-gray-700"
       >
         <option value="all">{{ m.adminTicketsUi.allStatuses }}</option>
@@ -59,11 +61,11 @@
             <AdminTd variant="muted">{{ formatDate(t.created_at) }}</AdminTd>
             <AdminTd variant="actions">
               <div class="flex justify-end gap-2">
-                <router-link :to="{ path: `/admin/tickets/${t.id}`, query: t.tenant_id ? { tenant_id: t.tenant_id } : undefined }" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300" :title="m.commonUi.view">
-                  <span class="material-icons text-xl">visibility</span>
+                <router-link :to="{ path: `/admin/tickets/${t.id}`, query: t.tenant_id ? { tenant_id: t.tenant_id } : undefined }" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300" :aria-label="`${m.commonUi.view} #${t.id}`">
+                  <span class="material-icons text-xl" aria-hidden="true">visibility</span>
                 </router-link>
-                <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300" :title="m.commonUi.delete" @click="confirmDelete(t)">
-                  <span class="material-icons text-xl">delete</span>
+                <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300" :aria-label="`${m.commonUi.delete} #${t.id}`" @click="confirmDelete(t)">
+                  <span class="material-icons text-xl" aria-hidden="true">delete</span>
                 </button>
               </div>
             </AdminTd>
