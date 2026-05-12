@@ -4,7 +4,7 @@
     <!-- Back -->
     <div class="mb-6">
       <router-link
-        to="/tickets"
+        to="/home/tickets"
         class="inline-flex items-center text-indigo-400 hover:text-indigo-300"
       >
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -9,7 +9,7 @@
         <p class="text-sm mt-1" style="color:var(--app-muted-text)">{{ m.ticketsUi.supportSubtitle }}</p>
       </div>
       <router-link
-        to="/tickets/create"
+        to="/home/tickets/create"
         class="inline-flex items-center gap-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
       >
         <span class="material-icons text-base" aria-hidden="true">add</span>
@@ -25,7 +25,7 @@
       <span class="material-icons text-5xl text-gray-600" aria-hidden="true">confirmation_number</span>
       <p class="mt-3 text-gray-400">{{ m.ticketsUi.noTickets }}</p>
       <router-link
-        to="/tickets/create"
+        to="/home/tickets/create"
         class="mt-4 inline-block rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
       >
         {{ m.ticketsUi.openFirstTicket }}
@@ -60,7 +60,7 @@
                 <p class="mt-1 text-xs text-gray-500">{{ formatDate(t.created_at) }}</p>
               </div>
               <router-link
-                :to="`/tickets/${t.id}`"
+                :to="`/home/tickets/${t.id}`"
                 class="shrink-0 rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-500"
               >
                 {{ m.ticketsUi.open }}
@@ -91,7 +91,7 @@
                 <p class="mt-1 text-xs text-gray-500">{{ formatDate(t.created_at) }}</p>
               </div>
               <router-link
-                :to="`/tickets/${t.id}`"
+                :to="`/home/tickets/${t.id}`"
                 class="shrink-0 rounded-md bg-gray-700 px-3 py-1.5 text-xs font-semibold text-gray-300 hover:bg-gray-600"
               >
                 {{ m.ticketsUi.view }}

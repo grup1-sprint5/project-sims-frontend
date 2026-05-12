@@ -4,7 +4,7 @@
     <!-- Back -->
     <div class="mb-6">
       <router-link
-        to="/tickets"
+        to="/home/tickets"
         class="inline-flex items-center text-indigo-400 hover:text-indigo-300"
       >
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,7 +58,7 @@
         <!-- Actions -->
         <div class="flex gap-3 pt-2 border-t border-gray-200 dark:border-gray-700">
           <router-link
-            to="/tickets"
+            to="/home/tickets"
             class="flex-1 text-center px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 text-sm font-medium"
           >
             {{ m.ticketsUi.cancel }}
@@ -105,7 +105,7 @@ const handleSubmit = async () => {
       description: form.description?.trim() || undefined,
     })
     toast.success(m.value.ticketsUi.ticketCreated)
-    router.push(`/tickets/${ticket.id}`)
+    router.push(`/home/tickets/${ticket.id}`)
   } catch (err: any) {
     const msg = err?.response?.data?.message || m.value.ticketsUi.createTicketError
     toast.error(msg)
