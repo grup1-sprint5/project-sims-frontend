@@ -23,7 +23,7 @@ export interface Vehicle {
 const vehicles = ref<Vehicle[]>([])
 const map = ref<L.Map | null>(null)
 const mapContainer = ref<HTMLElement | null>(null)
-const markers: Map<number, L.Marker> = new Map()
+const markers: Map<string, L.Marker> = new Map()
 let userMarker: L.Marker | L.CircleMarker | null = null
 let pollInterval: ReturnType<typeof setInterval> | null = null
 let pollEndpoint = '/vehicles-map'
@@ -137,12 +137,14 @@ const markVehicleAsBooked = (vehicleId: number, booked: boolean) => {
   }
   bookedVehicleIds.value = newSet
   // Actualitzar la icona del marcador si existeix
-  const marker = markers.get(vehicleId) as any
   const vehicle = rawVehicles.value.find(v => v.id === vehicleId)
-  if (marker && vehicle) {
-    const isSelected = vehicle.id === selectedVehicleId
-    const effectiveStatus = newSet.has(vehicleId) ? 'occupied' : vehicle.status
-    try { marker.setIcon(createVehicleIcon(effectiveStatus, isSelected)) } catch { /* ignore */ }
+  if (vehicle) {
+    const marker = markers.get(vehicle.plate) as any
+    if (marker) {
+      const isSelected = vehicle.id === selectedVehicleId
+      const effectiveStatus = newSet.has(vehicleId) ? 'occupied' : vehicle.status
+      try { marker.setIcon(createVehicleIcon(effectiveStatus, isSelected)) } catch { /* ignore */ }
+    }
   }
 }
 
@@ -206,7 +208,7 @@ const fetchVehicles = async (endpoint = '/vehicles') => {
 
     // Actualitzar icones dels marcadors ja existents amb l'estat real de reserva
     rawVehicles.value.forEach(v => {
-      const marker = markers.get(v.id) as any
+      const marker = markers.get(v.plate) as any
       if (marker) {
         const isSelected = v.id === selectedVehicleId
         const effectiveStatus = occupiedIds.has(v.id) ? 'occupied' : v.status
@@ -264,8 +266,8 @@ const applyFiltersAndMarkers = () => {
   // Afegir només marcadors nous
   vehicles.value.forEach(v => {
     if (v.latitude == null || v.longitude == null) return
-    if (markers.has(v.id)) return
-    
+    if (markers.has(v.plate)) return
+
     const effectiveStatus = bookedVehicleIds.value.has(v.id) ? 'occupied' : v.status
     const marker = L.marker([v.latitude, v.longitude], {
       icon: createVehicleIcon(effectiveStatus, false)
@@ -281,15 +283,15 @@ const applyFiltersAndMarkers = () => {
       }
     })
 
-    markers.set(v.id, marker)
+    markers.set(v.plate, marker)
   })
-  
+
   // Eliminar marcadors que no estan al filtre
-  const visibleIds = new Set(vehicles.value.map(v => v.id))
-  markers.forEach((m, id) => {
-    if (!visibleIds.has(id)) {
+  const visiblePlates = new Set(vehicles.value.map(v => v.plate))
+  markers.forEach((m, plate) => {
+    if (!visiblePlates.has(plate)) {
       m.remove()
-      markers.delete(id)
+      markers.delete(plate)
     }
   })
 }
@@ -369,23 +371,27 @@ const setSelectedVehicle = (vehicleId: number | null) => {
   selectedVehicleId = vehicleId
   
   // Només actualitzar els marcadors afectats (l'anterior i el nou)
-  if (previousSelectedId !== null && markers.has(previousSelectedId)) {
-    const prevMarker = markers.get(previousSelectedId) as any
+  if (previousSelectedId !== null) {
     const prevVehicle = rawVehicles.value.find(v => v.id === previousSelectedId)
     if (prevVehicle) {
-      try {
-        prevMarker.setIcon(createVehicleIcon(getEffectiveStatus(prevVehicle), false))
-      } catch (e) { /* ignore */ }
+      const prevMarker = markers.get(prevVehicle.plate) as any
+      if (prevMarker) {
+        try {
+          prevMarker.setIcon(createVehicleIcon(getEffectiveStatus(prevVehicle), false))
+        } catch (e) { /* ignore */ }
+      }
     }
   }
-  
-  if (vehicleId !== null && markers.has(vehicleId)) {
-    const newMarker = markers.get(vehicleId) as any
+
+  if (vehicleId !== null) {
     const newVehicle = rawVehicles.value.find(v => v.id === vehicleId)
     if (newVehicle) {
-      try {
-        newMarker.setIcon(createVehicleIcon(getEffectiveStatus(newVehicle), true))
-      } catch (e) { /* ignore */ }
+      const newMarker = markers.get(newVehicle.plate) as any
+      if (newMarker) {
+        try {
+          newMarker.setIcon(createVehicleIcon(getEffectiveStatus(newVehicle), true))
+        } catch (e) { /* ignore */ }
+      }
     }
   }
 }
