@@ -141,6 +141,8 @@ const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 
+const isIpv4Host = (host: string): boolean => /^\d{1,3}(?:\.\d{1,3}){3}$/.test(host)
+
 const isCentralDomain = computed(() => {
   if (typeof window === 'undefined') return false
   const host = window.location.hostname.toLowerCase()
@@ -151,7 +153,7 @@ const isCentralDomain = computed(() => {
     'www.grup1-sims.com',
     'jordiarnau.iemhosting.asix2.iesmontsia.cat'
   ]
-  return centralDomains.includes(host)
+  return centralDomains.includes(host) || isIpv4Host(host)
 })
 
 const registerRoute = computed(() => {
@@ -162,6 +164,7 @@ const registerRoute = computed(() => {
 const getTenantSlugFromHost = (): string => {
   if (typeof window === 'undefined') return ''
   const host = window.location.hostname.toLowerCase()
+  if (isIpv4Host(host)) return ''
   const parts = host.split('.')
   if (parts.length >= 3) return parts[0]!
   if (host.endsWith('.localhost')) return host.split('.')[0]!

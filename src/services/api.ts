@@ -22,12 +22,14 @@ const apiClient = axios.create({
   }
 })
 
+const isIpv4Host = (host: string): boolean => /^\d{1,3}(?:\.\d{1,3}){3}$/.test(host)
+
 const getTenantFromHost = (): string | undefined => {
   if (typeof window === 'undefined') return undefined
   const host = window.location.hostname.toLowerCase()
 
   const centralHosts = new Set(['localhost', '127.0.0.1', 'app.localhost'])
-  if (centralHosts.has(host)) return undefined
+  if (centralHosts.has(host) || isIpv4Host(host)) return undefined
 
   if (host.endsWith('.localhost')) {
     const label = host.split('.')[0]

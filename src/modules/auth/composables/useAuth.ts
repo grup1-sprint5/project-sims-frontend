@@ -99,6 +99,8 @@ const looksLikeTenancyHeaderError = (err: any): boolean => {
   return false;
 };
 
+const isIpv4Host = (host: string): boolean => /^\d{1,3}(?:\.\d{1,3}){3}$/.test(host);
+
 export function useAuth() {
   const router = useRouter();
   const { m } = useI18n();
@@ -125,7 +127,8 @@ export function useAuth() {
     if (
       host === "localhost" ||
       host === "127.0.0.1" ||
-      host === "app.localhost"
+      host === "app.localhost" ||
+      isIpv4Host(host)
     )
       return true;
 

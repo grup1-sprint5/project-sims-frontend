@@ -162,13 +162,15 @@ const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 
+const isIpv4Host = (host: string): boolean => /^\d{1,3}(?:\.\d{1,3}){3}$/.test(host)
+
 // When org is pre-filled from query param or subdomain, lock the field
 const isOrgLocked = computed(() => tenantSlug.value !== '' && !isFromCentralDomain.value)
 
 const isFromCentralDomain = computed(() => {
   if (typeof window === 'undefined') return true
   const host = window.location.hostname.toLowerCase()
-  return ['localhost', '127.0.0.1', 'jordiarnau.iemhosting.asix2.iesmontsia.cat'].includes(host)
+  return ['localhost', '127.0.0.1', 'jordiarnau.iemhosting.asix2.iesmontsia.cat'].includes(host) || isIpv4Host(host)
 })
 
 onMounted(() => {
@@ -181,6 +183,7 @@ onMounted(() => {
   // Auto-detect from subdomain (e.g. empresa1.jordiarnau...)
   if (!isFromCentralDomain.value) {
     const host = window.location.hostname.toLowerCase()
+    if (isIpv4Host(host)) return
     const parts = host.split('.')
     if (parts.length >= 3 && parts[0]) tenantSlug.value = parts[0]
   }
