@@ -12,11 +12,13 @@ services:
       - node_modules:/app/node_modules
     environment:
       - NODE_ENV=development
+      - VITE_PROXY_API_TARGET=http://project_sims_app:8001
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    command: npm run dev -- --host 0.0.0.0
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
     networks:
       - app-network
+      - backend-network
 
 volumes:
   node_modules:
@@ -24,3 +26,6 @@ volumes:
 networks:
   app-network:
     driver: bridge
+  backend-network:
+    external: true
+    name: project-sims-backend_default

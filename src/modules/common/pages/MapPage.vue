@@ -1,6 +1,6 @@
 <template>
   <!-- fixed: ocupa exactament entre top nav (top-16) i bottom nav (bottom-0 mòbil / bottom-0 desktop sense bottom nav) -->
-  <div class="fixed inset-x-0 top-16 bottom-0 bg-gray-800 z-0">
+  <div class="fixed inset-x-0 top-16 bottom-16 sm:bottom-0 bg-gray-800 z-0">
     <!-- Mapa: en mòbil deixa espai per la bottom nav fixe (4rem) -->
     <div ref="mapContainer" class="absolute inset-0 map-container"></div>
 
@@ -895,13 +895,6 @@ onUnmounted(() => {
 .slide-left-leave-to {
   transform: translateX(-100%);
   opacity: 0;
-}
-
-/* Mobile: map leaves space for bottom nav */
-@media (max-width: 767px) {
-  .map-container {
-    bottom: 4rem !important;
-  }
 }
 
 /* Modal transition (mòbil popup) */

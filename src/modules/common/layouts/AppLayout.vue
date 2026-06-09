@@ -180,7 +180,7 @@
     </nav>
 
     <!-- Content (MAP / PAGES) -->
-    <main class="relative min-h-[calc(100dvh-4rem)] pb-16" data-tour-id="client-content">
+    <main class="relative min-h-[calc(100dvh-4rem)] pb-16 sm:pb-0" data-tour-id="client-content">
       <router-view />
     </main>
 

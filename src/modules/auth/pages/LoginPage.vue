@@ -6,7 +6,7 @@
       <div class="rounded-xl border border-white/10 bg-gray-900 px-6 pt-8 pb-8">
 
         <RouterLink to="/landing" class="flex justify-center mb-6">
-          <img class="h-20 w-auto" :src="isDark ? '/branding/fleetly_logotip_blanc.svg' : '/branding/fleetly_logotip_negre.svg'" alt="Fleetly" />
+          <img class="h-20 w-auto" src="/branding/fleetly_logotip_blanc.svg" alt="Fleetly" />
         </RouterLink>
 
         <div v-if="!isCentralDomain && tenantName" class="mb-5 flex justify-center">
@@ -22,7 +22,21 @@
 
         <form class="space-y-4" @submit.prevent="handleSubmit">
 
-          <div v-if="!isCentralDomain">
+          <div v-if="isCentralDomain">
+            <label for="tenant" class="block text-sm text-gray-400 mb-1.5">{{ m.login.orgLabel }}</label>
+            <input
+              id="tenant"
+              v-model="tenantSlug"
+              type="text"
+              autocomplete="organization"
+              placeholder="sims-corp"
+              :disabled="isLoading"
+              class="block w-full rounded-lg bg-white/5 px-3.5 py-3 text-base text-white placeholder:text-gray-600 border border-white/10 focus:border-[var(--fleetly-baltic-blue)] focus:outline-none transition disabled:opacity-50"
+            />
+            <p class="mt-1.5 text-xs text-gray-500">{{ m.login.orgHint }}</p>
+          </div>
+
+          <div v-else>
             <label for="tenant" class="block text-sm text-gray-400 mb-1.5">{{ m.login.orgLabel }}</label>
             <input
               id="tenant"
@@ -123,16 +137,15 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useRouter, RouterLink } from 'vue-router'
+import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
-import { useTheme } from '@/modules/common/composables/useTheme'
 import LanguageSwitcher from '@/modules/common/components/LanguageSwitcher.vue'
 import { useI18n } from '@/i18n'
 import apiClient from '@/services/api'
 
 const router = useRouter()
+const route = useRoute()
 const { login, isLoading, error, user } = useAuth()
-const { isDark } = useTheme()
 const { m } = useI18n()
 
 const tenantSlug = ref('')
@@ -172,6 +185,11 @@ const getTenantSlugFromHost = (): string => {
 }
 
 onMounted(async () => {
+  const orgFromQuery = route.query.org?.toString()
+  if (isCentralDomain.value && orgFromQuery) {
+    tenantSlug.value = orgFromQuery
+  }
+
   if (!isCentralDomain.value) {
     const slug = getTenantSlugFromHost()
     if (slug) {
@@ -187,7 +205,7 @@ onMounted(async () => {
 })
 
 const handleSubmit = async () => {
-  const tenant = isCentralDomain.value ? '' : tenantSlug.value
+  const tenant = tenantSlug.value.trim()
   const success = await login(tenant, email.value, password.value)
   if (success) {
     const isAdmin = user.value?.roles?.some((role: any) => {

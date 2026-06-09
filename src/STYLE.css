@@ -24,8 +24,12 @@
   /* Superfícies i targetes */
   --app-surface: #ffffff;
   --app-surface-alt: #eef2f7;
+  --app-surface-muted: #e2e8f0;
   --app-card-bg: #fff;
   --app-card-border: #c8d2e0;
+  --app-sidebar-bg: #ffffff;
+  --app-sidebar-hover: #eef2f7;
+  --app-sidebar-text: #4b5563;
 
   /* Inputs i quadres */
   --app-input-bg: #fff;
@@ -64,8 +68,12 @@ html.dark {
 
   --app-surface: #111827;
   --app-surface-alt: #1f2937;
+  --app-surface-muted: #273346;
   --app-card-bg: #111827;
   --app-card-border: #334155;
+  --app-sidebar-bg: #111827;
+  --app-sidebar-hover: #1f2937;
+  --app-sidebar-text: #c4cbd6;
 
   --app-input-bg: #232a31;
   --app-input-border: #313940;
@@ -93,13 +101,30 @@ html.dark {
   --chat-user-avatar-bg: #475569;
 }
 
+html,
+body,
+#app {
+  min-width: 320px;
+  min-height: 100%;
+}
+
+html {
+  background-color: var(--app-bg);
+}
+
 body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
   font-family: var(--font-sans);
   background-color: var(--app-bg);
   color: var(--app-text);
+  overflow-x: hidden;
 }
 
 .app-theme {
+  min-height: 100vh;
+  min-height: 100dvh;
   background-color: var(--app-bg);
   color: var(--app-text);
 }

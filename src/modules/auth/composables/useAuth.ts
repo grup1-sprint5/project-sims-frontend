@@ -157,7 +157,7 @@ export function useAuth() {
   ): void => {
     const protocol = window.location.protocol;
     const portSuffix = window.location.port ? `:${window.location.port}` : "";
-    const tenantUrl = `${protocol}//${tenantHost}${portSuffix}/auth/callback?exchange_token=${encodeURIComponent(exchangeToken)}&tenant=${encodeURIComponent(tenantRef)}`;
+    const tenantUrl = `${protocol}//${tenantHost}${portSuffix}/#/auth/callback?exchange_token=${encodeURIComponent(exchangeToken)}&tenant=${encodeURIComponent(tenantRef)}`;
     window.location.assign(tenantUrl);
   };
 
